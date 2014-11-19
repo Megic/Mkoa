@@ -1,0 +1,17 @@
+{
+  "name": "Mkoa",
+  "description": "make by Megic use koa",
+  "version": "0.0.1",
+  "dependencies": {
+    "koa": "*",
+    "koa-static-cache": "*",
+    "koa-body": "*",
+     "koa-favi": "*",
+     "koa-logger": "*",
+     "koa-swig": "*",
+    "underscore": "^1.6.0"
+  },
+  "engines": {
+    "node": ">= 11.3"
+  }
+}
