@@ -8,7 +8,8 @@
     "koa-body": "*",
      "koa-favi": "*",
      "koa-logger": "*",
-     "koa-swig": "*",
+     "koa-ejs": "*",
+     "sequelize":"^2.0.0",
     "underscore": "^1.6.0"
   },
   "engines": {

@@ -5,9 +5,10 @@ module.exports=function(root){
         mongo:'mongodb://acount:pwd@url:27017/db',
         //系统目录
         model:root+'/model',
-        view:root+'/view',
+        views:root+'/views',
         controller:root+'/controller',
         lib:root+'/lib',
+        static:root+'/static',
         //cookie session
         maxAge: 259200000,
         secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',

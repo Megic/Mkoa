@@ -1,15 +1,12 @@
 /**
  * Created by Megic
  */
-module.exports = function(_CS,render){
+module.exports = function($this,$M){
     return {
         _extend : 'blog/common',
-
         login:function *(){
-            console.log('33');
-            yield  _CS.render('login');
+            yield  $this.render($M.TPL,{title:$M.GET['title']});
         }   
-
-
+        
     }
 }
