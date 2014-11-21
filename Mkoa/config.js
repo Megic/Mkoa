@@ -2,7 +2,13 @@
 module.exports=function(root){
     return {
         //数据库连接
-        mongo:'mongodb://acount:pwd@url:27017/db',
+        mysql:{
+             user:'root'
+            ,password:''
+            ,dbName:'Mkoa'
+            ,prefix:'M_'
+            ,port:3306
+        },
         //系统目录
         model:root+'/model',
         views:root+'/views',
@@ -13,7 +19,8 @@ module.exports=function(root){
         maxAge: 259200000,
         secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',
         //端口设置
-        port:3388,
+        port:3000,
+        logger:true,
         //执行默认模块
         default_mod:['blog','blog','index'],
     }

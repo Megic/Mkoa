@@ -15,7 +15,8 @@ var koa = require('koa')
   ,staticCache = require('koa-static-cache')
   ,favicon = require('koa-favi')
   ,baseRender = require('koa-ejs')
-  ,koaBody = require('koa-body');
+  ,koaBody = require('koa-body')
+ ,Sequelize = require('sequelize');
 
   var $M={};//全局对象
   $M.F= require('underscore');//辅助函数
@@ -32,6 +33,48 @@ if($M.C.logger){
 var logger = require('koa-logger');app.use(logger());
 }
 
+//链接数据库
+sequelize = new Sequelize($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.password, {
+      dialect: "mysql", 
+      port: $M.C.mysql.port, 
+      logging: $M.C.logger?console.log:false
+    });
+
+var User = sequelize.define('User', {
+  name: {
+    type: Sequelize.STRING(100),
+    allowNull: false,
+    comment: 'user name',
+  },
+  ip: {
+    type: Sequelize.STRING(64),
+    allowNull: false,
+    comment: 'user last request ip',
+  },
+  isNpmUser: {
+    field: 'npm_user',
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+    comment: 'user sync from npm or not, 1: true, other: false',
+  }
+}, {
+  tableName: 'user',
+  comment: 'user base info',
+  indexes: [
+    {
+      unique: true,
+      fields: ['name']
+    },
+    {
+      fields: ['gmt_modified']
+    }
+  ],
+  createdAt: 'gmt_create',
+  updatedAt: 'gmt_modified',
+  charset: 'utf8',
+  collate: 'utf8_general_ci',
+});
   //定义静态文件路径
  app.use(staticCache($M.C.static+'/', {
   maxAge: 365 * 24 * 60 * 60
@@ -54,6 +97,12 @@ baseRender(app, {
 
 
 app.use(function *(next){
+
+   yield sequelize.sync({ force: true });
+var user = yield User.build({
+  name: 'fxx222x',
+  ip: '127.0.0.1'
+}).save();
 
 $M.GET=this.request.query;//get参数
 $M.POST=this.request.body;//post参数
@@ -80,7 +129,7 @@ app.use(function *page404(next){//404页面
         console.log('server error', err);
     });
 
-app.listen(3000);
+app.listen($M.C.port);
 
 
 
