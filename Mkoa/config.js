@@ -3,21 +3,22 @@ module.exports=function(root){
     return {
         //数据库连接
         mysql:{
-             user:'root'
+             user:''
             ,password:''
-            ,dbName:'Mkoa'
-            ,prefix:'M_'
+            ,dbName:'mkoa'
+            ,prefix:'mkoa_'
             ,port:3306
         },
         //系统目录
-        model:root+'/model',
+        models:root+'/models',
         views:root+'/views',
         controller:root+'/controller',
         lib:root+'/lib',
         static:root+'/static',
         //cookie session
-        maxAge: 259200000,
-        secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',
+        csrf:true,
+        maxAge: 30 * 60 * 1000,
+        secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
         //端口设置
         port:3000,
         logger:true,

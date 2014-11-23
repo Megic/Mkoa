@@ -5,14 +5,15 @@ module.exports=function(root){
         mysql:{
              user:'root'
             ,password:''
-            ,dbName:'Mkoa'
-            ,prefix:'M_'
+            ,dbName:'mkoa'
+            ,prefix:'mkoa_'
         },
         //系统目录
-        model:root+'/model',
+        models:root+'/models',
         views:root+'/views',
         controller:root+'/controller',
         static:root+'/static',
+        csrf:true,//是否开启csrf验证
         //端口设置
         port:3000,
         logger:true,

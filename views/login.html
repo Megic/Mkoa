@@ -5,6 +5,10 @@
   <title>Document</title>
 </head>
 <body>
-<%=title%>
+<form action="http://localhost:3000/home/auth/login"  enctype="multipart/form-data"  method="post">
+    <input type="file" name="file" id="">
+    <input type="text" name="_csrf" value="<%=csrf%>" >
+    <button type="submit">提交</button>
+  </form>
 </body>
 </html>

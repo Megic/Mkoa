@@ -9,6 +9,11 @@
      "koa-favi": "*",
      "koa-logger": "*",
      "koa-ejs":"*",
+     "koa-generic-session":"*",
+     "koa-validate":"*",
+     "koa-mysql-session":"*",
+     "koa-json":"*",
+      "koa-csrf":"*",
      "mysql": "*",
      "sequelize":"^2.0.0",
     "underscore": "^1.6.0"
