@@ -15,8 +15,17 @@ module.exports=function(root){
         controller:root+'/controller',
         lib:root+'/lib',
         static:root+'/static',
+        upload:root+'/static/upload',//上传文件夹
+        maxFieldsSize:'2mb',//最大上传文件
+        fileType:['jpg','png','gif'],
         //cookie session
         csrf:true,
+        useUPYun:false,
+        UPYun:{
+            buckname: '',
+             username: '',
+             password: ''
+        },
         maxAge: 30 * 60 * 1000,
         secret:'*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
         //端口设置

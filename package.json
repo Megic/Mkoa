@@ -14,7 +14,11 @@
      "koa-mysql-session":"*",
      "koa-json":"*",
       "koa-csrf":"*",
-     "mysql": "*",
+      "koa-passport":"*",
+      "passport-local":"*",
+     "moment":"*",
+      "mysql": "*",
+     "co-fs-plus": "*",
      "sequelize":"^2.0.0",
     "underscore": "^1.6.0"
   },

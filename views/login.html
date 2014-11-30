@@ -5,10 +5,11 @@
   <title>Document</title>
 </head>
 <body>
-<form action="http://localhost:3000/home/auth/login"  enctype="multipart/form-data"  method="post">
-    <input type="file" name="file" id="">
+<form action="http://localhost:3000/home/auth/login"  method="post">
+    <input type="text" name="username" value="test" />
+      <input type="password" name="password" value="test" />
     <input type="text" name="_csrf" value="<%=csrf%>" >
-    <button type="submit">提交</button>
+    <button type="submit">login</button>
   </form>
 </body>
 </html>

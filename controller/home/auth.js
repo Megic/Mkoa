@@ -4,7 +4,7 @@
 module.exports = function($this,$M){
     return {
         _extend : 'blog/common',
-        login:function *(){
+        index:function *(){
             // var User = $M.D('User');
             // $this.session['xx']=null;
   // yield sequelize.sync({ force: true });
@@ -21,13 +21,25 @@ module.exports = function($this,$M){
 
   // console.log($this.csrf);
     // $this.body = $this.query;
-    // console.log($this.request.body.files);
-
+    console.log($M.FILES);
       yield  $this.render('login',{csrf:$this.csrf});
-        } ,
-        post:function *(){
-        $this.assertCSRF($this.request.body._csrf);
-        }
+        } ,//***************************************************
+        home:function *(){
+            console.log('xx');
+            if ($this.isAuthenticated()) {
+                console.log(1);
+            }else{
+                console.log(2);
+            }
+        },//***************************************************
+        login:function *(){
+  
+      
+        yield $M.passport.authenticate('local', {
+            successRedirect: '/home/auth/home',
+            failureRedirect: '/home/auth/index'
+          })
+        }//***************************************************
         
     }
 }

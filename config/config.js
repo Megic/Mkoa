@@ -13,12 +13,19 @@ module.exports=function(root){
         views:root+'/views',
         controller:root+'/controller',
         static:root+'/static',
+        upload:root+'/static/upload',//上传文件夹
+        fileType:['jpg','png','gif'],
+        maxFieldsSize:'2mb',//最大上传文件
+        useUPYun:false,
+        UPYun:{
+             buckname: 'aichi8pic',
+             username: 'megic',
+             password: 'k7727719'
+        },
         csrf:true,//是否开启csrf验证
-        //端口设置
-        port:3000,
-        logger:true,
-        //执行默认模块
-        default_mod:['blog','blog','index'],
+        port:3000,    //端口设置
+        logger:true,    //输出调试内容
+ 
     }
 
 }
