@@ -18,11 +18,11 @@ module.exports=function(root){
         maxFieldsSize:'2mb',//最大上传文件
         useUPYun:false,
         UPYun:{
-             buckname: 'aichi8pic',
-             username: 'megic',
-             password: 'k7727719'
+             buckname: 'aichi8pic'
+             ,username: 'megic'
+             ,password: 'k7727719'
         },
-        csrf:true,//是否开启csrf验证
+        csrf:false,//是否开启csrf验证
         port:3000,    //端口设置
         logger:true,    //输出调试内容
  

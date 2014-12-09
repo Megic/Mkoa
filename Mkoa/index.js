@@ -77,6 +77,8 @@ app.use(validate());//参数过滤
 app.keys = [$M.C.secret];//session支持
 //使用mysql存储session  _mysql_session_store
 app.use(session({
+        key:'Mkoa:sid',
+        prefix:'Mkoa:sess:',
         store: new MysqlStore({
         user:$M.C.mysql.user,
         password:$M.C.mysql.password,
@@ -103,29 +105,7 @@ baseRender(app, {
   debug: true
 });
 
-      var user = { id: 1, username: 'test' }
-        var LocalStrategy = require('passport-local').Strategy
-        $M.passport.use(new LocalStrategy(function(username, password, done) {
-        console.log(0);
-          if (username === 'test' && password === 'test') {
-            done(null, user)
-          } else {
-            console.log(0);
-            done(null, false)
-
-          }
-        }))
-      $M.passport.serializeUser(function(user, done) {
-          done(null, user.id)
-        })
-
-        $M.passport.deserializeUser(function(id, done) {
-          done(null, user)
-        })
-//登录中间件
-
-app.use($M.passport.initialize());
-app.use($M.passport.session());
+   
 
 //链接数据库
 var sequelize = new Sequelize($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.password, {
@@ -133,14 +113,22 @@ var sequelize = new Sequelize($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.passw
       port: $M.C.mysql.port, 
       logging: $M.C.logger?console.log:false
     });
-
+$M.sequelize=sequelize;
 $M.D=function(model){ return sequelize.import($M.C.models+'/'+model);}//模型加载
 
-
+//登录中间件
+if(fs.existsSync(root + '/config/auth.js')){
+require(root+'/config/auth')($M);
+}else{
+require(mpath+'/lib/auth')($M);
+}
+app.use($M.passport.initialize());
+app.use($M.passport.session());
 
 //主中间件
 app.use(function *(next){
 
+$M.USER=this.req.user;//登录后user对象
 $M.GET=this.request.query;//get参数
 $M.POST=this.request.body;//post参数
 $M.TPL=this.request.path.slice(1);//当前controller对应的模板
@@ -178,7 +166,7 @@ for (key in this.request.body.files)
       fs.unlinkSync(val.path);//删除文件
     //****************************远程存储结束**************************
       }else{//本地存储
-      if(fs.existsSync(newPath)){
+      if(fs.existsSync(newPath)){//判定文件夹是否存在
         fs.renameSync(val.path,newFile);//转移临时文件
       }else{
        if(yield fscp.mkdirp(newPath, 0755))fs.renameSync(val.path,newFile);//转移临时文件   
@@ -203,7 +191,8 @@ var acUrl=$M.C.controller+cpath+'.js';
 if(fs.existsSync(acUrl)){ //判定controller是否存在
   var SysFuc=require(acUrl)(this,$M); //加载controller
    if (SysFuc&&$M._.isFunction(SysFuc[action])){ 
-   yield SysFuc[action]();//执行请求函数
+   if($M._.isFunction(SysFuc['_init']))yield SysFuc['_init']();//执行int函数
+    yield SysFuc[action]();//执行请求函数
  }else{yield next;}//404页面
 }else{ yield next; }//404页面
 

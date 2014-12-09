@@ -4,6 +4,9 @@
 module.exports = function($this,$M){
     return {
         _extend : 'blog/common',
+        _init: function * () {//先执行的公共函数
+                console.log('呵呵');
+          },
         index:function *(){
             // var User = $M.D('User');
             // $this.session['xx']=null;
@@ -25,21 +28,35 @@ module.exports = function($this,$M){
       yield  $this.render('login',{csrf:$this.csrf});
         } ,//***************************************************
         home:function *(){
-            console.log('xx');
+            console.log($M.USER);
             if ($this.isAuthenticated()) {
-                console.log(1);
+                $this.body ={ success:'已经登录'};
             }else{
-                console.log(2);
+               $this.body ={ success:'未登录' };
             }
         },//***************************************************
         login:function *(){
-  
-      
-        yield $M.passport.authenticate('local', {
-            successRedirect: '/home/auth/home',
-            failureRedirect: '/home/auth/index'
-          })
+        // yield $M.passport.authenticate('local', {
+        //     successRedirect: '/home/auth/home',
+        //     failureRedirect: '/home/auth/index'
+        //   })
+        yield $M.passport.authenticate('local', function*(err, user, info) {
+            if (err) throw err
+            if (user === false) {
+              $this.status = 401
+              $this.body = { success: false }
+            } else {
+              yield $this.logIn(user);
+              $this.body = { success: true }
+            }
+          });
+        },//***************************************************
+        reg:function *(){
+        yield  $this.render('reg',{csrf:$this.csrf});
+        },//***************************************************
+        lgout:function *(){
+        $this.logout()
+        $this.body = { success: '退出' }
         }//***************************************************
-        
     }
 }

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+<form action="http://192.168.0.101:3000/auth/index/register"  method="post">
+    <input type="text" name="phone" value="test" />
+    <input type="password" name="password" value="test" />
+    <input type="text" name="_csrf" value="<%=csrf%>" >
+    <button type="submit">reg</button>
+  </form>
+</body>
+</html>
