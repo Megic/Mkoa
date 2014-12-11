@@ -51,6 +51,18 @@ module.exports = function($this,$M){
             }
           });
         },//***************************************************
+        sms:function *(){
+            console.log(1);
+            var result = yield $M.request({
+            uri:$M.C.sms
+            method: 'POST',
+            form:{
+                 mobile:'15521286598',
+                 message:'您的验证码是: 321123 【萌豆】'
+            }
+          });
+            console.log(result);
+        },//**
         reg:function *(){
         yield  $this.render('reg',{csrf:$this.csrf});
         },//***************************************************

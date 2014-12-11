@@ -34,17 +34,22 @@ var koa = require('koa')
      * $M.GET  GET数据对象
      * $M.POST  POST数据对象
      * $M.FILES  上传文件数据对象
+     * $M.sequelize  
+     * $M.F.moment 时间辅助函数（moment）
+     * $M.F.encode md5等函数
+     * $M.passport  passport
+     * $M.request  co-request//发起http请求等
      */
 
   var $M={};//全局对象
   $M._= require('underscore');//辅助函数
   $M.F={};
   $M.F.moment = require('moment');//时间格式化
-  $M.F.moment.locale('zh-cn');//默认中文时间
+  $M.F.moment.locale('zh-cn'); //默认中文时间
   var sysFn = require(mpath + '/functions/init')(mpath);
-  $M._.extend($M.F, sysFn);//整合方法
-  $M.passport = require('koa-passport')//登录验证
-
+  $M._.extend($M.F, sysFn); //整合方法
+  $M.passport = require('koa-passport');//登录验证
+  $M.request = require('co-request');   
   $M.C={};//全局配置
 
 //===================获取配置内容===================

@@ -16,6 +16,7 @@
       "koa-csrf":"*",
       "koa-passport":"*",
       "passport-local":"*",
+      "co-request":"*",
      "moment":"*",
       "mysql": "*",
      "co-fs-plus": "*",

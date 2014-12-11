@@ -9,6 +9,7 @@ module.exports=function(root){
             ,prefix:'mkoa_'
         },
         //系统目录
+        sms:'https://api:key-9e6096ea51f6a365ad978df7f108de9a@sms-api.luosimao.com/v1/send.json',
         models:root+'/models',
         views:root+'/views',
         controller:root+'/controller',
