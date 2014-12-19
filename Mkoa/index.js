@@ -4,10 +4,9 @@
 /**
  *
  * @param root 根目录
- * @param mPath 库目录
+ * @param mpath 库目录
  */
 module.exports = function(root, mpath) {
-
 var koa = require('koa')
   ,app = koa()
   ,path = require('path')
@@ -87,8 +86,8 @@ app.use(session({
         store: new MysqlStore({
         user:$M.C.mysql.user,
         password:$M.C.mysql.password,
-        database: $M.C.mysql.dbName,
-        host: $M.C.mysql.port
+        database:$M.C.mysql.dbName,
+        host:$M.C.mysql.host
         }),
         rolling: true,
         cookie: {
@@ -114,8 +113,9 @@ baseRender(app, {
 
 //链接数据库
 var sequelize = new Sequelize($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.password, {
-      dialect: "mysql", 
-      port: $M.C.mysql.port, 
+      dialect: "mysql",
+      host: $M.C.mysql.host,
+      port: $M.C.mysql.port,
       logging: $M.C.logger?console.log:false
     });
 $M.sequelize=sequelize;
@@ -210,7 +210,7 @@ app.use(function *page404(next){//404页面
 
 
 app.listen($M.C.port);
-
+console.log('listen:'+$M.C.port)
 
 
 }

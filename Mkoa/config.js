@@ -7,6 +7,7 @@ module.exports=function(root){
             ,password:''
             ,dbName:'mkoa'
             ,prefix:'mkoa_'
+            ,host:'localhost'
             ,port:3306
         },
         //系统目录

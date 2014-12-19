@@ -55,11 +55,11 @@ module.exports = function(sequelize, DataTypes) {
       fields: ['email']
     },
     {
-      fields: ['gmt_modified']
+      fields: ['updated']
     }
   ],
-  createdAt: 'gmt_create',
-  updatedAt: 'gmt_modified',
+  createdAt: 'create',
+  updatedAt: 'updated',
   charset: 'utf8',
   collate: 'utf8_general_ci',
 });
