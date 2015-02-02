@@ -5,5 +5,6 @@ module.exports = function(mpath){
   var path=mpath+'/functions/'
     return{
         encode:require(path+'encode'),
+        validate:require(path+'validate')
     }
 }

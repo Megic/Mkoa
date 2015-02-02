@@ -7,7 +7,8 @@ var Sequelize = require('sequelize');
 //链接数据库
 var sequelize = new Sequelize(C.mysql.dbName,C.mysql.user,C.mysql.password, {
       dialect: "mysql", 
-      port: C.mysql.port, 
+      port: C.mysql.port,
+      host: C.mysql.host,
       logging: C.logger?console.log:false
     });
 

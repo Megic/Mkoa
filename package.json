@@ -20,8 +20,10 @@
      "moment":"*",
       "mysql": "*",
      "co-fs-plus": "*",
-     "sequelize":"^2.0.0",
-    "underscore": "^1.6.0"
+    "sequelize":"^2.0.0",
+    "underscore": "^1.6.0",
+    "image-size":"*",
+    "koa-memcached":"*"
   },
   "engines": {
     "node": ">= 11.3"

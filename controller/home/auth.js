@@ -54,7 +54,7 @@ module.exports = function($this,$M){
         sms:function *(){
             console.log(1);
             var result = yield $M.request({
-            uri:$M.C.sms
+            uri:$M.C.sms,
             method: 'POST',
             form:{
                  mobile:'15521286598',

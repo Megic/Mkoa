@@ -1,25 +1,294 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'H:\\nodejs\\\\node.exe',
-1 verbose cli   'H:\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'install',
-1 verbose cli   '--save',
-1 verbose cli   'mysql' ]
-2 info using npm@1.4.28
-3 info using node@v0.11.14-nightly-20140819-pre
-4 verbose node symlink H:\nodejs\\node.exe
-5 error Failed to parse json
-5 error Unexpected token '
-6 error File: H:\nodejs\web\Mkoa-dev\package.json
-7 error Failed to parse package.json data.
-7 error package.json must be actual JSON, not just JavaScript.
-7 error
-7 error This is not a bug in npm.
-7 error Tell the package author to fix their package.json file. JSON.parse
-8 error System Windows_NT 6.1.7601
-9 error command "H:\\nodejs\\\\node.exe" "H:\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "--save" "mysql"
-10 error cwd H:\nodejs\web\Mkoa-dev
-11 error node -v v0.11.14-nightly-20140819-pre
-12 error npm -v 1.4.28
-13 error file H:\nodejs\web\Mkoa-dev\package.json
-14 error code EJSONPARSE
-15 verbose exit [ 1, true ]
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install' ]
+2 info using npm@2.0.0
+3 info using node@v0.11.14
+4 warn package.json Mkoa@0.0.1 No repository field.
+5 verbose readDependencies using package.json deps
+6 verbose install where, deps [ '/www/funnybaby',
+6 verbose install   [ 'koa',
+6 verbose install     'koa-static-cache',
+6 verbose install     'koa-body',
+6 verbose install     'koa-favi',
+6 verbose install     'koa-logger',
+6 verbose install     'koa-ejs',
+6 verbose install     'koa-generic-session',
+6 verbose install     'koa-validate',
+6 verbose install     'koa-mysql-session',
+6 verbose install     'koa-json',
+6 verbose install     'koa-csrf',
+6 verbose install     'koa-passport',
+6 verbose install     'passport-local',
+6 verbose install     'co-request',
+6 verbose install     'moment',
+6 verbose install     'mysql',
+6 verbose install     'co-fs-plus',
+6 verbose install     'sequelize',
+6 verbose install     'image-size',
+6 verbose install     'koa-memcached' ] ]
+7 info preinstall Mkoa@0.0.1
+8 warn package.json koa-favi@0.1.0 No repository field.
+9 verbose readDependencies using package.json deps
+10 verbose already installed skipping koa-mysql-session@* /www/funnybaby
+11 verbose already installed skipping koa-json@* /www/funnybaby
+12 verbose already installed skipping koa-csrf@* /www/funnybaby
+13 verbose already installed skipping koa-passport@* /www/funnybaby
+14 verbose already installed skipping passport-local@* /www/funnybaby
+15 verbose already installed skipping co-request@* /www/funnybaby
+16 verbose already installed skipping moment@* /www/funnybaby
+17 verbose already installed skipping mysql@* /www/funnybaby
+18 verbose already installed skipping co-fs-plus@* /www/funnybaby
+19 verbose cache add [ 'sequelize@^2.0.0', null ]
+20 verbose cache add spec="sequelize@^2.0.0" args=["sequelize@^2.0.0",null]
+21 verbose parsed spec { raw: 'sequelize@^2.0.0',
+21 verbose parsed spec   scope: null,
+21 verbose parsed spec   name: 'sequelize',
+21 verbose parsed spec   rawSpec: '^2.0.0',
+21 verbose parsed spec   spec: '>=2.0.0 <3.0.0',
+21 verbose parsed spec   type: 'range' }
+22 verbose already installed skipping image-size@* /www/funnybaby
+23 verbose cache add [ 'koa-memcached@*', null ]
+24 verbose cache add spec="koa-memcached@*" args=["koa-memcached@*",null]
+25 verbose parsed spec { raw: 'koa-memcached@*',
+25 verbose parsed spec   scope: null,
+25 verbose parsed spec   name: 'koa-memcached',
+25 verbose parsed spec   rawSpec: '*',
+25 verbose parsed spec   spec: '*',
+25 verbose parsed spec   type: 'range' }
+26 verbose already installed skipping koa@* /www/funnybaby
+27 verbose already installed skipping koa-static-cache@* /www/funnybaby
+28 verbose parsed spec { raw: 'sequelize@^2.0.0',
+28 verbose parsed spec   scope: null,
+28 verbose parsed spec   name: 'sequelize',
+28 verbose parsed spec   rawSpec: '^2.0.0',
+28 verbose parsed spec   spec: '>=2.0.0 <3.0.0',
+28 verbose parsed spec   type: 'range' }
+29 verbose addNamed [ 'sequelize', '>=2.0.0 <3.0.0' ]
+30 verbose addNamed [ null, '>=2.0.0 <3.0.0' ]
+31 verbose parsed spec { raw: 'koa-memcached@*',
+31 verbose parsed spec   scope: null,
+31 verbose parsed spec   name: 'koa-memcached',
+31 verbose parsed spec   rawSpec: '*',
+31 verbose parsed spec   spec: '*',
+31 verbose parsed spec   type: 'range' }
+32 verbose addNamed [ 'koa-memcached', '*' ]
+33 verbose addNamed [ null, '*' ]
+34 silly lockFile 0baf490d-sequelize-2-0-0-3-0-0 sequelize@>=2.0.0 <3.0.0
+35 verbose lock sequelize@>=2.0.0 <3.0.0 /root/.npm/0baf490d-sequelize-2-0-0-3-0-0.lock
+36 silly lockFile c46305fb-koa-memcached koa-memcached@*
+37 verbose lock koa-memcached@* /root/.npm/c46305fb-koa-memcached.lock
+38 silly addNameRange { name: 'sequelize', range: '>=2.0.0 <3.0.0', hasData: false }
+39 verbose mapToRegistry name sequelize
+40 verbose mapToRegistry uri https://registry.npmjs.org/sequelize
+41 silly addNameRange { name: 'koa-memcached', range: '*', hasData: false }
+42 verbose mapToRegistry name koa-memcached
+43 verbose mapToRegistry uri https://registry.npmjs.org/koa-memcached
+44 verbose already installed skipping koa-body@* /www/funnybaby
+45 verbose already installed skipping koa-favi@* /www/funnybaby
+46 verbose already installed skipping koa-logger@* /www/funnybaby
+47 verbose request on initialization, where is /koa-memcached
+48 verbose request after pass 1, where is /koa-memcached
+49 verbose request url raw /koa-memcached
+50 verbose request resolving registry [ 'https://registry.npmjs.org/', './koa-memcached' ]
+51 verbose request after pass 2, where is https://registry.npmjs.org/koa-memcached
+52 verbose request no auth needed
+53 info attempt registry request try #1 at 17:08:26
+54 verbose request id 47de8eb8f72b2cf1
+55 http request GET https://registry.npmjs.org/koa-memcached
+56 verbose already installed skipping koa-ejs@* /www/funnybaby
+57 verbose already installed skipping koa-generic-session@* /www/funnybaby
+58 verbose already installed skipping koa-validate@* /www/funnybaby
+59 verbose request on initialization, where is /sequelize
+60 verbose request after pass 1, where is /sequelize
+61 verbose request url raw /sequelize
+62 verbose request resolving registry [ 'https://registry.npmjs.org/', './sequelize' ]
+63 verbose request after pass 2, where is https://registry.npmjs.org/sequelize
+64 verbose request no auth needed
+65 info attempt registry request try #1 at 17:08:26
+66 verbose etag "5CLIBH4AZDXR8Z1CAKV0OIKU2"
+67 http request GET https://registry.npmjs.org/sequelize
+68 http 200 https://registry.npmjs.org/sequelize
+69 silly registry.get cb [ 200,
+69 silly registry.get   { date: 'Wed, 07 Jan 2015 09:08:26 GMT',
+69 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+69 silly registry.get     etag: '"4UNONCWKCYXLZ843JX9GHLKM0"',
+69 silly registry.get     'content-type': 'application/json',
+69 silly registry.get     'cache-control': 'max-age=60',
+69 silly registry.get     'content-length': '180085',
+69 silly registry.get     'accept-ranges': 'bytes',
+69 silly registry.get     via: '1.1 varnish',
+69 silly registry.get     age: '0',
+69 silly registry.get     'x-served-by': 'cache-ty68-TYO',
+69 silly registry.get     'x-cache': 'HIT',
+69 silly registry.get     'x-cache-hits': '1',
+69 silly registry.get     'x-timer': 'S1420621706.321965,VS0,VE125',
+69 silly registry.get     vary: 'Accept',
+69 silly registry.get     connection: 'close' } ]
+70 silly addNameRange number 2 { name: 'sequelize', range: '>=2.0.0 <3.0.0', hasData: true }
+71 silly addNameRange versions [ 'sequelize',
+71 silly addNameRange   [ '0.2.2',
+71 silly addNameRange     '0.2.3',
+71 silly addNameRange     '0.2.4',
+71 silly addNameRange     '0.2.5',
+71 silly addNameRange     '0.2.6',
+71 silly addNameRange     '0.3.0',
+71 silly addNameRange     '0.4.0',
+71 silly addNameRange     '0.4.1',
+71 silly addNameRange     '0.4.2',
+71 silly addNameRange     '0.4.3',
+71 silly addNameRange     '1.0.0',
+71 silly addNameRange     '1.0.1',
+71 silly addNameRange     '1.0.2',
+71 silly addNameRange     '1.1.0',
+71 silly addNameRange     '1.1.1',
+71 silly addNameRange     '1.1.2',
+71 silly addNameRange     '1.1.3',
+71 silly addNameRange     '1.1.4',
+71 silly addNameRange     '1.2.0',
+71 silly addNameRange     '1.2.1',
+71 silly addNameRange     '1.3.0',
+71 silly addNameRange     '1.3.1',
+71 silly addNameRange     '1.3.2',
+71 silly addNameRange     '1.3.3',
+71 silly addNameRange     '1.3.4',
+71 silly addNameRange     '1.3.5',
+71 silly addNameRange     '1.3.6',
+71 silly addNameRange     '1.3.7',
+71 silly addNameRange     '1.4.0',
+71 silly addNameRange     '1.4.1',
+71 silly addNameRange     '1.5.0-alpha',
+71 silly addNameRange     '1.5.0-beta',
+71 silly addNameRange     '1.5.0-beta-2',
+71 silly addNameRange     '1.5.0',
+71 silly addNameRange     '1.6.0-alpha-1',
+71 silly addNameRange     '1.6.0-alpha-2',
+71 silly addNameRange     '1.6.0-alpha-3',
+71 silly addNameRange     '1.6.0-beta-1',
+71 silly addNameRange     '1.6.0-beta-2',
+71 silly addNameRange     '1.6.0-beta-3',
+71 silly addNameRange     '1.6.0-beta4',
+71 silly addNameRange     '1.6.0',
+71 silly addNameRange     '1.7.0-alpha1',
+71 silly addNameRange     '1.7.0-alpha2',
+71 silly addNameRange     '2.0.0-alpha1',
+71 silly addNameRange     '2.0.0-alpha2',
+71 silly addNameRange     '1.7.0-alpha3',
+71 silly addNameRange     '2.0.0-alpha3',
+71 silly addNameRange     '1.7.0-beta.0',
+71 silly addNameRange     '2.0.0-beta.0',
+71 silly addNameRange     '1.7.0-beta.1',
+71 silly addNameRange     '2.0.0-beta.1',
+71 silly addNameRange     '1.7.0-beta.2',
+71 silly addNameRange     '2.0.0-beta.2',
+71 silly addNameRange     '1.7.0-beta.3b',
+71 silly addNameRange     '2.0.0-beta.3',
+71 silly addNameRange     '1.7.0-beta.4a',
+71 silly addNameRange     '2.0.0-beta.4',
+71 silly addNameRange     '1.7.0-beta.5',
+71 silly addNameRange     '2.0.0-beta.5',
+71 silly addNameRange     '1.7.0-beta6',
+71 silly addNameRange     '2.0.0-beta.6',
+71 silly addNameRange     '1.7.0-beta7',
+71 silly addNameRange     '2.0.0-beta.7',
+71 silly addNameRange     '2.0.0-beta.8',
+71 silly addNameRange     '1.7.0-beta8',
+71 silly addNameRange     '1.7.0-rc1',
+71 silly addNameRange     '2.0.0-dev1',
+71 silly addNameRange     '1.7.0-rc2',
+71 silly addNameRange     '2.0.0-dev2',
+71 silly addNameRange     '1.7.0-rc3',
+71 silly addNameRange     '2.0.0-dev3',
+71 silly addNameRange     '1.7.0-rc4',
+71 silly addNameRange     '2.0.0-dev4',
+71 silly addNameRange     '2.0.0-dev5',
+71 silly addNameRange     '1.7.0-rc5',
+71 silly addNameRange     '1.7.0-rc6',
+71 silly addNameRange     '2.0.0-dev6',
+71 silly addNameRange     '2.0.0-dev7',
+71 silly addNameRange     '1.7.0-rc7',
+71 silly addNameRange     '2.0.0-dev8',
+71 silly addNameRange     '1.7.0-rc8',
+71 silly addNameRange     '1.7.0-rc9',
+71 silly addNameRange     '2.0.0-dev9',
+71 silly addNameRange     '2.0.0-dev10',
+71 silly addNameRange     '1.7.0',
+71 silly addNameRange     '1.7.1',
+71 silly addNameRange     '1.7.2',
+71 silly addNameRange     '1.7.3',
+71 silly addNameRange     '2.0.0-dev11',
+71 silly addNameRange     '1.7.4',
+71 silly addNameRange     '1.7.5',
+71 silly addNameRange     '1.7.7',
+71 silly addNameRange     '1.7.8',
+71 silly addNameRange     '1.7.9',
+71 silly addNameRange     '2.0.0-dev12',
+71 silly addNameRange     '1.7.10',
+71 silly addNameRange     '2.0.0-dev13',
+71 silly addNameRange     '2.0.0-rc1',
+71 silly addNameRange     '2.0.0-rc2',
+71 silly addNameRange     '2.0.0-rc3',
+71 silly addNameRange     '2.0.0-rc4',
+71 silly addNameRange     '2.0.0-rc5',
+71 silly addNameRange     '2.0.0-rc6' ] ]
+72 silly lockFile 0baf490d-sequelize-2-0-0-3-0-0 sequelize@>=2.0.0 <3.0.0
+73 silly lockFile 0baf490d-sequelize-2-0-0-3-0-0 sequelize@>=2.0.0 <3.0.0
+74 http 200 https://registry.npmjs.org/koa-memcached
+75 silly registry.get cb [ 200,
+75 silly registry.get   { date: 'Wed, 07 Jan 2015 09:08:29 GMT',
+75 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+75 silly registry.get     etag: '"7XUTTJK7T4S7BMJY1CSUUE5CO"',
+75 silly registry.get     'content-type': 'application/json',
+75 silly registry.get     'cache-control': 'max-age=60',
+75 silly registry.get     'content-length': '2812',
+75 silly registry.get     'accept-ranges': 'bytes',
+75 silly registry.get     via: '1.1 varnish',
+75 silly registry.get     age: '0',
+75 silly registry.get     'x-served-by': 'cache-ty67-TYO',
+75 silly registry.get     'x-cache': 'MISS',
+75 silly registry.get     'x-cache-hits': '0',
+75 silly registry.get     'x-timer': 'S1420621709.181045,VS0,VE116',
+75 silly registry.get     vary: 'Accept',
+75 silly registry.get     connection: 'close' } ]
+76 silly addNameRange number 2 { name: 'koa-memcached', range: '*', hasData: true }
+77 silly addNameRange versions [ 'koa-memcached', [ '0.1.1', '0.1.2' ] ]
+78 verbose addNamed [ 'koa-memcached', '0.1.2' ]
+79 verbose addNamed [ '0.1.2', '0.1.2' ]
+80 silly lockFile 2d6508ac-koa-memcached-0-1-2 koa-memcached@0.1.2
+81 verbose lock koa-memcached@0.1.2 /root/.npm/2d6508ac-koa-memcached-0-1-2.lock
+82 silly lockFile b54188b2-emcached-koa-memcached-0-1-2-tgz https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz
+83 verbose lock https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz /root/.npm/b54188b2-emcached-koa-memcached-0-1-2-tgz.lock
+84 verbose addRemoteTarball [ 'https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz',
+84 verbose addRemoteTarball   '1dd76f2fc167b8f69029b2890a8086ebd6547a2f' ]
+85 info retry fetch attempt 1 at 17:08:29
+86 info attempt registry request try #1 at 17:08:29
+87 http fetch GET https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz
+88 http fetch 200 https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz
+89 silly fetchAndShaCheck shasum 1dd76f2fc167b8f69029b2890a8086ebd6547a2f
+90 silly lockFile b54188b2-emcached-koa-memcached-0-1-2-tgz https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz
+91 silly lockFile b54188b2-emcached-koa-memcached-0-1-2-tgz https://registry.npmjs.org/koa-memcached/-/koa-memcached-0.1.2.tgz
+92 silly lockFile 2d6508ac-koa-memcached-0-1-2 koa-memcached@0.1.2
+93 silly lockFile 2d6508ac-koa-memcached-0-1-2 koa-memcached@0.1.2
+94 silly lockFile c46305fb-koa-memcached koa-memcached@*
+95 silly lockFile c46305fb-koa-memcached koa-memcached@*
+96 verbose stack Error: No compatible version found: sequelize@'>=2.0.0 <3.0.0'
+96 verbose stack Valid install targets:
+96 verbose stack ["0.2.2","0.2.3","0.2.4","0.2.5","0.2.6","0.3.0","0.4.0","0.4.1","0.4.2","0.4.3","1.0.0","1.0.1","1.0.2","1.1.0","1.1.1","1.1.2","1.1.3","1.1.4","1.2.0","1.2.1","1.3.0","1.3.1","1.3.2","1.3.3","1.3.4","1.3.5","1.3.6","1.3.7","1.4.0","1.4.1","1.5.0-alpha","1.5.0-beta","1.5.0-beta-2","1.5.0","1.6.0-alpha-1","1.6.0-alpha-2","1.6.0-alpha-3","1.6.0-beta-1","1.6.0-beta-2","1.6.0-beta-3","1.6.0-beta4","1.6.0","1.7.0-alpha1","1.7.0-alpha2","2.0.0-alpha1","2.0.0-alpha2","1.7.0-alpha3","2.0.0-alpha3","1.7.0-beta.0","2.0.0-beta.0","1.7.0-beta.1","2.0.0-beta.1","1.7.0-beta.2","2.0.0-beta.2","1.7.0-beta.3b","2.0.0-beta.3","1.7.0-beta.4a","2.0.0-beta.4","1.7.0-beta.5","2.0.0-beta.5","1.7.0-beta6","2.0.0-beta.6","1.7.0-beta7","2.0.0-beta.7","2.0.0-beta.8","1.7.0-beta8","1.7.0-rc1","2.0.0-dev1","1.7.0-rc2","2.0.0-dev2","1.7.0-rc3","2.0.0-dev3","1.7.0-rc4","2.0.0-dev4","2.0.0-dev5","1.7.0-rc5","1.7.0-rc6","2.0.0-dev6","2.0.0-dev7","1.7.0-rc7","2.0.0-dev8","1.7.0-rc8","1.7.0-rc9","2.0.0-dev9","2.0.0-dev10","1.7.0","1.7.1","1.7.2","1.7.3","2.0.0-dev11","1.7.4","1.7.5","1.7.7","1.7.8","1.7.9","2.0.0-dev12","1.7.10","2.0.0-dev13","2.0.0-rc1","2.0.0-rc2","2.0.0-rc3","2.0.0-rc4","2.0.0-rc5","2.0.0-rc6"]
+96 verbose stack
+96 verbose stack     at installTargetsError (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:258:12)
+96 verbose stack     at next (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:237:17)
+96 verbose stack     at setData (/usr/local/lib/node_modules/npm/lib/cache/add-named.js:214:5)
+96 verbose stack     at saved (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/get.js:167:7)
+96 verbose stack     at Object.oncomplete (fs.js:93:15)
+97 verbose cwd /www/funnybaby
+98 error Linux 2.6.32-431.23.3.el6.x86_64
+99 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install"
+100 error node v0.11.14
+101 error npm  v2.0.0
+102 error code ETARGET
+103 error notarget No compatible version found: sequelize@'>=2.0.0 <3.0.0'
+103 error notarget Valid install targets:
+103 error notarget ["0.2.2","0.2.3","0.2.4","0.2.5","0.2.6","0.3.0","0.4.0","0.4.1","0.4.2","0.4.3","1.0.0","1.0.1","1.0.2","1.1.0","1.1.1","1.1.2","1.1.3","1.1.4","1.2.0","1.2.1","1.3.0","1.3.1","1.3.2","1.3.3","1.3.4","1.3.5","1.3.6","1.3.7","1.4.0","1.4.1","1.5.0-alpha","1.5.0-beta","1.5.0-beta-2","1.5.0","1.6.0-alpha-1","1.6.0-alpha-2","1.6.0-alpha-3","1.6.0-beta-1","1.6.0-beta-2","1.6.0-beta-3","1.6.0-beta4","1.6.0","1.7.0-alpha1","1.7.0-alpha2","2.0.0-alpha1","2.0.0-alpha2","1.7.0-alpha3","2.0.0-alpha3","1.7.0-beta.0","2.0.0-beta.0","1.7.0-beta.1","2.0.0-beta.1","1.7.0-beta.2","2.0.0-beta.2","1.7.0-beta.3b","2.0.0-beta.3","1.7.0-beta.4a","2.0.0-beta.4","1.7.0-beta.5","2.0.0-beta.5","1.7.0-beta6","2.0.0-beta.6","1.7.0-beta7","2.0.0-beta.7","2.0.0-beta.8","1.7.0-beta8","1.7.0-rc1","2.0.0-dev1","1.7.0-rc2","2.0.0-dev2","1.7.0-rc3","2.0.0-dev3","1.7.0-rc4","2.0.0-dev4","2.0.0-dev5","1.7.0-rc5","1.7.0-rc6","2.0.0-dev6","2.0.0-dev7","1.7.0-rc7","2.0.0-dev8","1.7.0-rc8","1.7.0-rc9","2.0.0-dev9","2.0.0-dev10","1.7.0","1.7.1","1.7.2","1.7.3","2.0.0-dev11","1.7.4","1.7.5","1.7.7","1.7.8","1.7.9","2.0.0-dev12","1.7.10","2.0.0-dev13","2.0.0-rc1","2.0.0-rc2","2.0.0-rc3","2.0.0-rc4","2.0.0-rc5","2.0.0-rc6"]
+103 error notarget
+103 error notarget This is most likely not a problem with npm itself.
+103 error notarget In most cases you or one of your dependencies are requesting
+103 error notarget a package version that doesn't exist.
+104 verbose exit [ 1, true ]

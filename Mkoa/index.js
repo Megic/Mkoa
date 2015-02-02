@@ -21,6 +21,7 @@ var koa = require('koa')
   ,json = require('koa-json')//json输出
   ,session = require('koa-generic-session')//session
   ,MysqlStore = require('koa-mysql-session')// mysql存储session  //有时间可以使用sequelize改写
+  ,MemStore = require('koa-memcached')// memcached存储session
  ,Sequelize = require('sequelize');//ORM框架
 
 //===================全局对象===================
@@ -37,7 +38,9 @@ var koa = require('koa')
      * $M.F.moment 时间辅助函数（moment）
      * $M.F.encode md5等函数
      * $M.passport  passport
+     * $M.F.sizeOf 返回图片规格(image-size)
      * $M.request  co-request//发起http请求等
+     * $M.USER  登录后user对象
      */
 
   var $M={};//全局对象
@@ -45,6 +48,7 @@ var koa = require('koa')
   $M.F={};
   $M.F.moment = require('moment');//时间格式化
   $M.F.moment.locale('zh-cn'); //默认中文时间
+  $M.F.sizeOf=require('image-size');//返回图片规格
   var sysFn = require(mpath + '/functions/init')(mpath);
   $M._.extend($M.F, sysFn); //整合方法
   $M.passport = require('koa-passport');//登录验证
@@ -66,35 +70,47 @@ app.use(function* (next) {
     yield next
   } catch(e) {
     console.log(e);
-    return this.body = e.message||e.name||e;//输出错误
+    return this.body ={erro:e.message||e.name||e};//输出错误
   }
 });
 
 
 
-app.use(staticCache($M.C.static+'/', {maxAge: 365 * 24 * 60 * 60}));  //定义静态文件路径
+app.use(staticCache($M.C.static+'/', {maxAge: 365 * 24 * 60 * 60,buffer:true}));  //定义静态文件路径
 app.use(favicon(root+'/favicon.ico'));//favicon处理
 app.use(json());//json输出
-app.use(koaBody({multipart: true,formLimit: 200,formidable:{uploadDir:mpath+'cache',keepExtensions:false,maxFieldsSize:$M.C.maxFieldsSize}}));//body中间件
+app.use(koaBody({multipart: true,formLimit:$M.C.formLimit,formidable:{uploadDir:__dirname,keepExtensions:false,maxFieldsSize:$M.C.maxFieldsSize}}));//body中间件
 app.use(validate());//参数过滤
 
 app.keys = [$M.C.secret];//session支持
 //使用mysql存储session  _mysql_session_store
-app.use(session({
-        key:'Mkoa:sid',
-        prefix:'Mkoa:sess:',
+if($M.C.sessionType==1) {
+    app.use(session({
+        key: 'Mkoa:sid',
+        prefix: 'Mkoa:sess:',
         store: new MysqlStore({
-        user:$M.C.mysql.user,
-        password:$M.C.mysql.password,
-        database:$M.C.mysql.dbName,
-        host:$M.C.mysql.host
+            user: $M.C.mysql.user,
+            password: $M.C.mysql.password,
+            database: $M.C.mysql.dbName,
+            host: $M.C.mysql.host
         }),
-        rolling: true,
+        rolling: false,
         cookie: {
-            maxage:$M.C.maxAge
+            maxage: $M.C.maxAge
         }
-}))
-
+    }))
+}
+if($M.C.sessionType==2) {
+        app.use(session({
+            key: 'Mkoa:sid',
+            prefix: 'Mkoa:sess:',
+            store: new MemStore($M.C.memcached),
+            rolling: false,
+            cookie: {
+                maxage: $M.C.maxAge
+            }
+        }))
+    }
 
 if($M.C.csrf){//开启csrf
 var csrf = require('koa-csrf')//csrf
@@ -132,20 +148,18 @@ app.use($M.passport.session());
 
 //主中间件
 app.use(function *(next){
-
 $M.USER=this.req.user;//登录后user对象
 $M.GET=this.request.query;//get参数
 $M.POST=this.request.body;//post参数
 $M.TPL=this.request.path.slice(1);//当前controller对应的模板
-
 //上传文件处理
-if(this.request.body.files){
+if(this.request.body.files&&this.isAuthenticated()){//登录且包含文件数据
   $M.FILES={};
 for (key in this.request.body.files)
 {
   var key=key;
   var val=this.request.body.files[key];
-      var type=val.type.split('/')[1];
+      var type=val.name.split('.')[1];
     if(type=='jpeg')type='jpg';
     var fileName=val.path.slice(-32);//获取文件名
       $M.FILES[key]=false;
@@ -166,11 +180,13 @@ for (key in this.request.body.files)
       $M.FILES[key]={//返回文件对象
                   name:val.name,
                   type:type,
-                  path:yppath
+                  path:yppath,
+                  size:$M.F.sizeOf(val.path)
                 };
       fs.unlinkSync(val.path);//删除文件
     //****************************远程存储结束**************************
       }else{//本地存储
+
       if(fs.existsSync(newPath)){//判定文件夹是否存在
         fs.renameSync(val.path,newFile);//转移临时文件
       }else{
@@ -179,7 +195,8 @@ for (key in this.request.body.files)
       $M.FILES[key]={//返回文件对象
         name:val.name,
         type:type,
-        path:newFile.replace($M.C.static,'')
+        path:newFile.replace($M.C.static,''),
+        size:$M.F.sizeOf(val.path)
       };
       //****************************本地存储结束**************************
      }
@@ -210,7 +227,7 @@ app.use(function *page404(next){//404页面
 
 
 app.listen($M.C.port);
-console.log('listen:'+$M.C.port)
+
 
 
 }

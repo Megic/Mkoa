@@ -13,7 +13,16 @@ module.exports=function ($M){
             )
           }).success(function (user) {
           if (user&&$M.F.encode.md5(password) == user.password) {//判定密码是否正确
-            done(null, user)
+            done(null,{
+                id:user.id,
+                user:{
+                    id:user.id,
+                    phone:user.phone,
+                    nickname:user.nickname,
+                    imageurl:user.imageurl
+                },
+                curBaby:user.curBaby
+            })
           } else {
             done(null, false)
           }
