@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-   var C = require('../config/config')();
+   var C = require('../../../config/config')();
   return sequelize.define('User', {
   phone: {
     type: DataTypes.BIGINT,
@@ -25,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   },
   name: {
-    type: DataTypes.STRING(20),   
+    type: DataTypes.STRING(20),
     allowNull: true,
     comment: '用户真实姓名',
     validate: {
@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   },
   nickname: {
-    type: DataTypes.STRING(20),    
+    type: DataTypes.STRING(20),
     allowNull: false,
     comment: '用户昵称',
     validate: {
@@ -80,7 +80,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     }
 }, {
-  tableName: C.mysql.prefix+'user',
+  tableName: C.pgsql.prefix+'user',
   comment: '基础用户表',
   indexes: [
     {

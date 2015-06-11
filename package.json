@@ -4,18 +4,16 @@
   "version": "0.0.1",
   "dependencies": {
     "koa": "*",
-    "koa-static-cache": "*",
+    "koa-static": "*",
     "koa-body": "*",
      "koa-favi": "*",
      "koa-logger": "*",
      "koa-ejs":"*",
      "koa-generic-session":"*",
      "koa-validate":"*",
-     "koa-mysql-session":"*",
+     "koa-pg-session":"*",
      "koa-json":"*",
-      "koa-csrf":"*",
-      "koa-passport":"*",
-      "passport-local":"*",
+     "koa-csrf":"*",
       "co-request":"*",
      "moment":"*",
       "mysql": "*",
@@ -23,7 +21,8 @@
     "sequelize":"^2.0.0",
     "underscore": "^1.6.0",
     "image-size":"*",
-    "koa-memcached":"*"
+    "koa-memcached":"*",
+    "koa-file-cache":"*"
   },
   "engines": {
     "node": ">= 11.3"
