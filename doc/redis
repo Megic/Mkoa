@@ -1,0 +1,51 @@
+#!/bin/bash
+# chkconfig: 2345 10 90
+# description: Start and Stop redis
+PATH=/usr/local/bin:/sbin:/usr/bin:/bin
+   
+REDISPORT=6379 #实际环境而定
+EXEC=/www/redis-3.0.3/src/redis-server #实际环境而定
+REDIS_CLI=/www/redis-3.0.3/src/redis-cli #实际环境而定
+PIDFILE=/var/run/redis.pid
+CONF="/www/redis-3.0.3/redis.conf"
+AUTH="ADmegic2015"
+case "$1" in
+    start)
+ echo "$1"
+        if [ -f $PIDFILE ]
+        then
+                echo "$PIDFILE exists, process is already running or crashed"
+        else
+                echo "Starting Redis server..."
+                $EXEC $CONF
+        fi
+        if [ "$?"="0" ] 
+        then
+              echo "Redis is running..."
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+                echo "$PIDFILE does not exist, process is not running"
+        else
+                PID=$(cat $PIDFILE)
+                echo "Stopping ..."
+                $REDIS_CLI -p $REDISPORT -a $AUTH SHUTDOWN 
+                while [ -x ${PIDFILE} ]
+               do
+                    echo "Waiting for Redis to shutdown ..."
+                    sleep 1
+                done
+                echo "Redis stopped"
+        fi
+        ;;
+   restart|reload)
+        ${0} stop
+        ${0} start
+        ;;
+  *)
+    echo "Usage: /etc/init.d/redis {start|stop|restart|reload}" >&2
+        exit 1
+        ;;
+esac

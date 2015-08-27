@@ -1,45 +1,57 @@
 
 module.exports=function(root){
     return {
+        v:'1.0',//版本
         //数据库连接
-        mysql:{
-             user:'mkoa'
-            ,password:'x'
-            ,dbName:'mkoa'
+        sqlType:2,//ORM框架数据库 1 mysql  2 pgsql
+        //mysql:{
+        //    user:'root'
+        //    ,password:''
+        //    ,dbName:'mkoa'
+        //    ,prefix:'mkoa_'
+        //    ,host:'localhost'
+        //},
+        pgsql:{
+             username:'postgres'
+            ,password:'root'
+            ,dbName:'Mkoa'
             ,prefix:'mkoa_'
-            ,host:'x'
+            ,host:'localhost'
+            ,port:5432
         },
         memcached:{
-            host:'x'
+             host:'x'
             ,port:'11211'
             ,username:'x'
             ,password:'x'
         },
+        redis:{
+            host:'127.0.0.1',
+            port:6379,
+            socket:'',
+            db:'',
+            pass:'e6c925a8eeb04856:ADmegic2015'
+        },
         //系统目录
-        sms:'x',
-        models:root+'/models',
-        views:root+'/views',
-        controller:root+'/controller',
-        static:root+'/static',
-        upload:root+'/static/upload',//上传文件夹
-        fileType:['jpg','png','gif'],
-        maxFieldsSize:'2mb',//最大上传文件
-        formLimit:300,//post最大长度
-        useUPYun:true,
+        fileType:['gif','jpg','png'],//允许上传文件的类型
+        maxFieldsSize:1*1024*1024,//最大上传文件
+        formLimit:'1mb',//post最大长度
+        useUPYun:false,
         UPYun:{
              buckname: 'x'
              ,username: 'x'
              ,password: 'x'
         },
         host:{//服务器地址
-            1:'x'//本地存储
+             1:'http://localhost/' //本地存储
             ,2:'x'//又拍云远程
         },
-        sessionType:2,//1mysql 2 memcached
+        sessionType:4,//1pgsql  2memcached 3 mysql 4 redis
         csrf:false,//是否开启csrf验证
         port:80,    //端口设置
-        logger:true,    //输出调试内容
- 
+        logger:true,   //输出调试内容
+        //执行默认模块
+        defaultPath:"login.html"//默认访问路径
     }
 
-}
+};

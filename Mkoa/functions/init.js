@@ -7,4 +7,4 @@ module.exports = function(mpath){
         encode:require(path+'encode'),
         validate:require(path+'validate')
     }
-}
+};

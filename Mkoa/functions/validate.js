@@ -23,7 +23,7 @@ module.exports = {
             //  kr:/^(?:0?[17])(?:\d{9}|\d{8})$/,
             //日本
             // jp:/^(?:0?[789])(?:\d{9}|\d{8})$/*/
-        }
+        };
         var ok=0;
         for (var i in phoneOne) {
             if (phoneOne[i].test(phone)) {
@@ -33,4 +33,4 @@ module.exports = {
         }
         return ok;
     }
-}
+};

@@ -1,0 +1,12 @@
+下载安装看官网
+
+设置密码
+requirepass ADmegic2015
+
+复制启动脚本
+/etc/init.d/redis
+参考附件
+# 开启服务自启动
+chkconfig redis on
+
+service redis start

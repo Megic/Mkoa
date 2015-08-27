@@ -1,0 +1,35 @@
+<form ms-controller="userType" ms-widget="validation">
+    <div class="m-form-group">
+        <label >企业名称</label>
+        <input type="text" class="form-control input-lg" ms-duplex-required="form.company" data-duplex-event="change"  name="company" placeholder="输入企业名称">
+    </div>
+    <div class="m-form-group">
+        <label>所在地</label>
+        <div ms-include-src="app.$tplUrl+'chooseArea.html'" data-include-replace="true"></div>
+    </div>
+    <button type="submit" ms-class="u-btn-c4:isLock"  class="u-btn u-btn-lg f-mt15" >{{isLock?'稍等...':'保存';}}</button>
+    <a href="ucenter.html" class="u-btn u-btn-c4 u-btn-lg f-mt15">以后再填</a>
+</form>
+
+<script>
+    var userType=avalon.define({
+        $id:'userType',
+        isLock:0,
+        form:{company:''},
+        validation: app.$getValidation(function(form){
+            userType.isLock=1;
+            $.post(app.$host+'member/info/add',$(form).serialize(),function(data) {
+                if(data.error){
+                    $.showMsg(data.error,2);
+                    userType.isLock=0;
+                }else{//输入成功
+                    $.showMsg('提交成功！正在跳转...',1);
+                    setTimeout(function(){location.href=app.$root+"ucenter.html";},1000);
+                }
+            });
+        })
+    });
+    userType.$watch("setData", function(form){
+        sys.extend(userType.form,form);
+    });
+</script>

@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
    var C = require('../config/config')();
-  return sequelize.define('User', {
+  return sequelize.define('user',{
   phone: {
     type: DataTypes.BIGINT,
     allowNull: false,
@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     comment: '用户密码'
   },
   email: {
-    type: DataTypes.STRING,     // VARCHAR(255),
+    type: DataTypes.STRING(120),     // VARCHAR(255),
     allowNull: true,
     unique: true,
     comment: '用户邮箱',
@@ -41,7 +41,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   },
     sex: {
-      type: DataTypes.INTEGER(2),
+      type: DataTypes.TINYINT(1),
       allowNull: true,
       comment: '性别',
       validate: {
@@ -49,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     groupid: {
-    type: DataTypes.INTEGER(2),
+    type: DataTypes.TINYINT(2),
     allowNull: false,
     defaultValue: 0,
     comment: '用户组',
@@ -70,11 +70,41 @@ module.exports = function(sequelize, DataTypes) {
       allowNull:true,
       comment: '头像地址'
     },
+    wxopenid: {
+      type: DataTypes.STRING(120),
+      allowNull:true,
+      comment: '微信用户标识'
+    },
+    integral: {
+      type: DataTypes.INTEGER,
+      allowNull:true,
+      comment: '用户积分',
+      validate: {
+        isInt: true //判定是数字
+      }
+    },
+    like: {
+      type: DataTypes.INTEGER,
+      allowNull:true,
+      comment: '关注数',
+      validate: {
+        isInt: true //判定是数字
+      }
+    },
     curBaby: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
       comment: '当前宝宝ID',
+      validate: {
+        isInt: true //判定是数字
+      }
+    },
+    status: {
+      type: DataTypes.TINYINT(2),
+      allowNull: false,
+      defaultValue: 0,
+      comment: '状态',
       validate: {
         isInt: true //判定是数字
       }

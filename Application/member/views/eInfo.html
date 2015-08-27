@@ -1,0 +1,29 @@
+<div class="c-title f-cb">
+    <a href="javascript:history.go(-1);" class="c-back f-fl"><i class="m-ico">&#xe601;</i></a><span class="c-title-h f-fl">修改用户信息</span>
+    <!--<span class="f-fr f-mr10 f-pt5"><a class="u-btn f-fl" href="#">s</a></span>-->
+</div>
+<div ms-controller="member_eInfo">
+    <div class="c-box f-tal f-bc f-mt20 f-wb600 f-p20 f-pt10" ms-include-src="app.$host+'member/userinfo/type'+app.member.groupid+'?'+app.$v"></div>
+</div>
+<script>
+
+    var vm = avalon.define({
+        $id: 'member_eInfo'
+    });
+    var formData='';
+    vm.$watch("getData", function(form){
+        if(!formData) {
+            var loading=layer.load(2);
+            $.getJSON(app.$host + 'member/info/find?' + new Date().getTime(), function (data) { //获取登录用户资料
+                if (!data.error) {
+                    vm.$fire("all!setData", data.data);
+                    formData=data.data;
+                }
+                layer.closeAll('loading');
+            });
+        }else{
+            vm.$fire("all!setData", formData);
+        }
+    });
+
+</script>
