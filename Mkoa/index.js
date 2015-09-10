@@ -80,6 +80,7 @@ module.exports = function (root, mpath) {
         }
     });
     //app.use(cors());
+    /////////////////////////////////////////////////静态文件处理///////////////////////////
     //设置默认访问路径/输出模块静态文件夹内容
     app.use(function *(next) {
         if (this.request.path == '/' && $M.C.defaultPath)this.request.path = $M.C.defaultPath;//设置默认访问路径
@@ -94,6 +95,8 @@ module.exports = function (root, mpath) {
     });
     app.use(statics($M.C.staticpath, {maxAge: 365 * 24 * 60 * 60, buffer: true}));//定义静态文件路径
     app.use(favicon(root + '/favicon.ico'));//favicon处理
+    /////////////////////////////////////////////////静态文件处理.end///////////////////////////
+
     app.use(json());//json输出
     app.use(koaBody({
         multipart: true,
@@ -248,7 +251,7 @@ module.exports = function (root, mpath) {
         };
 //上传文件处理
         //if(this.request.body.files&&this.isAuthenticated()){//登录且包含文件数据
-        if (this.request.body.files) {//登录且包含文件数据
+        if (this.request.body.files) {
             //console.log(this.checkFile('file'));
             $M.FILES = {};
             for (key in this.request.body.files) {
