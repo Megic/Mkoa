@@ -35,12 +35,12 @@ module.exports = function (root, mpath) {
      * $M.POST  POST数据对象
      * $M.FILES  上传文件数据对象
      * $M.sequelize
-     * $M.F.moment 时间辅助函数（moment）
-     * $M.F.encode md5等函数
-     * $M.F.sizeOf 返回图片规格(image-size)
-     * $M.F.getCachePath  返回/创建缓存文件夹
+     * $M['F'].moment 时间辅助函数（moment）
+     * $M['F'].encode md5等函数
+     * $M['F'].V Validator函数
+     * $M['F'].sizeOf 返回图片规格(image-size)
+     * $M['F'].getCachePath  返回/创建缓存文件夹
      * $M.request  co-request//发起http请求等
-     * $M.USER  登录后user对象
      * $M.HOST 访问地址
      */
 
@@ -103,7 +103,7 @@ module.exports = function (root, mpath) {
         formLimit: $M.C.formLimit,
         formidable: {keepExtensions: false, maxFieldsSize: parseInt($M.C.maxFieldsSize), multiples: false}
     }));//body中间件
-    app.use(validate());//参数过滤
+    //app.use(validate());//参数过滤
 /////////////////////////////////////////////////session///////////////////////////
     app.keys = [$M.C.secret];//session支持
     //session配置
@@ -349,7 +349,7 @@ module.exports = function (root, mpath) {
             yield this.render(tpl, data);//渲染模板
         };
         var _404 = false;
-        if (fs.existsSync(_acUrl)) { //判定controller是否存在2
+        if (fs.existsSync(_acUrl)) { //判定controller是否存在
             var SysFuc = require(_acUrl)(this, $M); //加载controller
             if (SysFuc && $M._.isFunction(SysFuc[_action])) {
                 if(!SysFuc['_init'])SysFuc['_init']=function *(){};

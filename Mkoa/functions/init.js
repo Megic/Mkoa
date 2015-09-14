@@ -2,9 +2,9 @@
  * Created by Megic on 14-11-30.
  */
 module.exports = function(mpath){
-  var path=mpath+'/functions/'
+  var path=mpath+'/functions/';
     return{
         encode:require(path+'encode'),
-        validate:require(path+'validate')
+        V:require(path+'validator')
     }
 };
