@@ -13,6 +13,10 @@
     <meta name="apple-mobile-web-app-title" content="Amaze UI" />
     <link rel="stylesheet" href="<%=$STATIC%>css/amazeui.min.css"/>
     <link rel="stylesheet" href="<%=$STATIC%>css/admin.css">
+    <style>
+        .am-modal-bd{overflow-y: scroll;
+            height: 373px;}
+    </style>
 </head>
 <body ms-controller="app">
 <!--[if lte IE 9]>
@@ -53,7 +57,7 @@
             <div class="am-panel am-panel-default admin-sidebar-panel">
                 <div class="am-panel-bd">
                     <p><span class="am-icon-tag"></span> wiki</p>
-                    <p>Welcome to the Amaze UI wiki!</p>
+                    <p>Mkoa sequelizejs通用模型及控制器生成</p>
                 </div>
             </div>
         </div>
@@ -65,7 +69,7 @@
 
         <div class="am-cf am-padding">
             <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">字段</strong> / <small>模型字段</small></div>
-            <div class="am-fr"> <button type="button" class="am-btn am-btn-primary am-btn-sm" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 400, height: 225}"><span class="am-icon-plus"></span> 增加字段</button></div>
+            <div class="am-fr"> <button type="button" class="am-btn am-btn-primary am-btn-sm" data-am-modal="{target: '#doc-modal-1', closeViaDimmer: 0, width: 650, height: 425}"><span class="am-icon-plus"></span> 增加字段</button></div>
         </div>
 
         <div class="am-g">
@@ -99,15 +103,15 @@
                             <td>{{$index}}</td>
                             <td>{{el.name}}</td>
                             <td>{{el.comment}}</td>
-                            <td>{{el.type}}({{el.length}})</td>
+                            <td>{{el.type}}</td>
                             <td>{{el.allowNull}}</td>
                             <td>{{el.defaultValue}}</td>
                             <td>{{JSON.stringify(el.validate)}}</td>
                             <td>
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                                        <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-copy"></span> 复制</button>
+                                        <!--<button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>-->
+                                        <!--<button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-copy"></span> 复制</button>-->
                                         <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" ms-click="$remove"><span class="am-icon-trash-o"></span> 删除</button>
                                     </div>
                                 </div>
@@ -118,19 +122,72 @@
 
                 </form>
             </div>
+            <div class="am-margin">
+                <form class="am-form am-form-horizontal am-input-sm">
+                    <div class="am-form-group">
+                        <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">模型名称/表名</label>
+                        <div class="am-u-sm-10">
+                            <input type="text" id="doc-ipt-3" ms-duplex="modelName" placeholder="小写英文开头：驼峰写法">
+                        </div>
+                    </div>
 
+                    <div class="am-form-group">
+                        <label for="doc-ipt-pwd-2" class="am-u-sm-2 am-form-label">描述</label>
+                        <div class="am-u-sm-10">
+                            <input type="text" id="doc-ipt-pwd-2" ms-duplex="comment" placeholder="中文描述">
+                        </div>
+                    </div>
+                    <div class="am-form-group">
+                        <label class="am-u-sm-2 am-form-label">增加记录字段</label>
+                        <div class="am-u-sm-7">
+                            <select ms-duplex="timestamps">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div> <div class="am-u-sm-3">updatedAt, createdAt</div>
+                    </div>
+                    <div class="am-form-group" ms-if="timestamps==1">
+                        <label class="am-u-sm-2 am-form-label">不删除数据</label>
+                        <div class="am-u-sm-7">
+                            <select ms-duplex="paranoid">
+                                <option value="0">否</option>
+                                <option value="1">是</option>
+                            </select>
+                        </div> <div class="am-u-sm-3 am-text-xs"></div>
+                    </div>
+                    <div class="am-form-group">
+                        <label  class="am-u-sm-2 am-form-label">索引配置</label>
+                        <div class="am-u-sm-10">
+                            <textarea ms-duplex="indexes" id="" cols="30" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="am-form-group">
+                        <label class="am-u-sm-2 am-form-label">文件模块目录</label>
+                        <div class="am-u-sm-10">
+                            <input type="text" ms-duplex="root" >
+                        </div>
+                    </div>
+                    <div class="am-form-group">
+                        <div class="am-u-sm-10 am-u-sm-offset-2">
+                            <button type="button" ms-click="save" class="am-btn am-btn-success">生成文件</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
         </div>
     </div>
     <!-- content end -->
+
 </div>
 
 <div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-1">
     <div class="am-modal-dialog">
-        <div class="am-modal-hd">Modal 标题
+        <div class="am-modal-hd">增加字段
             <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
         </div>
         <div class="am-modal-bd">
-            Modal 内容。本 Modal 无法通过遮罩层关闭。
+            <div ms-include-src="'http://localhost/builder/add'" class="am-margin-top"></div>
         </div>
     </div>
 </div>
@@ -151,13 +208,38 @@
 <script src="<%=$STATIC%>js/app.js"></script>
 <script src="<%=$STATIC%>avalon.min.js"></script>
 <script>
-
+var lock=false;
     var app=avalon.define({
         $id:'app',
-        fields:[
-            {name:'sid',comment:'模型ID',type:1,length:1,allowNull:false,defaultValue:0,validate:['phone','手机号码错误']}
-            ,{name:'sid',comment:'模型ID',type:1,length:1,allowNull:false,defaultValue:0,validate:['phone','手机号码错误']}
-        ]
+        modelName:"",
+        comment:"",
+        indexes:"",
+        timestamps:1,
+        paranoid:0,
+        fields:[],
+        root:'builder',
+        save:function(){
+            if(!lock) {
+                lock=true;
+                $.post("<%=$HOST%>builder/main/buildModel",//生成模型
+                        {
+                            modelName: app.modelName,
+                            comment: app.comment,
+                            indexes: app.indexes,
+                            timestamps: app.timestamps,
+                            paranoid: app.paranoid,
+                            fields: JSON.stringify(app.fields)
+                        },
+                        function (data) {
+                            if (data.error) {
+                                alert(data.error)
+                            } else {
+                                alert('生成成功！')
+                            }
+                            lock=false;
+                        });
+            }
+        }
     });
 </script>
 </body>
