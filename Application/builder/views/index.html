@@ -95,7 +95,7 @@
                     <table class="am-table am-table-striped am-table-hover table-main">
                         <thead>
                         <tr>
-                            <th>ID</th><th>字段名</th><th>字段描述</th><th>字段类型</th><th>是否为空</th><th>默认值</th><th>验证规则</th><th>操作</th>
+                            <th>ID</th><th>字段名</th><th>字段描述</th><th>字段类型</th><th>是否为空</th><th>是否唯一</th><th>默认值</th><th>验证规则</th><th>操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -105,15 +105,17 @@
                             <td>{{el.comment}}</td>
                             <td>{{el.type}}</td>
                             <td>{{el.allowNull}}</td>
+                            <td>{{el.unique}}</td>
                             <td>{{el.defaultValue}}</td>
-                            <td>{{JSON.stringify(el.validate)}}</td>
+                            <td>['{{el.validate.rule}}','{{el.validate.error}}']</td>
                             <td>
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <!--<button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>-->
-                                        <!--<button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span class="am-icon-copy"></span> 复制</button>-->
-                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" ms-click="$remove"><span class="am-icon-trash-o"></span> 删除</button>
-                                    </div>
+                                        <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only" type="button" ms-click="up($index)">上移</button>
+                                        <button class="am-btn am-btn-default am-btn-xs am-hide-sm-only"  type="button" ms-click="down($index)">下移</button>
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-secondary" type="button" ms-click="editor($index)"><span class="am-icon-pencil-square-o"></span> 编辑</button>
+                                        <button class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only" type="button" ms-click="$remove"><span class="am-icon-trash-o"></span> 删除</button>
+                                        </div>
                                 </div>
                             </td>
                         </tr>
@@ -191,6 +193,16 @@
         </div>
     </div>
 </div>
+<div class="am-modal am-modal-no-btn" tabindex="-1" id="doc-modal-2">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">修改
+            <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+        </div>
+        <div class="am-modal-bd">
+            <div ms-include-src="'http://localhost/builder/editor'" class="am-margin-top"></div>
+        </div>
+    </div>
+</div>
 <footer>
     <hr>
     <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
@@ -208,6 +220,36 @@
 <script src="<%=$STATIC%>js/app.js"></script>
 <script src="<%=$STATIC%>avalon.min.js"></script>
 <script>
+    window.extend=function(obj,newobj,isReset){//替换存在属性
+        avalon.each(obj,function(key){
+            if(newobj[key]==0||newobj[key]){
+                if(avalon.isPlainObject(obj[key])){
+                    if(avalon.isPlainObject(newobj[key])&&!isEmpty(newobj[key])){
+                     console.log(obj[key],newobj[key])
+                        extend(obj[key],newobj[key],isReset);
+                    }else{
+                        obj[key]['value'] = newobj[key];
+                    }
+                }else{
+                    obj[key]=newobj[key];
+                }
+            }else{
+                if(isReset){//重置值
+                    obj[key]=isNaN(obj[key])?0:'';
+                }
+            }
+        });
+    };
+    //判断对象是否为空
+    function isEmpty(obj)
+    {
+        for (var name in obj)
+        {
+            return false;
+        }
+        return true;
+    }
+    var $modal = $('#doc-modal-2');
 var lock=false;
     var app=avalon.define({
         $id:'app',
@@ -218,6 +260,27 @@ var lock=false;
         paranoid:0,
         fields:[],
         root:'builder',
+        eindex:0,
+        editor:function(index){
+            app.eindex=index;
+            $modal.modal({width:650,height:422});
+        },
+        up:function(index){
+            var a={};
+            avalon.mix(true,a,app.fields[index]);
+            var b={};
+            avalon.mix(true,b,app.fields[index-1]);
+            extend(app.fields[index],b);
+            extend(app.fields[index-1],a);
+        },
+        down:function(index){
+            var a={};
+            avalon.mix(true,a,app.fields[index]);
+            var b={};
+            avalon.mix(true,b,app.fields[index+1]);
+            extend(app.fields[index],b);
+            extend(app.fields[index+1],a);
+        },
         save:function(){
             if(!lock) {
                 lock=true;
@@ -228,6 +291,7 @@ var lock=false;
                             indexes: app.indexes,
                             timestamps: app.timestamps,
                             paranoid: app.paranoid,
+                            root:app.root,
                             fields: JSON.stringify(app.fields)
                         },
                         function (data) {

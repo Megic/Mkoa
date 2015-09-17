@@ -10,19 +10,12 @@ module.exports = function(sequelize, DataTypes) {
                         defaultValue:'0',
                         unique:0,
                         comment: '名称'
-                      },
-                name2: {
-                        type: DataTypes.STRING(255),
-                        allowNull:0,
-                        defaultValue:'0',
-                        unique:0,
-                        comment: '名称2'
                       }}, {
         tableName: C.pgsql.prefix+'user',
-        comment: '用户表',
+        comment: 'sss',
         timestamps:1,
         indexes:[],
-        paranoid:1,
+        paranoid:0,
         charset: 'utf8',
         collate: 'utf8_general_ci'
     });

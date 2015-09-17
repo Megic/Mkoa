@@ -4,6 +4,7 @@
 
 module.exports = function($this,$M){
     var fs = require('fs');
+    var fscp = require('co-fs-plus');//文件夹等操作
     var main={};
 
     main['_init']=function *(){//先执行的公共函数不会被缓存部分
@@ -40,12 +41,17 @@ module.exports = function($this,$M){
              res=res.replace('{{indexes}}',$M['POST'].indexes?$M['POST'].indexes:'[]');
              res=res.replace('{{paranoid}}',$M['POST'].paranoid);
              res=res.replace('{{fields}}',fieldsARR);
-            fs.writeFile($M.ROOT + '/' + $M.C.application + '/' + $M['POST'].root + '/models/'+$M['POST'].modelName+'.js',res, function (error) {
-                if (error)console.log('生成模型失败');
-            });
+            var modelPath=$M.ROOT + '/' + $M.C.application + '/' + $M['POST'].root + '/models/';
+            if (fs.existsSync(modelPath) || (yield fscp.mkdirp(modelPath, '0755'))) {//判定文件夹是否存在
+                fs.writeFile(modelPath+$M['POST'].modelName+'.js',res, function (error) {
+                    if (error)console.log('生成模型失败');
+                });
+            }
+            if (fs.existsSync($M.modulePath+'data/') || (yield fscp.mkdirp($M.modulePath+'data/', '0755'))) {//判定文件夹是否存在
             fs.writeFile($M.modulePath+'data/'+$M['POST'].modelName+'.js','module.exports='+JSON.stringify($M['POST'])+';', function (error) {
                 if (error)console.log('保存数据文件');
             });
+            }
             $this.success('生成模型成功!');
 
         }else{

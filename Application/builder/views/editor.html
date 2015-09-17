@@ -1,23 +1,23 @@
-<div ms-controller="add">
+<div ms-controller="editor" ms-if="fields.length>0">
     <form class="am-form am-form-horizontal am-form-group-sm">
         <div class="am-form-group">
             <label for="doc-ipt-3" class="am-u-sm-2 am-form-label">字段名</label>
             <div class="am-u-sm-7">
-                <input type="text" id="doc-ipt-3" ms-duplex="form.name" >
+                <input type="text" id="doc-ipt-3" ms-duplex="fields[eindex].name" >
             </div> <div class="am-u-sm-3 am-text-xs"></div>
         </div>
 
         <div class="am-form-group">
             <label for="doc-ipt-pwd-2" class="am-u-sm-2 am-form-label">字段描述</label>
             <div class="am-u-sm-7">
-                <input type="text" id="doc-ipt-pwd-2"  ms-duplex="form.comment">
+                <input type="text" id="doc-ipt-pwd-2"  ms-duplex="fields[eindex].comment">
             </div>
             <div class="am-u-sm-3 am-text-xs"></div>
         </div>
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">字段类型</label>
             <div class="am-u-sm-7">
-                <input type="text" ms-duplex="form.type" >
+                <input type="text" ms-duplex="fields[eindex].type" >
                 <div class="am-text-left am-padding-top-sm">
                     <button type="button" ms-click="chooseType('STRING(255)')" class="am-btn am-btn-primary am-btn-xs">STRING(255)</button>
                     <button type="button" ms-click="chooseType('CHAR(30)')" class="am-btn am-btn-primary am-btn-xs">CHAR(30)</button>
@@ -39,7 +39,7 @@
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">允许为空</label>
             <div class="am-u-sm-7">
-                <select ms-duplex="form.allowNull">
+                <select ms-duplex="fields[eindex].allowNull">
                     <option value="0">否</option>
                     <option value="1">是</option>
                 </select>
@@ -48,7 +48,7 @@
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">是否唯一</label>
             <div class="am-u-sm-7">
-                <select ms-duplex="form.unique">
+                <select ms-duplex="fields[eindex].unique">
                     <option value="0">否</option>
                     <option value="1">是</option>
                 </select>
@@ -57,24 +57,24 @@
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">默认值</label>
             <div class="am-u-sm-7">
-                <input type="text"  ms-duplex="form.defaultValue">
+                <input type="text"  ms-duplex="fields[eindex].defaultValue">
             </div> <div class="am-u-sm-3 am-text-xs"></div>
         </div>
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">验证规则</label>
             <div class="am-u-sm-7">
-                <input type="text" ms-duplex="form.validate.rule" >
+                <input type="text" ms-duplex="fields[eindex].validate.rule" >
             </div> <div class="am-u-sm-3 am-text-xs">写法参加</div>
         </div>
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">错误提示</label>
             <div class="am-u-sm-7">
-                <input type="text" ms-duplex="form.validate.error" >
+                <input type="text" ms-duplex="fields[eindex].validate.error" >
             </div> <div class="am-u-sm-3 am-text-xs">验证失败后的提示</div>
         </div>
         <div class="am-form-group">
             <div class="am-u-sm-12">
-                <button type="button" ms-click="add" class="am-btn  am-btn-success">提交</button>
+                <button type="button" ms-click="add" class="am-btn  am-btn-success">保存</button>
             </div>
         </div>
     </form>
@@ -82,14 +82,14 @@
 </div>
 <script>
 
-    var vm=avalon.define({
-        $id:'add',
-        form:{name:'',comment:'',type:'',allowNull:0,unique:0,defaultValue:'0',validate:{rule:'required',error:'验证失败!'}},
+    var editor=avalon.define({
+        $id:'editor',
         chooseType:function(str){
-            vm.form.type=str;
+            avalon.vmodels['app'].fields[avalon.vmodels['app'].eindex].type=str;
         },
         add:function(){
-            avalon.vmodels['app'].fields.push(vm.form.$model);
+
+            $('#doc-modal-2').modal('close');
         }
     });
 
