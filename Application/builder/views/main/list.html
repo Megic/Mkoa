@@ -1,0 +1,119 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Mkoa 通用模型生成器</title>
+    <meta name="keywords" content="table">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="<%=$STATIC%>i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="<%=$STATIC%>css/amazeui.min.css"/>
+    <link rel="stylesheet" href="<%=$STATIC%>css/admin.css">
+    <style>
+        .am-modal-bd{overflow-y: scroll;
+            height: 373px;}
+    </style>
+</head>
+<body ms-controller="app">
+<!--[if lte IE 9]>
+<p class="browsehappy">你正在使用<strong>过时</strong>的浏览器， 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
+    以获得更好的体验！</p>
+<![endif]-->
+
+<header class="am-topbar admin-header">
+    <div class="am-topbar-brand">
+        <strong>Mkoa</strong> <small>通用模型生成器</small>
+    </div>
+
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+        </ul>
+    </div>
+</header>
+
+<div class="am-cf admin-main">
+    <!-- sidebar start -->
+    <div class="admin-sidebar am-offcanvas" id="admin-offcanvas" ms-include-src="'<%=$HOST%>builder/menu'"></div>
+    <!-- sidebar end -->
+
+    <!-- content start -->
+    <div class="admin-content">
+
+        <div class="am-cf am-padding">
+            <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">模型</strong> / <small>模型列表</small></div>
+        </div>
+
+        <div class="am-g">
+
+        </div>
+
+        <div class="am-g">
+            <div class="am-u-sm-12">
+                <form class="am-form">
+                    <table class="am-table am-table-striped am-table-hover table-main">
+                        <thead>
+                        <tr>
+                            <th>ID</th><th>模型文件</th><th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ms-repeat="list">
+                            <td>{{$index}}</td>
+                            <td>{{el}}</td>
+                            <td>
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a ms-attr-href="'<%=$HOST%>builder/main/eModel?file='+el" class="am-btn am-btn-default am-btn-xs am-hide-sm-only" type="button" ms-click="editor(el)">重新编辑</a>
+                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!-- content end -->
+
+</div>
+
+
+<footer>
+    <hr>
+    <p class="am-padding-left">© 2014 AllMobilize, Inc. Licensed under MIT license.</p>
+</footer>
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="<%=$STATIC%>js/amazeui.ie8polyfill.min.js"></script>
+<![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="<%=$STATIC%>js/jquery.min.js"></script>
+<!--<![endif]-->
+<script src="<%=$STATIC%>js/amazeui.min.js"></script>
+<script src="<%=$STATIC%>js/app.js"></script>
+<script src="<%=$STATIC%>avalon.min.js"></script>
+<script>
+    var app=avalon.define({
+        $id:'app',
+        list:<%-dirList%>,
+        editor:function(index){
+            app.eindex=index;
+            $modal.modal({width:650,height:422});
+        }
+    });
+</script>
+</body>
+</html>

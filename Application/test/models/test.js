@@ -3,16 +3,16 @@
 */
 module.exports = function(sequelize, DataTypes) {
     var C = require('../../../config/config')();
-    return sequelize.define('user',{
+    return sequelize.define('test',{
                 name: {
                         type: DataTypes.STRING(255),
                         allowNull:0,
                         defaultValue:'0',
                         unique:0,
-                        comment: '用户名'
+                        comment: 'hah'
                       }}, {
-        tableName: C.pgsql.prefix+'user',
-        comment: '用户表',
+        tableName: C.pgsql.prefix+'test',
+        comment: '测试',
         timestamps:1,
         indexes:[],
         paranoid:0,

@@ -12,6 +12,14 @@ module.exports = function($this,$M){
     main['_after']=function *(){//后行的公共函数
         //console.log('公共头部');
     };
+    main['eModel']=function *(){
+       var data=require($M.modulePath+'data/'+$M.GET['file']);
+        yield $this.display(data);
+    };
+    main['list']=function *(){//模型列表
+        var dirList = fs.readdirSync($M.modulePath+'data');
+        yield $this.display({dirList:JSON.stringify(dirList)});
+    };
     main['buildModel']=function *(){
         $M['POST']['fields']=JSON.parse($M['POST']['fields']);
         var rules = {
@@ -59,36 +67,37 @@ module.exports = function($this,$M){
         }
 
     };
-    main['index']=function *(){
+    main['buildController']=function *(){
+        $M['POST']['fields']=JSON.parse($M['POST']['fields']);
+        var rules = {
+            modelName:['required|string','模型名称有误']
+        };
+        var r=$M['F'].V.validate($M['POST'], rules);
+        if(r.status==1&&$M['POST']['fields'].length>0){
+            var fieldsARR='{';
+            var len= $M['POST']['fields'].length;
+            //生成字段
+            for(var i=0; i<len; i++){
+                if(i)fieldsARR+=',';
+                fieldsARR+=`
+                ${$M['POST']['fields'][i].name}: {rule:'${$M['POST']['fields'][i].validate.rule}',error:'${$M['POST']['fields'][i].validate.error}'}`;
+            }
+            fieldsARR+='}';
+            var res=fs.readFileSync($M.modulePath+'lib/controller.tpl','utf-8');
+            res=res.replace(/{{name}}/g,$M['POST'].modelName);
+            res=res.replace('{{rules}}',fieldsARR);
+            var modelPath=$M.ROOT + '/' + $M.C.application + '/' + $M['POST'].root + '/controller/';
+            if (fs.existsSync(modelPath) || (yield fscp.mkdirp(modelPath, '0755'))) {//判定文件夹是否存在
+                fs.writeFile(modelPath+$M['POST'].modelName+'.js',res, function (error) {
+                    if (error)console.log('生成控制器失败');
+                });
+            }
+            $this.success('成功生成控制器!');
 
-        var person = {
-                name: 'Peter',
-                phone: '15521286598x',
-                email: 'peterexample.com',
-                age: 24,
-                gendar: 'male',
-                hobbies: ['coding', 'singing', 'movies'],
-                studentId: 'X2345678',
-                contact: '',
-                smilie: '{doge}'
-            },
+        }else{
+            $this.error('数据有误');
+        }
 
-            rules = {
-                name:['required|string','验证错误'],
-                phone:['phone','手机号码错误'],
-                email:['required_without:phone|email'],
-                gendar:['in:male,female'],
-                age:['integer|between:0,120|older_than:17'],
-                hobbies:['array'],
-                studentId:['alpha_num|size:8'],
-                contact:['required_without:phone,email'],
-                smilie:['regex:^{([a-z]*)}$']
-            };
-
-
-        var ss=$M['F'].V.validate(person, rules);
-
-        console.log(rules[ss.rejects[0].field]);
     };
 
     return main;

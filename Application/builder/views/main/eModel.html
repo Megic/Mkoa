@@ -220,13 +220,13 @@
 var lock=false;
     var app=avalon.define({
         $id:'app',
-        modelName:"",
-        comment:"",
-        indexes:"",
-        timestamps:1,
-        paranoid:0,
-        fields:[],
-        root:'builder',
+        modelName:"<%-modelName%>",
+        comment:"<%-comment%>",
+        indexes:"<%-indexes%>",
+        timestamps:<%-timestamps%>,
+        paranoid:<%-paranoid%>,
+        fields:<%-JSON.stringify(fields)%>,
+        root:'<%-root%>',
         eindex:0,
         editor:function(index){
             app.eindex=index;
