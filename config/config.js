@@ -46,7 +46,7 @@ module.exports=function(root){
              1:'http://localhost/' //本地存储
             ,2:'x'//又拍云远程
         },
-        sessionType:4,//1pgsql  2memcached 3 mysql 4 redis
+        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
         csrf:false,//是否开启csrf验证
         port:80,    //端口设置
         logger:true,   //输出调试内容

@@ -39,18 +39,18 @@
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">允许为空</label>
             <div class="am-u-sm-7">
-                <select ms-duplex="fields[eindex].allowNull">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
+                <select ms-duplex-boolean="fields[eindex].allowNull">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
                 </select>
             </div> <div class="am-u-sm-3 am-text-xs"></div>
         </div>
         <div class="am-form-group">
             <label class="am-u-sm-2 am-form-label">是否唯一</label>
             <div class="am-u-sm-7">
-                <select ms-duplex="fields[eindex].unique">
-                    <option value="0">否</option>
-                    <option value="1">是</option>
+                <select ms-duplex-boolean="fields[eindex].unique">
+                    <option value="false">否</option>
+                    <option value="true">是</option>
                 </select>
             </div> <div class="am-u-sm-3 am-text-xs"></div>
         </div>

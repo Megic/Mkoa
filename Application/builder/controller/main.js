@@ -20,12 +20,15 @@ module.exports = function($this,$M){
         var dirList = fs.readdirSync($M.modulePath+'data');
         yield $this.display({dirList:JSON.stringify(dirList)});
     };
+    //生成模型文件
     main['buildModel']=function *(){
         $M['POST']['fields']=JSON.parse($M['POST']['fields']);
         var rules = {
-            modelName:['required|string','模型名称有误']
+            modelName:{rule:'required|string',error:'模型名称有误'}
         };
+
         var r=$M['F'].V.validate($M['POST'], rules);
+
         if(r.status==1&&$M['POST']['fields'].length>0){
             var fieldsARR='{';
             var len= $M['POST']['fields'].length;
@@ -67,10 +70,11 @@ module.exports = function($this,$M){
         }
 
     };
+    //生成控制器
     main['buildController']=function *(){
         $M['POST']['fields']=JSON.parse($M['POST']['fields']);
         var rules = {
-            modelName:['required|string','模型名称有误']
+            modelName:{rule:'required|string',error:'模型名称有误'}
         };
         var r=$M['F'].V.validate($M['POST'], rules);
         if(r.status==1&&$M['POST']['fields'].length>0){

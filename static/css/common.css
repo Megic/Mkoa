@@ -1,0 +1,20 @@
+/*************************************************数据列表页样式************************/
+.mkoa-box{background-color: #fff;}
+.list-title{ margin: 0;padding: 0;padding-left: 10px;float: left;}
+/* 简易数据表格-格边框 */
+.mkoa-table{table-layout:fixed;width:100%;line-height:1.5;}
+.mkoa-table th,.mkoa-table td{padding:10px;border:1px solid #ddd;}
+.mkoa-table th{font-weight:bold;}
+.mkoa-table tbody tr:nth-child(2n){background:#fafafa;}
+.mkoa-table tbody tr:hover{background:#f0f0f0;}
+.mkoa-table .cola{width:100px;}
+.mkoa-table .colb{width:200px;}
+/* 简易数据表格-行边框*/
+.mkoa-table-row th,.mkoa-table-row td{border-width:0 0 1px;}
+/* 简易数据表格-圆角*/
+.mkoa-table-rds{border-collapse:separate;border:1px solid #ddd;border-width:0 1px 1px 0;border-radius:5px;}
+.mkoa-table-rds th,.mkoa-table-rds td{border-width:1px 0 0 1px;}
+.mkoa-table-rds > :first-child > :first-child > :first-child{border-top-left-radius:5px;}
+.mkoa-table-rds > :first-child > :first-child > :last-child{border-top-right-radius:5px;}
+.mkoa-table-rds > :last-child > :last-child > :first-child{border-bottomkoa-left-radius:5px;}
+.mkoa-table-rds > :last-child > :last-child > :last-child{border-bottomkoa-right-radius:5px;}

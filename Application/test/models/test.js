@@ -6,9 +6,9 @@ module.exports = function(sequelize, DataTypes) {
     return sequelize.define('test',{
                 name: {
                         type: DataTypes.STRING(255),
-                        allowNull:0,
+                        allowNull:false,
                         defaultValue:'0',
-                        unique:0,
+                        unique:false,
                         comment: 'hah'
                       }}, {
         tableName: C.pgsql.prefix+'test',

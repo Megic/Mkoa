@@ -109,18 +109,18 @@
                     <div class="am-form-group">
                         <label class="am-u-sm-2 am-form-label">增加记录字段</label>
                         <div class="am-u-sm-7">
-                            <select ms-duplex="timestamps">
-                                <option value="0">否</option>
-                                <option value="1">是</option>
+                            <select ms-duplex-boolean="timestamps">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
                             </select>
                         </div> <div class="am-u-sm-3">updatedAt, createdAt</div>
                     </div>
                     <div class="am-form-group" ms-if="timestamps==1">
                         <label class="am-u-sm-2 am-form-label">不删除数据</label>
                         <div class="am-u-sm-7">
-                            <select ms-duplex="paranoid">
-                                <option value="0">否</option>
-                                <option value="1">是</option>
+                            <select ms-duplex-boolean="paranoid">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
                             </select>
                         </div> <div class="am-u-sm-3 am-text-xs"></div>
                     </div>
@@ -223,8 +223,8 @@ var lock=false;
         modelName:"",
         comment:"",
         indexes:"",
-        timestamps:1,
-        paranoid:0,
+        timestamps:true,
+        paranoid:false,
         fields:[],
         root:'builder',
         eindex:0,
@@ -276,8 +276,8 @@ var lock=false;
                                 alert(data.error)
                             } else {
                                 alert('生成控制器成功！');
-                                lock=false;
                             }
+                            lock=false;
                         });
             }
         }

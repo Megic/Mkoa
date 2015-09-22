@@ -542,7 +542,7 @@
   // Breakdown validation rules and run tests.
   var validate = function (object, _rules) {
     for(var field in _rules) {
-      var ruleValue = _rules[field].rule,
+      var ruleValue = _rules[field][0],
           rules;
       if(Utils.typeof(ruleValue) === 'object' && field in object) {
         if(validate.apply(this, [object[field], _rules[field]]) || this.config.resumeOnFailed)
@@ -576,7 +576,7 @@
         object = JSON.parse(object);
       } catch (e) {
         return {
-          status: 0,
+          status: '0',
           rejects: [{object: 'Invalid JSON string!'}]
         };
       }
@@ -584,7 +584,7 @@
     rejects = [];
     validate.apply(this, [object, rules]);
     return {
-      status: !rejects.length ? 1 : 0,
+      status: !rejects.length ? '1' : '0',
       rejects: rejects
     };
   };
