@@ -13,7 +13,7 @@ define(["avalon","mkoaAjax/mkoaAjax","css!./mkoa.pager.css"], function (avalon,$
         url:"",//数据获取地址
         list: "",
         listData:[],
-        perPages: 20, //@config {Number} 每页包含多少条目
+        perPages: 10, //@config {Number} 每页包含多少条目
         showPages: 10, //@config {Number} 中间部分一共要显示多少页(如果两边出现省略号,即它们之间的页数)
         currentPage: 0, //@config {Number} 当前选中的页面 (按照人们日常习惯,是从1开始)，它会被高亮
         totalItems: 0, //@config {Number} 总条目数
@@ -59,7 +59,8 @@ define(["avalon","mkoaAjax/mkoaAjax","css!./mkoa.pager.css"], function (avalon,$
                 var option={};
                 option['currentPage']=vm.currentPage;//当前页码
                 option['perPages']=vm.perPages;//每页页数
-                $a.getJSON(vm.url+'?'+new Date().getTime(),option,function(data){//获取列表数据
+                option['t']=new Date().getTime();
+                $a.getJSON(vm.url,option,function(data){//获取列表数据
                     if(!data.error){
                         vm.totalItems=data.data.count;
                         vm.listData=data.data.rows;
