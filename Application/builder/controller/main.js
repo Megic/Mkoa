@@ -62,6 +62,22 @@ module.exports = function($this,$M){
             if (fs.existsSync($M.modulePath+'data/') || (yield fscp.mkdirp($M.modulePath+'data/', '0755'))) {//判定文件夹是否存在
             fs.writeFileSync($M.modulePath+'data/'+$M['POST'].modelName+'.js','module.exports='+JSON.stringify($M['POST'])+';');
             }
+            yield $M.D($M['POST'].root+':'+$M['POST'].modelName).sync({force: true});//写入数据表
+            //编辑安装锁
+            var filePath=$M.ROOT+'/install.json';
+            var modelData=[];
+            if(fs.existsSync(filePath)){
+                var res=fs.readFileSync(filePath,'utf-8');
+                if(res)modelData=JSON.parse(res);
+            }else{
+                fs.writeFile(filePath,JSON.stringify(modelData), function (error) {
+                    if (error)console.log('生成install.json文件失败！');
+                    console.log('生成install.json文件');
+                });
+            }
+            if(modelData.indexOf($M['POST'].modelName+'.js')==-1) modelData.push($M['POST'].modelName+'.js');
+            fs.writeFileSync(filePath,JSON.stringify(modelData));
+
             $this.success('生成模型成功!');
 
         }else{
