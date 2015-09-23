@@ -1,3 +1,83 @@
+/*************************************************后台index框架样式************************/
+ul,li{
+    padding: 0;
+    margin: 0;}
+/* 全屏自适应布局  */
+html,body{width:100%;height:100%;overflow:hidden;margin:0;
+    background-color: #ebeef1;}
+html{_height:auto;_padding:50px 0 0px;}
+.g-hd,.g-sd,.g-mn,.g-ft{position:absolute;left:0;}
+.g-hd,.g-ft{width:100%;}
+.g-sd,.g-mn{top:51px;bottom:0px;_height:100%;
+    overflow: hidden;overflow-y:auto;}
+.g-hd{top:0;height:50px;}
+
+.g-mn{_position:relative;left:180px;right:0;_top:0;_left:0;_margin-left:180px;overflow:auto;transition: left .1s ease-in-out;
+    z-index: 2;
+    background-color: #ebeef1;}
+.g-sd{
+    width: 180px;
+    background-color: #303641;
+    z-index: 0;}
+.closemenu .g-mn{
+    left: 0;_margin-left:0px;}
+
+#top{
+    background-color: #fff;
+    border-bottom: 1px solid #e9e9e9;}
+.logo{
+    display: block;
+    height: 50px;
+    text-decoration: none;
+    overflow: hidden;
+    width: 179px;}
+.logo img{
+    margin-left: 10px;height: 50px;}
+.m-top-nav{
+    height: 50px;
+    line-height: 50px;cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    float: left;
+    color: #666;
+    text-decoration: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    border-left: 1px solid #eee;}
+.m-top-nav i{
+    font-size: 20px;}
+.m-top-nav:hover{
+    background-color:#ec651a;
+    color:#fff}
+.m-menu li{
+    font-size: 0;
+    display: block;
+    *display: inline-block;}
+.m-menu .m-menu-title{
+    font-size: 16px;
+    line-height: 42px;
+    height: 42px;
+    background-color: #6c889b;
+    color: #fff;}
+.m-menu-a{line-height: 42px;
+    height: 42px; color: #fff;
+    font-size: 14px;
+    display: block;
+    white-space: nowrap;
+    padding-left: 10px;
+    text-decoration: none;}
+.m-menu-a.on,.m-menu-a:hover{
+    background-color: #ebeef1;
+    color: #666;}
+
+.logo span{
+    font-size: 26px;
+    display: block;
+    text-align: center;
+    line-height: 50px;
+    font-weight: bold;
+    color: #444;}
 /*************************************************数据列表页样式************************/
 .mkoa-box{background-color: #fff;}
 .list-title{ margin: 0;padding: 0;padding-left: 10px;float: left;}
@@ -18,3 +98,18 @@
 .mkoa-table-rds > :first-child > :first-child > :last-child{border-top-right-radius:5px;}
 .mkoa-table-rds > :last-child > :last-child > :first-child{border-bottomkoa-left-radius:5px;}
 .mkoa-table-rds > :last-child > :last-child > :last-child{border-bottomkoa-right-radius:5px;}
+
+/*******************************编辑表单**********************************************/
+.mkoa-form{
+    width: 100%;
+    font-size: 14px;}
+.mkoa-form-title{
+    font-weight: bold;
+    display: block;
+    text-align: right;
+    padding-right: 8px;}
+.mkoa-form td{
+    padding: 5px;
+    border: 1px solid #eee;}
+.mkoa-form td input,.mkoa-form td select{
+    max-width: 300px;}

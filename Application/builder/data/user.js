@@ -1,1 +1,1 @@
-module.exports={"modelName":"user","comment":"用户表","indexes":"","timestamps":"1","paranoid":"0","root":"builder","fields":[{"name":"name","comment":"用户名","type":"STRING(255)","allowNull":0,"unique":0,"defaultValue":"0","validate":{"rule":"required","error":"验证失败!"}}]};
+module.exports={"modelName":"user","comment":"用户表","indexes":"","timestamps":"true","paranoid":"false","root":"news","fields":[{"name":"name","comment":"名字","type":"STRING(255)","allowNull":false,"unique":false,"defaultValue":"0","validate":{"rule":"required","error":"验证失败!"}}]};

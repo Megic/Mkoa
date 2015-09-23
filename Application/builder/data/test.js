@@ -1,1 +1,0 @@
-module.exports={"modelName":"test","comment":"测试","indexes":"","timestamps":"1","paranoid":"0","root":"test","fields":[{"name":"name","comment":"hah","type":"STRING(255)","allowNull":false,"unique":false,"defaultValue":"0","validate":{"rule":"required","error":"验证失败!"}}]};

@@ -11,7 +11,7 @@ define(["avalon","mkoaAjax/mkoaAjax","css!./mkoa.pager.css"], function (avalon,$
     };
     avalon.component("mkoa:pager", {
         url:"",//数据获取地址
-        list: "",
+        $list: "",
         listData:[],
         perPages: 10, //@config {Number} 每页包含多少条目
         showPages: 10, //@config {Number} 中间部分一共要显示多少页(如果两边出现省略号,即它们之间的页数)
@@ -31,7 +31,7 @@ define(["avalon","mkoaAjax/mkoaAjax","css!./mkoa.pager.css"], function (avalon,$
         //插件模板
         $template: heredoc(function (vm) {
             /*
-             {{list|html}}
+             {{$list|html}}
              <p class="mkoa-pager-empty" ms-if="!totalItems">{{empty}}</p>
              <div class="mkoa-pager" ms-if="totalItems">
              <span  ms-click="changePage(currentPage-1)" class="mkoa-pager-button" ms-class="mkoa-pager-lock:currentPage==1">{{prevText}}</span>
@@ -45,6 +45,7 @@ define(["avalon","mkoaAjax/mkoaAjax","css!./mkoa.pager.css"], function (avalon,$
              */
         }),
         $init:function(vm){
+
             //修改当前页面
             vm.changePage=function(index){
                 if(index>0&&index<=vm.totalPages)vm.currentPage=index;

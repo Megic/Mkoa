@@ -269,15 +269,24 @@ var lock=false;
                                 alert('生成模型成功！');
                             }
                         });
-                $.post("<%=$HOST%>builder/main/buildController",//生成模型
+                $.post("<%=$HOST%>builder/main/buildController",//生成控制器
                         postdata,
                         function (data) {
                             if (data.error) {
                                 alert(data.error)
                             } else {
                                 alert('生成控制器成功！');
-                                lock=false;
                             }
+                        });
+                $.post("<%=$HOST%>builder/main/buildViews",//生成视图
+                        postdata,
+                        function (data) {
+                            if (data.error) {
+                                alert(data.error)
+                            } else {
+                                alert('生成视图成功！');
+                            }
+                            lock=false;
                         });
             }
         }

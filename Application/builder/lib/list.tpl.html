@@ -1,0 +1,30 @@
+<div class="f-cb f-mb10"><h3 class="list-title">{{%name%}}数据</h3> <span class="f-fr"><a href="#!/?{{%mroot%}}/{{%name%}}/addItem" class="f-btn f-btn-success">增加数据</a></span></div>
+<div class="mkoa-box"  ms-controller="{{%name%}}-list">
+    <mkoa:pager  ms-attr-url="app.$host+'{{%mroot%}}/{{%name%}}/findAll'">
+        <table slot="$list" class="mkoa-table">
+            <thead>
+            <tr><th width="30">ID</th>{{%titleSTR%}}<th width="100">操作</th></tr>
+            </thead>
+            <tbody>
+            <tr ms-repeat="listData"><td>{{el.id}}</td>{{%listSTR%}}
+           <td><a ms-attr-href="'#!/?{{%mroot%}}/{{%name%}}/addItem?id='+el.id"  class="f-btn f-btn-sm">编辑</a> <button  ms-click="remove($remove,el.id)" class="f-btn f-btn-sm">删除</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </mkoa:pager>
+</div>
+<script>
+    require(["mkoaAjax/mkoaAjax","mkoaPager/mkoaPager"], function ($a){
+       avalon.define({
+            $id:'{{%name%}}-list',
+            remove:function($remove,id){
+                $a.getJSON(app.$host +'{{%mroot%}}/{{%name%}}/delete',{id:id},function(data){//删除数据
+                    if(!data.error){
+                        $remove();
+                    }
+                });
+            }
+        });
+        avalon.scan();
+    });
+</script>

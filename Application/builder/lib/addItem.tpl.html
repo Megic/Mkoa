@@ -1,32 +1,14 @@
-<style>
-.mkoa-form{
-    width: 100%;
-    font-size: 14px;}
-.mkoa-form-title{
-    font-weight: bold;
-    display: block;
-    text-align: right;
-    padding-right: 8px;}
-.mkoa-form td{
-    padding: 5px;
-    border: 1px solid #eee;}
-.mkoa-form td input,.mkoa-form td select{
-    max-width: 300px;}
-</style>
-<div ms-controller="test">
+<div ms-controller="{{%name%}}-addItem">
 <div class="f-cb f-mb10"><h3 class="list-title">编辑数据</h3>
     <span class="f-fr"><a href="javascript:history.go(-1);" class="f-btn">返回</a></span></div>
 <div class="mkoa-box">
     <div class="f-p10">
-    <form name="" action="#" method="get">
+    <form>
         <table class="mkoa-form">
-            <tr>
-                <td width="120"><span class="mkoa-form-title">ID</span></td><td><input type="text" ms-duplex-number="form.id"/></td>
+            <tr ms-if="form.id">
+                <td width="120"><span class="mkoa-form-title">ID</span></td><td>{{form.id}}</td>
             </tr>
-            <tr>
-                <td width="120"><span class="mkoa-form-title">姓名</span></td><td><input type="text" ms-duplex="form.name"/></td>
-            </tr>
-
+            {{%formSTR%}}
         </table>
         <div class="f-mt10 f-tac">
             <button type="button" class="f-btn f-btn-success" ms-class="f-btn-disabled:isLock" ms-click="save">{{isLock?'稍等...':'保存';}}</button>
@@ -38,14 +20,12 @@
 <script>
     (function(){
         var id=avalon.vmodels['router'].GET['id'];//是否存在id
-        var form={name:""};//数据对象
-
+        var form={{%vmSTR%}};//数据对象
         require(["mkoaAjax/mkoaAjax"],function($a){
         if(id){//更新数据
-            $a.getJSON(app.$host +'test/test/findOne',{id:id,t:new Date().getTime()},function(data){//获取列表数据
+            $a.getJSON(app.$host +'{{%mroot%}}/{{%name%}}/findOne',{id:id,t:new Date().getTime()},function(data){//获取列表数据
                 if(!data.error){
-                    pageLoad(data.data);
-                    avalon.scan();
+                    pageLoad(data.data); avalon.scan();
                 }
             });
         }else{//新增数据
@@ -53,12 +33,12 @@
         }
         function pageLoad(form){
             var vm=avalon.define({
-                $id:'test',
+                $id:'{{%name%}}-addItem',
                 form:form,
                 isLock:0,
                 save:function(){
                     vm.isLock=1;
-                    $a.post(app.$host +'test/test/add?'+new Date().getTime(),vm.form.$model,function(data){//获取列表数据
+                    $a.post(app.$host +'{{%mroot%}}/{{%name%}}/add?'+new Date().getTime(),vm.form.$model,function(data){//获取列表数据
                         if(!data.error){
                             alert('提交成功!');
                         }else{

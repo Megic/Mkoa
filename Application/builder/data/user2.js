@@ -1,0 +1,1 @@
+module.exports={"modelName":"user2","comment":"用户表2","indexes":"","timestamps":"true","paranoid":"false","root":"news","fields":[{"name":"name","comment":"名字","type":"STRING(255)","allowNull":false,"unique":false,"defaultValue":"0","validate":{"rule":"required","error":"验证失败!"}}]};
