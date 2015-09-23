@@ -11,7 +11,6 @@
      "koa-logger": "*",
      "koa-ejs":"*",
      "koa-generic-session":"*",
-//     "koa-validate":"*",
      "koa-pg-session":"*",
     "koa-mysql-session":"*",
     "koa-redis":"*",
