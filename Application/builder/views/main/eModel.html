@@ -259,17 +259,17 @@ var lock=false;
             extend(app.fields[index],b);
             extend(app.fields[index+1],a);
         },
-        save:function(){
-            if(!lock) {
-                lock=true;
-                var postdata={
+        save:function() {
+            if (!lock) {
+                lock = true;
+                var postdata = {
                     modelName: app.modelName,
                     comment: app.comment,
                     indexes: app.indexes,
-                    buildViews:app.buildViews,
+                    buildViews: app.buildViews,
                     timestamps: app.timestamps,
                     paranoid: app.paranoid,
-                    root:app.root,
+                    root: app.root,
                     fields: JSON.stringify(app.fields)
                 };
                 $.post("<%=$HOST%>builder/main/buildModel",//生成模型
@@ -291,7 +291,7 @@ var lock=false;
                             }
                             lock = false;
                         });
-                if(app.buildViews) {
+                if (app.buildViews) {
                     $.post("<%=$HOST%>builder/main/buildViews",//生成视图
                             postdata,
                             function (data) {
@@ -303,6 +303,7 @@ var lock=false;
                                 lock = false;
                             });
                 }
+            }
         }
     });
 </script>

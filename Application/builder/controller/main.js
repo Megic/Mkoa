@@ -49,6 +49,9 @@ module.exports = function($this,$M){
             }
             fieldsARR+='}';
             var res=fs.readFileSync($M.modulePath+'lib/model.tpl','utf-8');
+            var fixArr=['','mysql','pgsql'];
+
+            res=res.replace('{{%prefix%}}',$M.C[fixArr[$M.C.sqlType]].prefix);
              res=res.replace(/{{%name%}}/g,$M['POST'].modelName);
              res=res.replace('{{%comment%}}',$M['POST'].comment);
              res=res.replace('{{%timestamps%}}',$M['POST'].timestamps);

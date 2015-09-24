@@ -2,9 +2,8 @@
 * Created by Mkoa
 */
 module.exports = function(sequelize, DataTypes) {
-    var C = require('../../../config/config')();
     return sequelize.define('{{%name%}}',{{%fields%}}, {
-        tableName: C.pgsql.prefix+'{{%name%}}',
+        tableName:'{{%prefix%}}{{%name%}}',
         comment: '{{%comment%}}',
         timestamps:{{%timestamps%}},
         indexes:{{%indexes%}},
