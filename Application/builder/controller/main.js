@@ -70,10 +70,7 @@ module.exports = function($this,$M){
                 var res=fs.readFileSync(filePath,'utf-8');
                 if(res)modelData=JSON.parse(res);
             }else{
-                fs.writeFile(filePath,JSON.stringify(modelData), function (error) {
-                    if (error)console.log('生成install.json文件失败！');
-                    console.log('生成install.json文件');
-                });
+                fs.writeFileSync(filePath,JSON.stringify(modelData));
             }
             if(modelData.indexOf($M['POST'].modelName+'.js')==-1) modelData.push($M['POST'].modelName+'.js');
             fs.writeFileSync(filePath,JSON.stringify(modelData));
@@ -156,7 +153,7 @@ module.exports = function($this,$M){
             var list=fs.readFileSync($M.modulePath+'lib/list.tpl.html','utf-8');//读取模板
             var len= $M['POST']['fields'].length;
             //生成字段
-            var titleSTR='',listSTR='',formSTR='',vmSTR={};
+            var titleSTR='',listSTR='',formSTR='',vmSTR={},fieldsARR='{';
             for(var i=0; i<len; i++){
                 //list页面
                 titleSTR+=`<th>${$M['POST']['fields'][i].comment}</th>`;
@@ -165,7 +162,14 @@ module.exports = function($this,$M){
                 formSTR+=`<tr><td width="120"><span class="mkoa-form-title">${$M['POST']['fields'][i].comment}</span></td>
                 <td><input type="text" ms-duplex="form.${$M['POST']['fields'][i].name}"/></td></tr>`;
                 vmSTR[$M['POST']['fields'][i].name]="";
+                //验证数据
+                if(i)fieldsARR+=',';
+                fieldsARR+=`
+                ${$M['POST']['fields'][i].name}: {rule:'${$M['POST']['fields'][i].validate.rule}',error:'${$M['POST']['fields'][i].validate.error}'}`;
+
             }
+            fieldsARR+='}';
+
             list=list.replace('{{%titleSTR%}}',titleSTR);
             list=list.replace('{{%listSTR%}}',listSTR);
             list=list.replace(/{{%name%}}/g,$M['POST'].modelName);
@@ -177,6 +181,7 @@ module.exports = function($this,$M){
             //生成addItem文件
 
             var addItem=fs.readFileSync($M.modulePath+'lib/addItem.tpl.html','utf-8');//读取模板
+            addItem=addItem.replace('{{%rules%}}',fieldsARR);
             addItem=addItem.replace('{{%formSTR%}}',formSTR);
             addItem=addItem.replace('{{%vmSTR%}}',JSON.stringify(vmSTR));
             addItem=addItem.replace(/{{%name%}}/g,$M['POST'].modelName);
@@ -191,12 +196,7 @@ module.exports = function($this,$M){
         }
 
     };
-    main['test']=function *(){
 
-
-
-
-    };
 
     return main;
 };

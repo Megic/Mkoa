@@ -32,7 +32,7 @@
       };
       if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
       for (var k in o)
-      if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+        if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
       return fmt;
     },
 
@@ -542,7 +542,7 @@
   // Breakdown validation rules and run tests.
   var validate = function (object, _rules) {
     for(var field in _rules) {
-      var ruleValue = _rules[field][0],
+      var ruleValue = _rules[field].rule,
           rules;
       if(Utils.typeof(ruleValue) === 'object' && field in object) {
         if(validate.apply(this, [object[field], _rules[field]]) || this.config.resumeOnFailed)
@@ -558,7 +558,7 @@
             value = rules[i].value;
 
         if(!run(object, this.requires, rules[i], field) ||
-          (field in object && !run(object, this.validators, rules[i], object[field]))) {
+            (field in object && !run(object, this.validators, rules[i], object[field]))) {
           rejects.push({
             //object: object,
             field: field, rule: key });
@@ -576,7 +576,7 @@
         object = JSON.parse(object);
       } catch (e) {
         return {
-          status: '0',
+          status: 0,
           rejects: [{object: 'Invalid JSON string!'}]
         };
       }
@@ -584,7 +584,7 @@
     rejects = [];
     validate.apply(this, [object, rules]);
     return {
-      status: !rejects.length ? '1' : '0',
+      status: !rejects.length ? 1 : 0,
       rejects: rejects
     };
   };

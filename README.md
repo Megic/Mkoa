@@ -4,6 +4,7 @@
 #npm install -g n
 #n stable //安装最新稳定版nodejs 
 #npm install -g pm2
+#node 4.0以下版本需要"--harmony"参数
 #pm2 start app.js --node-args="--harmony"
 #sequelize 模块的依赖需要进入 sequelize文件夹运行npm install 安装
 
