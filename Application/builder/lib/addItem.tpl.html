@@ -9,6 +9,12 @@
                 <td width="120"><span class="mkoa-form-title">ID</span></td><td>{{form.id}}</td>
             </tr>
             {{%formSTR%}}
+            <tr ms-if="form.createdAt">
+                <td width="120"><span class="mkoa-form-title">创建时间</span></td><td>{{form.createdAt|date("yyyy-MM-dd HH:mm:ss")}}</td>
+            </tr>
+            <tr ms-if="form.updatedAt">
+                <td width="120"><span class="mkoa-form-title">更新时间</span></td><td>{{form.updatedAt|date("yyyy-MM-dd HH:mm:ss")}}</td>
+            </tr>
         </table>
         <div class="f-mt10 f-tac">
             <button type="button" class="f-btn f-btn-success" ms-class="f-btn-disabled:isLock" ms-click="save">{{isLock?'稍等...':'保存';}}</button>

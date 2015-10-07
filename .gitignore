@@ -15,3 +15,5 @@ static/upload
 
 npm-debug.log
 node_modules
+Application/builder/data
+Application/news

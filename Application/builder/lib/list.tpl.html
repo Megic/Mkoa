@@ -1,6 +1,15 @@
 <div class="f-cb f-mb10"><h3 class="list-title">{{%name%}}数据</h3> <span class="f-fr"><a href="#!/?{{%mroot%}}/{{%name%}}/addItem" class="f-btn f-btn-success">增加数据</a></span></div>
 <div class="mkoa-box"  ms-controller="{{%name%}}-list">
-    <mkoa:pager  ms-attr-url="app.$host+'{{%mroot%}}/{{%name%}}/findAll'">
+    <mkoa:pager  ms-attr-url="app.$host+'{{%mroot%}}/{{%name%}}/findAll'" ms-attr-searchurl="app.$host+'{{%mroot%}}/{{%name%}}/search'" >
+        <div slot="$top" id="search">
+            <select ms-duplex="searchKey" class="f-fl" >
+                <option value="id">ID</option>
+                {{%searchSTR%}}
+            </select>
+            <input type="text" ms-duplex="searchValue" class="f-fl f-ml5"/>
+            <button ms-click="search" class="f-btn f-btn-success f-ml10" >搜索</button>
+            <button ms-if="searchOpen" ms-click="closeSearch" class="f-btn">清空搜索</button>
+        </div>
         <table slot="$list" class="mkoa-table">
             <thead>
             <tr><th width="30">ID</th>{{%titleSTR%}}<th width="100">操作</th></tr>
@@ -14,7 +23,7 @@
     </mkoa:pager>
 </div>
 <script>
-    require(["mkoaAjax/mkoaAjax","mkoaPager/mkoaPager"], function ($a){
+    require(["mkoaAjax/mkoaAjax","mkoaPagerFull/mkoaPagerFull"], function ($a){
        avalon.define({
             $id:'{{%name%}}-list',
             remove:function($remove,id){

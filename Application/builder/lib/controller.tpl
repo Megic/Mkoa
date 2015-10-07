@@ -54,7 +54,25 @@ module.exports = function ($this, $M) {
         }, {raw: true});
         if (res)$this.success(res);
     };
-
+    //返回搜索数据
+    main['search'] = function *() {
+    var perPages=$M.GET['perPages']?parseInt($M.GET['perPages']):10;//每页数据数
+    var currentPage=$M.GET['currentPage']?parseInt($M.GET['currentPage']):1;//查询页码
+    var where = {};
+    if(!isNaN($M.GET['searchValue'])){
+    where[$M.GET['searchKey']]=$M.GET['searchValue'];
+    }else{
+    where[$M.GET['searchKey']]={
+    $like:'%'+$M.GET['searchValue']+'%'
+    };
+    }
+    var res = yield $M.D('{{%name%}}').findAndCountAll({
+    where: where,
+    limit: perPages,
+    offset: perPages * (currentPage - 1)
+    }, {raw: true});
+    if (res)$this.success(res);
+    };
 
     //删除数据
     main['delete'] = function *() {

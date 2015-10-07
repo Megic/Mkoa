@@ -13,13 +13,13 @@ module.exports = function($this,$M){
         //console.log('公共头部');
     };
     main['eModel']=function *(){
-       var data=require($M.modulePath+'data/'+$M.GET['file']);
+       var data=require($M.modulePath+'data/module/'+$M.GET['file']);
         yield $this.display(data);
     };
     main['list']=function *(){//模型列表
         var dirList=[];
-        if(fs.existsSync($M.modulePath+'data')){
-           dirList = fs.readdirSync($M.modulePath+'data');
+        if(fs.existsSync($M.modulePath+'data/module')){
+           dirList = fs.readdirSync($M.modulePath+'data/module');
         }
         yield $this.display({dirList:JSON.stringify(dirList)});
     };
@@ -62,8 +62,8 @@ module.exports = function($this,$M){
             if (fs.existsSync(modelPath) || (yield fscp.mkdirp(modelPath, '0755'))) {//判定文件夹是否存在
                 fs.writeFileSync(modelPath+$M['POST'].modelName+'.js',res);
             }
-            if (fs.existsSync($M.modulePath+'data/') || (yield fscp.mkdirp($M.modulePath+'data/', '0755'))) {//判定文件夹是否存在
-            fs.writeFileSync($M.modulePath+'data/'+$M['POST'].modelName+'.js','module.exports='+JSON.stringify($M['POST'])+';');
+            if (fs.existsSync($M.modulePath+'data/module') || (yield fscp.mkdirp($M.modulePath+'data/module', '0755'))) {//判定文件夹是否存在
+            fs.writeFileSync($M.modulePath+'data/module/'+$M['POST'].modelName+'.js','module.exports='+JSON.stringify($M['POST'])+';');
             }
             yield $M.D($M['POST'].root+':'+$M['POST'].modelName).sync({force: true});//写入数据表
             //编辑安装锁
@@ -126,10 +126,12 @@ module.exports = function($this,$M){
         if(r.status==1&&$M['POST']['fields'].length>0){
             //读取菜单数据
             var menuData={};
-            var menupath=$M.modulePath+'lib/menu.json';
-            if(fs.existsSync(menupath)){
-                var menuJson=fs.readFileSync($M.modulePath+'lib/menu.json','utf-8');
-                menuData=JSON.parse(menuJson);
+            var menupath=$M.modulePath+'data/menu.json';
+            if (fs.existsSync($M.modulePath+'data') || (yield fscp.mkdirp($M.modulePath+'data', '0755'))) {//判定文件夹是否存在
+                if (fs.existsSync(menupath)) {
+                    var menuJson = fs.readFileSync($M.modulePath + 'data/menu.json', 'utf-8');
+                    menuData = JSON.parse(menuJson);
+                }
             }
             if(!menuData[$M['POST'].root]){
                 menuData[$M['POST'].root]=[];
@@ -152,15 +154,15 @@ module.exports = function($this,$M){
                 fs.writeFileSync(vPath+'admin.html',index);
             }
 
-            //生成list文件
-            var list=fs.readFileSync($M.modulePath+'lib/list.tpl.html','utf-8');//读取模板
+         //拼接页面代码
             var len= $M['POST']['fields'].length;
             //生成字段
-            var titleSTR='',listSTR='',formSTR='',vmSTR={},fieldsARR='{';
+            var titleSTR='',searchSTR='',listSTR='',formSTR='',vmSTR={},fieldsARR='{';
             for(var i=0; i<len; i++){
                 //list页面
                 titleSTR+=`<th>${$M['POST']['fields'][i].comment}</th>`;
                 listSTR+=`<td>{{el.${$M['POST']['fields'][i].name}}}</td>`;
+                searchSTR+=`<option value="${$M['POST']['fields'][i].name}">${$M['POST']['fields'][i].comment}</option>`;
                 //add页面
                 formSTR+=`<tr><td width="120"><span class="mkoa-form-title">${$M['POST']['fields'][i].comment}</span></td>
                 <td><input type="text" ms-duplex="form.${$M['POST']['fields'][i].name}"/></td></tr>`;
@@ -171,8 +173,15 @@ module.exports = function($this,$M){
                 ${$M['POST']['fields'][i].name}: {rule:'${$M['POST']['fields'][i].validate.rule}',error:'${$M['POST']['fields'][i].validate.error}'}`;
 
             }
+            if($M['POST']['timestamps']){
+                titleSTR+=`<th width="155">创建时间</th>`;
+                listSTR+=`<td>{{el.createdAt|date("yyyy-MM-dd HH:mm:ss")}}</td>`;
+            }
             fieldsARR+='}';
 
+            //生成list文件
+            var list=fs.readFileSync($M.modulePath+'lib/list.tpl.html','utf-8');//读取模板
+            list=list.replace('{{%searchSTR%}}',searchSTR);
             list=list.replace('{{%titleSTR%}}',titleSTR);
             list=list.replace('{{%listSTR%}}',listSTR);
             list=list.replace(/{{%name%}}/g,$M['POST'].modelName);

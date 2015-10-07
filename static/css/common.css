@@ -79,6 +79,9 @@ html{_height:auto;_padding:50px 0 0px;}
     font-weight: bold;
     color: #444;}
 /*************************************************数据列表页样式************************/
+#search{
+    padding: 10px;}
+#search input,#search select{width: auto;}
 .mkoa-box{background-color: #fff;}
 .list-title{ margin: 0;padding: 0;padding-left: 10px;float: left;}
 /* 简易数据表格-格边框 */
