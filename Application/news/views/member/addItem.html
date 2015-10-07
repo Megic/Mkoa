@@ -1,0 +1,76 @@
+<div ms-controller="member-addItem">
+<div class="f-cb f-mb10"><h3 class="list-title">编辑数据</h3>
+    <span class="f-fr"><a href="javascript:history.go(-1);" class="f-btn">返回</a></span></div>
+<div class="mkoa-box">
+    <div class="f-p10">
+    <form>
+        <table class="mkoa-form">
+            <tr ms-if="form.id">
+                <td width="120"><span class="mkoa-form-title">ID</span></td><td>{{form.id}}</td>
+            </tr>
+            <tr><td width="120"><span class="mkoa-form-title">名称</span></td>
+                <td><input type="text" ms-duplex="form.name"/></td></tr><tr><td width="120"><span class="mkoa-form-title">标题</span></td>
+                <td><input type="text" ms-duplex="form.title"/></td></tr>
+            <tr ms-if="form.createdAt">
+                <td width="120"><span class="mkoa-form-title">创建时间</span></td><td>{{form.createdAt|date("yyyy-MM-dd HH:mm:ss")}}</td>
+            </tr>
+            <tr ms-if="form.updatedAt">
+                <td width="120"><span class="mkoa-form-title">更新时间</span></td><td>{{form.updatedAt|date("yyyy-MM-dd HH:mm:ss")}}</td>
+            </tr>
+        </table>
+        <div class="f-mt10 f-tac">
+            <button type="button" class="f-btn f-btn-success" ms-class="f-btn-disabled:isLock" ms-click="save">{{isLock?'稍等...':'保存';}}</button>
+        </div>
+    </form>
+    </div>
+</div>
+</div>
+<script>
+    (function(){
+        //验证规则
+        var rules =  {
+                name: {rule:'required',error:'验证失败!'},
+                title: {rule:'required',error:'验证失败!'}};;
+
+        var id=avalon.vmodels['router'].GET['id'];//是否存在id
+        var form={"name":"","title":""};//数据对象
+        require(["mkoaAjax/mkoaAjax","KoaValidator"],function($a,$v){
+        if(id){//更新数据
+            $a.getJSON(app.$host +'news/member/findOne',{id:id,t:new Date().getTime()},function(data){//获取列表数据
+                if(!data.error){
+                    pageLoad(data.data);
+                }
+            });
+        }else{//新增数据
+            pageLoad(form);
+        }
+        function pageLoad(form){
+            var vm=avalon.define({
+                $id:'member-addItem',
+                form:form,
+                isLock:0,
+                save:function(){
+                    var check = $v.validate(vm.form.$model, rules);//验证数据
+                    if (check.status) {/*通过验证*/
+                    vm.isLock=1;
+                    $a.post(app.$host +'news/member/add?'+new Date().getTime(),vm.form.$model,function(data){//获取列表数据
+                        if(!data.error){
+                            alert('提交成功!');
+                        }else{
+                            alert('写入数据不正确!');
+                        }
+                        vm.isLock=0;
+                    });
+                    }else{
+                        alert(rules[check.rejects[0].field].error);//验证错误
+                    }
+                }
+            });
+            avalon.scan();
+        }
+
+    });
+
+    })();
+
+</script>

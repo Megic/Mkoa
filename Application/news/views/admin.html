@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mkoa</title>
+    <link href="<%=$HOST%>css/base.min.css" rel="stylesheet">
+    <link href="<%=$HOST%>css/common.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="<%=$HOST%>lib/IE/html5.min.js"></script>
+    <script src="<%=$HOST%>lib/IE/json3.min.js"></script>
+    <![endif]-->
+    <script src="<%=$HOST%>lib/avalon.js"></script>
+    <script src="<%=$HOST%>lib/app.js"></script>
+</head>
+<body ms-controller="app" ms-class="closemenu:closeMenu">
+<div class="g-hd f-cb" id="top" >
+    <a href="#" class="f-fl logo">
+        <!--<img src="images/logo.png" alt="logo"/>-->
+        <span>MKOA</span>
+    </a>
+    <span class="m-top-nav ant-cColor" onclick="app.closeMenu=!app.closeMenu;">三</span>
+    <!--<span class="f-fr m-top-right"><a ms-click="sys.lgout" class="m-top-nav ant-cColor">退出</a></span>-->
+</div>
+<div class="g-sd">
+    <div class="m-menu">
+        <ul>
+            <li ms-class="m-menu-title" ms-repeat="leftMenu">
+                <span>
+                    <a ms-attr-href="el.url" ms-class="on:(el.url==avalon.vmodels['router'].curHref)" class="m-menu-a">· {{el.name}}</a>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--主体内容-->
+<div class="g-mn" ms-controller="router">
+    <div ms-include-src="curTpl" class="f-p15" ></div>
+</div>
+<script>
+    require(["KoaFunctions","mmRouter/mmRouter","mkoaPager/mkoaPager"], function (F) {
+        //菜单数据
+        app.leftMenu=[{"name":"member","url":"#!/?news/member/list"}];
+        //路由
+        var router = avalon.define({
+            $id: 'router',
+            defaultTpl:app.$host+'builder/default?'+app.$v,//默认加载的模板
+            GET:{},//模板参数
+            curTpl: '',//当前模板
+            curHref: ''//当前点击菜单
+        });
+        //定义模板路由
+        avalon.router.get("/", function () {
+            var tpl=window.location.href.split('#!/?')[1];
+            var sign='?'+app.$v;//版本号
+            var tplArr=[];
+            if(tpl)tplArr=tpl.split('?');
+            router.GET={};//传递参数
+            if(tplArr[1]){
+                router.GET=F.urlToObject('?'+tplArr[1]);//url参数
+                sign='&v='+app.$v;
+            }
+            var safe = ['app','router'];//页面切换时保护的VM对象
+            avalon.each(avalon.vmodels, function (key) {//清理页面VM模型
+                if (safe.indexOf(key) == -1) {
+                    avalon.vmodels[key] = null;
+                    delete avalon.vmodels[key];
+                }
+            });
+            router.curHref = '#!/?' + tpl;//用于点亮左侧菜单
+            router.curTpl = tpl ? app.$host + tpl+sign :router.defaultTpl; //设置加载页面及默认页面
+        });
+        avalon.history.start({
+            basepath: "/"
+        });
+        avalon.scan();
+    });
+
+
+</script>
+</body>
+</html>
