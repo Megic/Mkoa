@@ -1,5 +1,0 @@
-yum install node
-yum install npm
-npm install -g n//node 版本控制
-n latest //安装最新版本
-
