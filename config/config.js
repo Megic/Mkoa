@@ -37,19 +37,10 @@ module.exports=function(root){
         fileType:['gif','jpg','png'],//允许上传文件的类型
         maxFieldsSize:1*1024*1024,//最大上传文件
         formLimit:'1mb',//post最大长度
-        useUPYun:false,
-        UPYun:{
-             buckname: 'x'
-             ,username: 'x'
-             ,password: 'x'
-        },
-        host:{//服务器地址
-             1:'http://localhost/' //本地存储
-            ,2:'x'//又拍云远程
-        },
-
+        host:'http://localhost/',//访问域名
         csrf:false,//是否开启csrf验证
         openSocket:true,//是否开启socket.io
+        socketConfig:root + '/config/socket',//socket配置文件
         port:80,    //端口设置
         logger:true,   //输出调试内容
         //执行默认模块

@@ -55,19 +55,49 @@ module.exports = function (root, mpath) {
     if($M.C.openSocket){//是否开启socket.io
         koa = require(mpath +'/socket/application');
         app = koa();
-        require($M.ROOT+'/config/socket')(app,$M);//用户socket.io中间件
+        require($M.C.socketConfig)(app,$M);//用户socket.io中间件
+        ///////////////////////////MKOA默认socket事件//////////////////////
+        app.io.route('MKOA', function* (next,obj){
+            if(obj.path){
+                $M.DATA=obj.data;
+                mkoaRouter($M,'/'+obj.path);//路径处理
+                var _404 = false;
+                if (fs.existsSync($M.actionUrl)) { //判定controller是否存在
+                    var SysFuc = require($M.actionUrl)(this,$M); //加载controller
+                    if (SysFuc && $M._.isFunction(SysFuc[$M.actionName])) {
+                        if(!SysFuc['_init'])SysFuc['_init']=function *(){};
+                        if(!SysFuc['_after'])SysFuc['_after']=function *(){};
+                        if ($M._.isFunction(SysFuc['_init'])) {
+                            if ((yield SysFuc['_init'].call(this,next)) == undefined) {
+                                        yield SysFuc[$M.actionName].call(this, next);//执行请求函数
+                                        if ($M._.isFunction(SysFuc['_after']))yield SysFuc['_after'].call(this, next);//执行after函数
+                            }//执行int函数
+                        }
+                    } else {
+                        _404 = true;
+                    }//404页面
+                } else {
+                    _404 = true;
+                }
+                //404页面处理
+                if(_404){
+                    this.emit('MKOA',{error:'404'});//没有相关处理方法
+                }
+            }
+        });
+        ///////////////////////////MKOA默认socket事件结束//////////////////////
     }else{
         koa = require('koa');
         app = koa();
     }
-    require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
 
+    require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
 //////////////////////////////////////////////////主中间件//////////////////////////////////////////////////
     app.use(function *(next) {
         var $this=this;
         $M.GET = this.request.query;//get参数
         $M.POST = this.request.body;//post参数
-        $M.HOST = $M.C.host[1] ? $M.C.host[1] : 'http://' + this.host + '/';//访问地址
+        $M.HOST = $M.C.host ? $M.C.host : 'http://' + this.host + '/';//访问地址
         $M.filePath=$M.C.upload + '/' + $M.F.moment().format('YYYY/MM/DD/');//当前文件保存地址
         //保存远程文件
         $M.F.saveFile=function *(fileUrl,name){
@@ -83,9 +113,7 @@ module.exports = function (root, mpath) {
             }
         };
 //上传文件处理
-        //if(this.request.body.files&&this.isAuthenticated()){//登录且包含文件数据
-        if (this.request.body.files) {
-            //console.log(this.checkFile('file'));
+        if (this.request.body.files){
             $M.FILES = {};
             for (key in this.request.body.files) {
                 var key = key;
@@ -97,28 +125,6 @@ module.exports = function (root, mpath) {
                 if (val.size <= $M.C.maxFieldsSize && $M._.indexOf($M.C.fileType, type) > -1) {//判定是否是可上传类型
                     var newPath = $M.filePath;
                     var newFile = newPath + fileName + '.' + type;
-                    // if ($M.C.useUPYun) { //又拍云存储
-                    //var upyun = new UPYun($M.C.UPYun.buckname, $M.C.UPYun.username, $M.C.UPYun.password);
-                    //var fileContent = fs.readFileSync(val.path);
-                    //var md5Str = $M.F.encode.md5(fileContent);
-                    //upyun.setContentMD5(md5Str);
-                    //var yppath = newFile.replace($M.C.upload, '');
-                    //function ypRFile(path, file, mkdir) { //又拍云异步写
-                    //    return function (callback) {
-                    //        upyun.writeFile(path, file, mkdir, callback);
-                    //    };
-                    //}
-                    //yield ypRFile(yppath, fileContent, true);
-                    //$M.FILES[key] = {//返回文件对象
-                    //    name: val.name,
-                    //    type: type,
-                    //    path: yppath,
-                    //    size: $M.F.sizeOf(val.path)
-                    //};
-                    //fs.unlinkSync(val.path);//删除文件
-                    ////****************************远程存储结束**************************
-                    //} else {
-                    //本地存储
                     if (fs.existsSync(newPath) || (yield fscp.mkdirp(newPath, '0755'))) {//判定文件夹是否存在
                         $M.FILES[key] = {//返回文件对象
                             name: val.name,
@@ -129,8 +135,6 @@ module.exports = function (root, mpath) {
                         };
                     }
 
-                    //****************************本地存储结束**************************
-                    // }
                 } else {
                     fs.unlinkSync(val.path);//删除没通过检测的临时文件
                 }
@@ -138,18 +142,7 @@ module.exports = function (root, mpath) {
         }
 //****************************上传文件处理结束**************************
 
-        var _curPath = this.request.path;//访问路径
-        $M.TPL = _curPath.slice(1);//当前controller对应的模板
-        var _pathArr = _curPath.split('/');
-        var _action = $M._.last(_pathArr);//方法
-        var _moudle = _pathArr[1];//模块名称
-        $M.moudle = _moudle;
-        var _arrLenght = _pathArr.length;
-        var _clStr = '';//控制器路径
-        for (var i = 2; i < _arrLenght - 1; i++) _clStr = _clStr + '/' + _pathArr[i];
-        var _acUrl = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/' + $M.C.controller + '/' + _clStr + '.js';//控制器文件
-        $M.modulePath = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/';
-        $M.TPL = $M.C.application + '/' + _moudle + '/' + $M.C.views + _clStr + '/' + _action;
+        mkoaRouter($M,this.request.path);//路径处理
         //模板处理函数
         this.success = function (data) {//返回成功结构
             this.body = {error: 0, data: data};
@@ -172,7 +165,7 @@ module.exports = function (root, mpath) {
                 tpl = $M.TPL;
             } else {//跨模块模板
                 var _tplArr = tpl.split(':');
-                var _moudleName = _moudle;
+                var _moudleName = $M.moudle;
                 if (_tplArr.length > 1) {
                     _moudleName = _tplArr[0];
                     tpl = _tplArr[1];
@@ -182,9 +175,9 @@ module.exports = function (root, mpath) {
             yield this.render(tpl, data);//渲染模板
         };
         var _404 = false;
-        if (fs.existsSync(_acUrl)) { //判定controller是否存在
-            var SysFuc = require(_acUrl)(this, $M); //加载controller
-            if (SysFuc && $M._.isFunction(SysFuc[_action])) {
+        if (fs.existsSync($M.actionUrl)) { //判定controller是否存在
+            var SysFuc = require($M.actionUrl)(this, $M); //加载controller
+            if (SysFuc && $M._.isFunction(SysFuc[$M.actionName])) {
                 if(!SysFuc['_init'])SysFuc['_init']=function *(){};
                 if(!SysFuc['_after'])SysFuc['_after']=function *(){};
                 if ($M._.isFunction(SysFuc['_init'])) {
@@ -193,7 +186,7 @@ module.exports = function (root, mpath) {
                             yield next;
                         } else {
                             if (!this.body) {//前置函数未有返回
-                                yield SysFuc[_action].call(this, next);//执行请求函数
+                                yield SysFuc[$M.actionName].call(this, next);//执行请求函数
                                 if ($M._.isFunction(SysFuc['_after']))yield SysFuc['_after'].call(this, next);//执行after函数
                                 this.cacheOptions.type = $M.F.encode.isJSON(this.body) ? 'json' : 'html';
                                 if (!this.body)_404 = true;
@@ -207,7 +200,7 @@ module.exports = function (root, mpath) {
         } else {
             _404 = true;
         }
-        //404页面
+        //404页面处理
         if (_404 && fs.existsSync($M.ROOT + '/' + $M.TPL + '.html')) {//存在html
             yield this.display();
         }
@@ -217,6 +210,22 @@ module.exports = function (root, mpath) {
             this.caching = false;
         }
     });
+
+//mkoa路径处理函数
+    function mkoaRouter($M,actionPath){
+        var _curPath = actionPath;//访问路径
+        $M.TPL = _curPath.slice(1);//当前controller对应的模板
+        var _pathArr = _curPath.split('/');
+        $M.actionName= $M._.last(_pathArr);//方法
+        var _moudle = _pathArr[1];//模块名称
+        $M.moudle = _moudle;
+        var _arrLenght = _pathArr.length;
+        var _clStr = '';//控制器路径
+        for (var i = 2; i < _arrLenght - 1; i++) _clStr = _clStr + '/' + _pathArr[i];
+        $M.actionUrl = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/' + $M.C.controller + '/' + _clStr + '.js';//控制器文件
+        $M.modulePath = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/';
+        $M.TPL = $M.C.application + '/' + _moudle + '/' + $M.C.views + _clStr + '/' + $M.actionName;
+    }
 
     app.listen($M.C.port);//监听端口
 
