@@ -2,6 +2,13 @@ module.exports = function (root) {
     return {
         //系统目录
         sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
+        mysql:{
+            user:''
+            ,password:''
+            ,dbName:''
+            ,prefix:''
+            ,host:'localhost'
+        },
         models:'models',//模型文件夹名
         views: 'views',//模板文件夹名
         application:'Application',//模块文件夹

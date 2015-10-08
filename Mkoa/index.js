@@ -11,19 +11,7 @@ module.exports = function (root, mpath) {
         , app = koa()
         , path = require('path')
         , fs = require('fs')
-        , fscp = require('co-fs-plus')//文件夹等操作
-    //, UPYun = require(mpath + 'lib/upyun').UPYun//又拍云
-        , send = require('koa-send')
-        , statics = require('koa-static')//静态服务器
-        , favicon = require('koa-favi')//favicon处理
-        , baseRender = require('koa-ejs')//ejs模板解析
-        , koaBody = require('koa-body')//Post处理
-    //,cors = require('koa-cors')
-    //    , validate = require('koa-validate')//参数过滤
-        , json = require('koa-json')//json输出
-        , session = require('koa-generic-session')//session
-        , Sequelize = require('sequelize');//ORM框架
-
+        , fscp = require('co-fs-plus');//文件夹等操作
 
 //===================全局对象===================
     /**
@@ -57,181 +45,17 @@ module.exports = function (root, mpath) {
     //$M.passport = require('koa-passport');//登录验证
     $M.request = require('co-request');
     $M.C = {};//全局配置
-
 //===================获取配置内容===================
     var sConfig = require(mpath + '/config')(root);
     var userConfig = require(root + '/config/config')(root);
     $M._.extend(sConfig, userConfig);
     $M.C = sConfig;
-
-//输出logger
-    if ($M.C.logger) {
-        var logger = require('koa-logger');
-        app.use(logger());
-    }
-
-//===================系统错误处理===================
-    app.use(function*(next) {
-        try {
-            yield next
-        } catch (e) {
-            console.log('错误' + e);
-            return this.body = {error: 500, data: e.message || e.name || e};//输出错误
-        }
-    });
-    //app.use(cors());
-    /////////////////////////////////////////////////静态文件处理///////////////////////////
-    //设置默认访问路径/输出模块静态文件夹内容
-    app.use(function *(next) {
-        if (this.request.path == '/' && $M.C.defaultPath)this.request.path = $M.C.defaultPath;//设置默认访问路径
-        var _pathArr = this.request.path.split('/');
-        var file = root + '/' + $M.C.application + this.request.path;
-        if (_pathArr[2] == $M.C.static && _pathArr.length > 3 && fs.existsSync(file)) {
-            yield send(this, file);
-        } else {
-            yield next;
-        }
-
-    });
-    app.use(statics($M.C.staticpath, {maxAge: 365 * 24 * 60 * 60, buffer: true}));//定义静态文件路径
-    app.use(favicon(root + '/favicon.ico'));//favicon处理
-    /////////////////////////////////////////////////静态文件处理.end///////////////////////////
-
-    app.use(json());//json输出
-    app.use(koaBody({
-        multipart: true,
-        formLimit: $M.C.formLimit,
-        formidable: {keepExtensions: false, maxFieldsSize: parseInt($M.C.maxFieldsSize), multiples: false}
-    }));//body中间件
-    //app.use(validate());//参数过滤
-/////////////////////////////////////////////////session///////////////////////////
-    app.keys = [$M.C.secret];//session支持
-    //session配置
-    var sessionOptions = {
-        key: 'Mkoa:sid',
-        prefix: 'Mkoa:sess:',
-        rolling: false,
-        cookie: {
-            maxage: $M.C.maxAge
-        }
-    };
-    if ($M.C.sessionType == 1) {//使用PostgreSQL存储session
-        var PgStore = require('koa-pg-session');
-        sessionOptions['store']=new PgStore("postgres://" + $M.C.pgsql['username'] + ":" + $M.C.pgsql['password'] + "@" + $M.C.pgsql['host'] + ":" + $M.C.pgsql.port + "/" + $M.C.pgsql['dbName']);
-    }
-    if ($M.C.sessionType == 3) {
-        var MysqlStore = require('koa-mysql-session');// mysql存储session
-        sessionOptions['store']=new MysqlStore({
-            user: $M.C.mysql.user,
-            password: $M.C.mysql.password,
-            database: $M.C.mysql.dbName,
-            host: $M.C.mysql.host
-        });
-    }
-    if ($M.C.sessionType == 2) {
-        var MemStore = require('koa-memcached');// memcached存储session
-        sessionOptions['store']=new MemStore($M.C.memcached);
-    }
-    if ($M.C.sessionType == 4) {
-        var redisStore = require('koa-redis');// redis存储session
-        sessionOptions['store']=redisStore($M.C.redis);
-    }
-    app.use(session(sessionOptions));
-/////////////////////////////////////////////////session.end///////////////////////////
-
-    if ($M.C.csrf) {//开启csrf
-        var csrf = require('koa-csrf');//csrf
-        csrf(app);
-        app.use(csrf.middleware);
-    }
-//定义模板
-    baseRender(app, {
-        root: root,
-        layout: false,
-        viewExt: 'html',
-        cache: false,
-        debug: true
-    });
-
-
-//链接数据库
-    var sequelize;
-    if($M.C.sqlType==1){//sql
-        sequelize = new Sequelize($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.password, {
-            dialect: "mysql",
-            host: $M.C.mysql.host,
-            port: $M.C.mysql.port,
-            logging: $M.C.logger?console.log:false
-        });
-    }
-    if($M.C.sqlType==2){//postgres
-        sequelize = new Sequelize($M.C.pgsql.dbName, $M.C.pgsql.username, $M.C.pgsql.password, {
-            dialect: "postgres",
-            host: $M.C.pgsql.host,
-            port: $M.C.pgsql.port,
-            logging: $M.C.logger ? console.log : false,
-            autocommit: false,
-            isolationLevel: 'REPEATABLE_READ',
-            deferrable: 'NOT DEFERRABLE' // implicit default of postgres
-        });
-    }
-    $M.sequelize = sequelize;
-    $M.D = function (model) {
-        var mdPath = root + '/' + $M.C.application + '/' + $M.moudle + '/' + $M.C.models + '/' + model;
-        var _mdArr = model.split(':');
-        if (_mdArr.length > 1) {
-            //非当前模块模型
-            mdPath = root + '/' + $M.C.application + '/' + _mdArr[0] + '/' + $M.C.models + '/' + _mdArr[1];
-        }
-        return sequelize.import(mdPath);
-    };//模型加载
-
-    ////////////数据库事务支持
-    var cls = require('continuation-local-storage');
-    var co = require('co');
-    var namespace;
-    if (Sequelize.cls) {
-        namespace = Sequelize.cls;
-    } else {
-        namespace = cls.createNamespace('koa-sequelize-transaction');
-        Sequelize.cls = namespace;
-    }
-    $M.transaction = function *(fn) {
-        yield $M.sequelize.transaction(function (t) {
-            return co(function *() {
-                yield fn()
-            });
-        });
-    };
-
-///////////////////////缓存中间件/////////////////////////
-    var Cache = require('mkoa-file-cache');
-
-    //返回或创建缓存文件夹
-    $M.F.getCachePath = function *(curPath) {
-        newPath = $M.C.cachepath + '/' + curPath;
-        if (fs.existsSync(newPath) || (yield fscp.mkdirp(newPath, '0755'))) {//判定文件夹是否存在
-            return curPath;
-        }
-    };
-    app.use(function*(next) {
-        var path = 'file';
-        var getPath = encodeURIComponent(this.request.query['$cachePath']);//get参数存在mkoa_cachePath 使用其作为缓存文件夹
-        if (getPath != 'undefined')path = yield $M.F.getCachePath(getPath);
-        this.cacheName = encodeURIComponent(this.originalUrl);//缓存文件名
-        this.cacheName = path + '/' + this.cacheName;
-        this.caching = $M.C.iscache;
-        yield next;
-        //console.log(this.caching);
-    });//获取缓存配置
-
-    app.use(Cache({folder: $M.C.cachepath + '/', cacheTime: $M.C.cacheTime, type: 'html'}));
-
+    $M.ROOT = root;
+    require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
 
 //////////////////////////////////////////////////主中间件//////////////////////////////////////////////////
     app.use(function *(next) {
         var $this=this;
-        $M.ROOT = root;
         $M.GET = this.request.query;//get参数
         $M.POST = this.request.body;//post参数
         $M.HOST = $M.C.host[1] ? $M.C.host[1] : 'http://' + this.host + '/';//访问地址
@@ -314,8 +138,8 @@ module.exports = function (root, mpath) {
         var _arrLenght = _pathArr.length;
         var _clStr = '';//控制器路径
         for (var i = 2; i < _arrLenght - 1; i++) _clStr = _clStr + '/' + _pathArr[i];
-        var _acUrl = root + '/' + $M.C.application + '/' + _moudle + '/' + $M.C.controller + '/' + _clStr + '.js';//控制器文件
-        $M.modulePath = root + '/' + $M.C.application + '/' + _moudle + '/';
+        var _acUrl = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/' + $M.C.controller + '/' + _clStr + '.js';//控制器文件
+        $M.modulePath = $M.ROOT + '/' + $M.C.application + '/' + _moudle + '/';
         $M.TPL = $M.C.application + '/' + _moudle + '/' + $M.C.views + _clStr + '/' + _action;
         //模板处理函数
         this.success = function (data) {//返回成功结构
@@ -375,7 +199,7 @@ module.exports = function (root, mpath) {
             _404 = true;
         }
         //404页面
-        if (_404 && fs.existsSync(root + '/' + $M.TPL + '.html')) {//存在html
+        if (_404 && fs.existsSync($M.ROOT + '/' + $M.TPL + '.html')) {//存在html
             yield this.display();
         }
         else if (_404) {

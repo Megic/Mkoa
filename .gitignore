@@ -19,3 +19,7 @@ Application/builder/data
 
 
 node_modules
+static/lib
+static/css
+Application/builder
+Application/news
