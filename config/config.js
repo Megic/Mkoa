@@ -4,6 +4,7 @@ module.exports=function(root){
         v:'1.0',//版本
         //数据库连接
         sqlType:2,//ORM框架数据库 1 mysql  2 pgsql
+        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
         //mysql:{
         //    user:'root'
         //    ,password:''
@@ -46,8 +47,9 @@ module.exports=function(root){
              1:'http://localhost/' //本地存储
             ,2:'x'//又拍云远程
         },
-        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
+
         csrf:false,//是否开启csrf验证
+        openSocket:true,//是否开启socket.io
         port:80,    //端口设置
         logger:true,   //输出调试内容
         //执行默认模块

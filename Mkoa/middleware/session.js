@@ -34,5 +34,10 @@ module.exports = function(app,$M){
         sessionOptions['store']=redisStore($M.C.redis);
     }
     app.use(session(sessionOptions));
+    if($M.C.openSocket){//是否开启socket.io
+        app.session(sessionOptions);
+    }else{
+        app.use(session(sessionOptions));
+    }
 /////////////////////////////////////////////////session.end///////////////////////////
 };

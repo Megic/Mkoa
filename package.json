@@ -1,7 +1,7 @@
 {
   "name": "Mkoa",
   "description": "make by Megic use koa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "koa": "*",
     "koa-send": "*",
@@ -26,7 +26,13 @@
     "image-size":"*",
     "koa-memcached":"*",
     "mkoa-file-cache":"*",
-    "memory-cache":"*"
+    "memory-cache":"*",
+    "socket.io": ">=1.3.7",
+    "debug": "2.2.0",
+    "cookies": "0.5.1",
+    "delegates": ">=0.1.0",
+    "parseurl": ">=1.3.0",
+    "koa-compose": ">=2.3.0"
   },
   "engines": {
     "node": ">= 11.3"

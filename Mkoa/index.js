@@ -7,9 +7,7 @@
  * @param mpath 库目录
  */
 module.exports = function (root, mpath) {
-    var koa = require('koa')
-        , app = koa()
-        , path = require('path')
+    var path = require('path')
         , fs = require('fs')
         , fscp = require('co-fs-plus');//文件夹等操作
 
@@ -51,6 +49,17 @@ module.exports = function (root, mpath) {
     $M._.extend(sConfig, userConfig);
     $M.C = sConfig;
     $M.ROOT = root;
+
+
+    var koa,app;
+    if($M.C.openSocket){//是否开启socket.io
+        koa = require(mpath +'/socket/application');
+        app = koa();
+        require($M.ROOT+'/config/socket')(app,$M);//用户socket.io中间件
+    }else{
+        koa = require('koa');
+        app = koa();
+    }
     require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
 
 //////////////////////////////////////////////////主中间件//////////////////////////////////////////////////
