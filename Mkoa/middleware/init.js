@@ -15,7 +15,7 @@ module.exports = function(mpath,app,$M){
 
 
     //***************************自动加载模块目录下中间件***********************
-
+    var apppath=$M.ROOT+ '/' +$M.C.application;
     function walk(apppath){
         var dirList = fs.readdirSync(apppath);
         dirList.forEach(function(item){
@@ -26,7 +26,8 @@ module.exports = function(mpath,app,$M){
             }});
     }
 //搜索模块文件夹
-    var apppath=$M.ROOT+ '/' +$M.C.application;
+
+
     var moudelList = fs.readdirSync($M.C.application);
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){

@@ -11,6 +11,7 @@ module.exports = function (root) {
         },
         models:'models',//模型文件夹名
         views: 'views',//模板文件夹名
+        middleware:'middleware',//中间件文件夹名称
         application:'Application',//模块文件夹
         controller:'controller',//控制器文件夹名
         lib: root + '/lib',
