@@ -1,10 +1,9 @@
 module.exports = function(app,$M){
     var send = require('koa-send')
         ,fs = require('fs')
-        , statics = require('koa-static')//静态服务器
-        , favicon = require('koa-favi');//favicon处理
+        , statics = require('koa-static');//静态服务器
     /////////////////////////////////////////////////静态文件处理///////////////////////////
-    app.use(favicon($M.ROOT + '/favicon.ico'));//favicon处理
+    //app.use(favicon($M.ROOT + '/favicon.ico'));//favicon处理
     //设置默认访问路径/输出模块静态文件夹内容
     app.use(function *(next) {
 

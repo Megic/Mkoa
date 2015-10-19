@@ -7,7 +7,6 @@
     "koa-send": "*",
     "koa-static": "*",
     "koa-body": "*",
-     "koa-favi": "*",
      "koa-logger": "*",
      "koa-ejs":"*",
      "koa-generic-session":"*",
