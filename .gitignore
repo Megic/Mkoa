@@ -24,3 +24,5 @@ static/css
 Application/builder
 Application/news
 Application/socket
+Application/ucenter
+Application/auth

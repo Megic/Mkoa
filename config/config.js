@@ -3,15 +3,17 @@ module.exports=function(root){
     return {
         v:'1.0',//版本
         //数据库连接
-        sqlType:2,//ORM框架数据库 1 mysql  2 pgsql
-        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
+        //sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
+        //sessionType:3,//1pgsql  2memcached 3 mysql 4 redis
         //mysql:{
         //    user:'root'
-        //    ,password:''
+        //    ,password:'root'
         //    ,dbName:'mkoa'
         //    ,prefix:'mkoa_'
         //    ,host:'localhost'
         //},
+        sqlType:2,//ORM框架数据库 1 mysql  2 pgsql
+        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
         pgsql:{
              username:'postgres'
             ,password:'root'

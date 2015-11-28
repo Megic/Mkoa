@@ -33,7 +33,7 @@ module.exports = function(app,$M){
         var redisStore = require('koa-redis');// redis存储session
         sessionOptions['store']=redisStore($M.C.redis);
     }
-    app.use(session(sessionOptions));
+    //app.use(session(sessionOptions));
     if($M.C.openSocket){//是否开启socket.io
         app.session(sessionOptions);
     }else{

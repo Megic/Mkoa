@@ -8,7 +8,7 @@ module.exports = function(app,$M){
         layout: false,
         viewExt: 'html',
         cache: false,
-        debug: true
+        debug: $M.C.logger
     });
     app.use(json());//json输出
 

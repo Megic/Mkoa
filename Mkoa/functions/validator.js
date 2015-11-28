@@ -32,7 +32,7 @@
       };
       if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
       for (var k in o)
-      if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
+        if (new RegExp('(' + k + ')').test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)));
       return fmt;
     },
 
@@ -216,9 +216,10 @@
       var res = false;
       min = Number(min);
       max = Number(max);
+
       switch(Utils.typeof(value)) {
         case 'string':
-          res = (value.localeCompare(min) >= 0) && (value.localeCompare(max) <= 0);
+          res = (value.length >= min) && (value.length <= max);
           break;
         case 'number':
           res = (value >= min) && (value <= max);
@@ -340,9 +341,10 @@
     'max': function (object, value, max) {
       var res = false;
       max = Number(max);
+
       switch(Utils.typeof(value)) {
         case 'string':
-          res = value.localeCompare(max) <= 0;
+          res = value.length <= max;
           break;
         case 'number':
           res = value <= max;
@@ -389,7 +391,7 @@
       min = Number(min);
       switch(Utils.typeof(value)) {
         case 'string':
-          res = value.localeCompare(min) >= 0;
+          res = value.length >= min;
           break;
         case 'number':
           res = value >= min;
@@ -552,18 +554,22 @@
       } else if (Utils.typeof(ruleValue) === 'string') {
         rules = parse(ruleValue);
       }
-
-      for (var i = 0; i < rules.length; i++) {
-        var key   = rules[i].key,
-            value = rules[i].value;
-
-        if(!run(object, this.requires, rules[i], field) ||
-          (field in object && !run(object, this.validators, rules[i], object[field]))) {
-          rejects.push({
-            //object: object,
-            field: field, rule: key });
-          if(!this.config.resumeOnFailed)
-            return false;
+      if (object[field].replace(/(^\s*)|(\s*$)/g, "").length ==0)//把所有空格转换成一个空格
+      {
+        object[field]='';
+      }
+      if(object[field]!=''||(_rules[field].rule.indexOf("required") >= 0)){//存在内容或者required才验证
+        for (var i = 0; i < rules.length; i++) {
+          var key   = rules[i].key,
+              value = rules[i].value;
+          if(!run(object, this.requires, rules[i], field) ||
+              (field in object && !run(object, this.validators, rules[i], object[field]))) {
+            rejects.push({
+              //object: object,
+              field: field, rule: key });
+            if(!this.config.resumeOnFailed)
+              return false;
+          }
         }
       }
     }
