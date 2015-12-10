@@ -1,0 +1,8 @@
+{
+  "name": "mkoa-moudle-auth",
+  "version": "0.0.1",
+  "dependencies": {
+    "koa-passport": "^1.2.0",
+    "passport-local": "^1.0.0"
+  }
+}
