@@ -19,8 +19,8 @@ Application/builder/data
 
 
 node_modules
-static/lib
-static/css
+Application/builder/static/admin/lib
+Application/builder/static/admin/css
 Application/builder
 Application/news
 Application/socket
