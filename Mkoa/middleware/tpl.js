@@ -10,6 +10,6 @@ module.exports = function(app,$M){
         cache: false,
         debug: $M.C.logger
     });
-    app.use(json());//json输出
+    app.use($M.convert(json()));//json输出
 
 };

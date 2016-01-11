@@ -554,8 +554,9 @@
       } else if (Utils.typeof(ruleValue) === 'string') {
         rules = parse(ruleValue);
       }
-      object[field]=object[field].toString();
-      if (object[field].replace(/(^\s*)|(\s*$)/g, "").length ==0)//把所有空格转换成一个空格
+
+      if(object[field])object[field]=object[field].toString();
+      if (object[field]&&object[field].replace(/(^\s*)|(\s*$)/g, "").length ==0)//把所有空格转换成一个空格
       {
         object[field]='';
       }

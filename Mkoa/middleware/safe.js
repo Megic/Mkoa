@@ -3,11 +3,11 @@ module.exports = function(app,$M){
     //app.use(cors());
 
 
-    app.use(koaBody({
+    app.use($M.convert(koaBody({
         multipart: true,
         formLimit: $M.C.formLimit,
         formidable: {keepExtensions: false, maxFieldsSize: parseInt($M.C.maxFieldsSize), multiples: false}
-    }));//body中间件
+    })));//body中间件
 
     if ($M.C.csrf) {//开启csrf
         var csrf = require('koa-csrf');//csrf

@@ -29,15 +29,15 @@ module.exports = function (root, mpath) {
      * $M.request  co-request//发起http请求等
      * $M.HOST 访问地址
      */
-
     var $M = {};//全局对象
     $M._ = require('underscore');//辅助函数
+    $M.convert = require('koa-convert');//koa 旧风格中间件转换
+    $M.co=require('co');
     $M.F = {};
     $M.CACHE=require('memory-cache');//缓存
     $M.F.moment = require('moment');//时间格式化
     $M.F.moment.locale('zh-cn'); //默认中文时间
     $M.F.sizeOf = require('image-size');//返回图片规格
-
     var sysFn = require(mpath + '/functions/init')(mpath);
     $M._.extend($M.F, sysFn); //整合方法
     //$M.passport = require('koa-passport');//登录验证
@@ -49,15 +49,52 @@ module.exports = function (root, mpath) {
     $M._.extend(sConfig, userConfig);
     $M.C = sConfig;
     $M.ROOT = root;
-
-
     var koa,app;
-    if($M.C.openSocket){//是否开启socket.io
-        koa = require(mpath +'/socket/application');
-        app = koa();
-        require($M.C.socketConfig)(app,$M);//用户socket.io中间件
+    koa = require('koa');
+    app = new koa();
+    if($M.C.openSocket){
+        const co = $M.co;
+        const IO = require('koa-socket');
+        $M.socket = new IO();
+        $M.socket.attach(app);
+    }
+    require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
+    if($M.C.openSocket) {//是否开启socket.io
+        //session处理
+        $M.socket.use($M.co.wrap(function *(ctx, next) {
+            if($M.socketUID[ctx.socket.id]){
+            ctx.session=yield $M.sessionStore.get('Mkoa:sess:'+$M.socketUID[ctx.socket.id]);
+            ctx.sessionSave=function *(){
+                yield $M.sessionStore.set('Mkoa:sess:'+$M.socketUID[ctx.socket.id],ctx.session);
+            };}else{
+                ctx.session={};
+            }
+            yield next();
+        }));
+        require($M.C.socketConfig)($M);//用户socket.io中间件
+        $M.socketUID={};
+        //进入事件
+        $M.socket.on('connection', ctx => {
+            $M.socketUID[ctx.socket.id]=getSessionId(ctx.socket.request.headers.cookie,'Mkoa:sid');
+            if($M.socketConnection)$M.socketConnection(ctx);
+            //获取sessiondid
+            function getSessionId(cookieString, cookieName) {
+                var matches = new RegExp(cookieName +
+                    '=([^;]+);', 'gmi').exec(cookieString);
+                return matches&&matches[1] ? matches[1] : null;
+            }
+        });
+
+        //退出事件
+        $M.socket.on('disconnect', ctx => {
+            if($M.socketDisconnect)$M.socketDisconnect(ctx);
+            $M.socketUID[ctx.socket.id]=null;
+            delete  $M.socketUID[ctx.socket.id];
+        });
+
         ///////////////////////////MKOA默认socket事件//////////////////////
-        app.io.route('MKOA', function* (next,obj){
+        $M.socket.on('MKOA',$M.convert(function *(next){
+            var obj=this.data;//socket数据
             if(obj.path){
                 $M.DATA=obj.data;
                 mkoaRouter($M,'/'+obj.path);//路径处理
@@ -69,9 +106,10 @@ module.exports = function (root, mpath) {
                         if(!SysFuc['_after'])SysFuc['_after']=function *(){};
                         if ($M._.isFunction(SysFuc['_init'])) {
                             if ((yield SysFuc['_init'].call(this,next)) == undefined) {
-                                        yield SysFuc[$M.actionName].call(this, next);//执行请求函数
-                                        if ($M._.isFunction(SysFuc['_after']))yield SysFuc['_after'].call(this, next);//执行after函数
+                                yield SysFuc[$M.actionName].call(this, next);//执行请求函数
+                                if ($M._.isFunction(SysFuc['_after']))yield SysFuc['_after'].call(this, next);//执行after函数
                             }//执行int函数
+                            //yield this.sessionSave();//保存session
                         }
                     } else {
                         _404 = true;
@@ -81,19 +119,15 @@ module.exports = function (root, mpath) {
                 }
                 //404页面处理
                 if(_404){
-                    this.emit('MKOA',{error:'404'});//没有相关处理方法
+                    this.socket.emit('MKOA',{error:'404'});//没有相关处理方法
                 }
             }
-        });
-        ///////////////////////////MKOA默认socket事件结束//////////////////////
-    }else{
-        koa = require('koa');
-        app = koa();
+        }));
     }
 
-    require(mpath + '/middleware/init')(mpath,app,$M);//引入预处理中间件
-//////////////////////////////////////////////////主中间件//////////////////////////////////////////////////
-    app.use(function *(next) {
+
+
+    app.use($M.convert(function *(next) {
         var $this=this;
         $M.GET = this.request.query;//get参数
         $M.POST = this.request.body;//post参数
@@ -154,7 +188,7 @@ module.exports = function (root, mpath) {
             var sys = {
                 $HOST: $M.HOST,
                 $V: $M.C.v,
-                $STATIC: $M.HOST + $M.moudle + '/' + $M.C.static + '/'//当前模块静态文件夹地址
+                $STATIC: $M.HOST + $M.moudle + '/' + $M.C.staticName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$M._.isString(tpl)) {//判断有没填模板参数
                 data = tpl;
@@ -209,7 +243,7 @@ module.exports = function (root, mpath) {
             yield this.display('common:404');
             this.caching = false;
         }
-    });
+    }));
 
 //mkoa路径处理函数
     function mkoaRouter($M,actionPath){
@@ -227,6 +261,21 @@ module.exports = function (root, mpath) {
         $M.TPL = $M.C.application + '/' + _moudle + '/' + $M.C.views + _clStr + '/' + $M.actionName;
     }
 
-    app.listen($M.C.port);//监听端口
+
+
+    //postgreSession 处理
+    if($M.pgSession){
+        $M.pgSession.setup().then(function(){runListen();});
+    }else{
+        runListen();
+    }
+    //监听端口
+    function runListen(){
+        if($M.C.openSocket) {
+            app.server.listen($M.C.port);//监听端口
+        }else{
+            app.listen($M.C.port);//监听端口
+        }
+    }
 
 };

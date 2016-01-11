@@ -6,7 +6,7 @@ module.exports=function(root){
         //sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
         //sessionType:3,//1pgsql  2memcached 3 mysql 4 redis
         //mysql:{
-        //    user:'root'
+        //    username:'root'
         //    ,password:'root'
         //    ,dbName:'mkoa'
         //    ,prefix:'mkoa_'
@@ -45,6 +45,7 @@ module.exports=function(root){
         socketConfig:root + '/config/socket',//socket配置文件
         port:80,    //端口设置
         logger:true,   //输出调试内容
+        loggerType:2,//1：console 2file
         //执行默认模块
         defaultPath:"login.html"//默认访问路径
     }

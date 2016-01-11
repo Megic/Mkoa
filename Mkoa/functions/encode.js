@@ -34,6 +34,9 @@ module.exports = {
 
 
     },
+    Trim:function(val) {//去除两边空格
+        return val?val.replace(/(^\s*)|(\s*$)/g, ""):'';
+    },
     isJSON:function (body) {
         if (!body) return false;
         if ('string' == typeof body) return false;

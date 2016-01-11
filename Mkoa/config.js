@@ -15,7 +15,7 @@ module.exports = function (root) {
         application:'Application',//模块文件夹
         controller:'controller',//控制器文件夹名
         lib: root + '/lib',
-        static:'static',
+        staticName:'static',
         staticpath: root + '/static/',
         cachepath:root + '/cache',
         socketConfig:root + '/config/socket',//socket配置文件路径
@@ -34,6 +34,12 @@ module.exports = function (root) {
         //端口设置
         port: 3000,
         logger: true,
+        loggerType:1,//1：default 2 config
+        logerConfig:{
+           file: root + '/cache/log/file.log'
+            //,size:''
+        },
+
         //执行默认模块
         defaultPath:""//默认访问路径
     }

@@ -1,7 +1,7 @@
 module.exports = function(app,$M){
     var fs = require('fs')
         ,fscp = require('co-fs-plus')
-        ,Cache = require('mkoa-file-cache');//文件夹等操作;
+        ,Cache = require('../lib/fileCache');//文件夹等操作;
     ///////////////////////缓存中间件/////////////////////////
 
     //返回或创建缓存文件夹
@@ -11,7 +11,7 @@ module.exports = function(app,$M){
             return curPath;
         }
     };
-    app.use(function*(next) {
+    app.use($M.convert(function*(next) {
         var path = 'file';
         var getPath = encodeURIComponent(this.request.query['$cachePath']);//get参数存在mkoa_cachePath 使用其作为缓存文件夹
         if (getPath != 'undefined')path = yield $M.F.getCachePath(getPath);
@@ -20,9 +20,9 @@ module.exports = function(app,$M){
         this.caching = $M.C.iscache;
         yield next;
         //console.log(this.caching);
-    });//获取缓存配置
+    }));//获取缓存配置
 
-    app.use(Cache({folder: $M.C.cachepath + '/', cacheTime: $M.C.cacheTime, type: 'html'}));
+    app.use($M.convert(Cache({folder: $M.C.cachepath + '/', cacheTime: $M.C.cacheTime, type: 'html'})));
 
 
 };

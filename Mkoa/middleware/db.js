@@ -4,7 +4,7 @@ module.exports = function(app,$M){
     //链接数据库
     var sequelize;
     if($M.C.sqlType==1){//sql
-        sequelize = new SequelizeOBJ($M.C.mysql.dbName,$M.C.mysql.user,$M.C.mysql.password, {
+        sequelize = new SequelizeOBJ($M.C.mysql.dbName,$M.C.mysql.username,$M.C.mysql.password, {
             dialect: "mysql",
             host: $M.C.mysql.host,
             port: $M.C.mysql.port,
