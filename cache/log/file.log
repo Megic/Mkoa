@@ -1,0 +1,2 @@
+[2016-01-12 00:11:47.460] [DEBUG] normal - 2016-01-12 00:11:47.459 ::1 -- GET /builder/index HTTP/1.1, null Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36
+[2016-01-12 00:11:48.161] [DEBUG] normal - 2016-01-12 00:11:48.161 ::1 -- GET /builder/index HTTP/1.1, null Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36
