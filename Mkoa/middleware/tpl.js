@@ -1,15 +1,15 @@
-module.exports = function(app,$M){
+module.exports = function(app){
     var  baseRender = require('koa-ejs')//ejs模板解析
         , json = require('koa-json');//json输出
     /////////////////////////////////////////////////静态文件处理///////////////////////////
     //定义模板
     baseRender(app, {
-        root: $M.ROOT,
+        root: $C.ROOT,
         layout: false,
         viewExt: 'html',
         cache: false,
-        debug: $M.C.logger
+        debug: $C.logger
     });
-    app.use($M.convert(json()));//json输出
+    app.use($F.convert(json()));//json输出
 
 };

@@ -43,6 +43,7 @@ module.exports=function(root){
         csrf:false,//是否开启csrf验证
         openSocket:true,//是否开启socket.io
         socketConfig:root + '/config/socket',//socket配置文件
+        openRewrite:true,
         port:80,    //端口设置
         logger:true,   //输出调试内容
         loggerType:2,//1：console 2file

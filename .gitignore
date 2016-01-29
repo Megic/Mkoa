@@ -25,3 +25,6 @@ Application/builder
 Application/news
 Application/socket
 Application/ucenter
+Application/setting
+static/css
+static/lib

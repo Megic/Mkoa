@@ -1,40 +1,40 @@
-module.exports = function(app,$M){
+module.exports = function(app){
     var fs = require('fs')
         , session = require('koa-generic-session');
     /////////////////////////////////////////////////session///////////////////////////
-    app.keys = [$M.C.secret];//session支持
+    app.keys = [$C.secret];//session支持
     //session配置
     var sessionOptions = {
         key: 'Mkoa:sid',
         prefix: 'Mkoa:sess:',
         rolling: false,
         cookie: {
-            maxage: $M.C.maxAge
+            maxage: $C.maxAge
         }
     };
-    if ($M.C.sessionType == 1) {//使用PostgreSQL存储session
+    if ($C.sessionType == 1) {//使用PostgreSQL存储session
         var PgStore = require('koa-pg-session');
-        sessionOptions['store']=new PgStore("postgres://" + $M.C.pgsql['username'] + ":" + $M.C.pgsql['password'] + "@" + $M.C.pgsql['host'] + ":" + $M.C.pgsql.port + "/" + $M.C.pgsql['dbName']);
-        $M.pgSession=sessionOptions['store'];//pgSession 标记
+        sessionOptions['store']=new PgStore("postgres://" + $C.pgsql['username'] + ":" + $C.pgsql['password'] + "@" + $C.pgsql['host'] + ":" + $C.pgsql.port + "/" + $C.pgsql['dbName']);
+        $SYS.pgSession=sessionOptions['store'];//pgSession 标记
     }
-    if ($M.C.sessionType == 3) {
+    if ($C.sessionType == 3) {
         var MysqlStore = require('koa-mysql-session');// mysql存储session
         sessionOptions['store']=new MysqlStore({
-            user: $M.C.mysql.username,
-            password: $M.C.mysql.password,
-            database: $M.C.mysql.dbName,
-            host: $M.C.mysql.host
+            user: $C.mysql.username,
+            password: $C.mysql.password,
+            database: $C.mysql.dbName,
+            host: $C.mysql.host
         });
     }
-    if ($M.C.sessionType == 2) {
+    if ($C.sessionType == 2) {
         var MemStore = require('koa-memcached');// memcached存储session
-        sessionOptions['store']=new MemStore($M.C.memcached);
+        sessionOptions['store']=new MemStore($C.memcached);
     }
-    if ($M.C.sessionType == 4) {
+    if ($C.sessionType == 4) {
         var redisStore = require('koa-redis');// redis存储session
-        sessionOptions['store']=redisStore($M.C.redis);
+        sessionOptions['store']=redisStore($C.redis);
     }
-    $M.sessionStore=sessionOptions['store'];
-   app.use($M.convert(session(sessionOptions)));
+    $SYS.sessionStore=sessionOptions['store'];
+   app.use($F.convert(session(sessionOptions)));
 /////////////////////////////////////////////////session.end///////////////////////////
 };

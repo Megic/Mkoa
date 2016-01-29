@@ -1,17 +1,17 @@
-module.exports = function(app,$M){
+module.exports = function(app){
     "use strict";
     //输出logger
-    if ($M.C.logger) {
+    if ($C.logger) {
         var logger = require('koa-log4js');
-        if($M.C.loggerType==1){
-            app.use($M.convert(logger()));
+        if($C.loggerType==1){
+            app.use($F.convert(logger()));
         }
-        if($M.C.loggerType==2){
-            app.use($M.convert(logger($M.C.logerConfig)));
+        if($C.loggerType==2){
+            app.use($F.convert(logger($C.logerConfig)));
         }
     }
 //===================系统错误处理===================
-    app.use($M.convert(function*(next) {
+    app.use($F.convert(function*(next) {
         try {
             yield next
         } catch (e) {

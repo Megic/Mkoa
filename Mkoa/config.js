@@ -11,6 +11,7 @@ module.exports = function (root) {
         },
         models:'models',//模型文件夹名
         views: 'views',//模板文件夹名
+        langs:'langs',//语言文件夹名称
         middleware:'middleware',//中间件文件夹名称
         application:'Application',//模块文件夹
         controller:'controller',//控制器文件夹名
@@ -39,7 +40,10 @@ module.exports = function (root) {
            file: root + '/cache/log/file.log'
             //,size:''
         },
-
+        openRewrite:false,//是否开启rewrite
+        cookie_locale: "mkoa_locale",//存放语言的 cookie 名称
+        defaultLang: "zh-cn", //默认语言
+        ROOT:root,//物理根目录
         //执行默认模块
         defaultPath:""//默认访问路径
     }
