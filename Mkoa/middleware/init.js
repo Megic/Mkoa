@@ -13,6 +13,7 @@ module.exports = function(mpath,app){
     require(path+'cache')(app);//缓存处理部分
     require(path+'tpl')(app);//输出处理部分
     require(path+'lang')(app);//语言处理部分
+    require(path+'low')(app);//low文件内存数据库
     require($C.ROOT+ '/config/middleware')(app);//用户自定义中间件
 
 
@@ -28,7 +29,7 @@ module.exports = function(mpath,app){
             }});
     }
 
-//自动加载模块目录中间件
+    //加载模块目录中间件
     var moudelList = fs.readdirSync($C.application);
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){

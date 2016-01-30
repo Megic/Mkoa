@@ -24,7 +24,6 @@ module.exports = function (root, mpath) {
 
     $F.convert = require('koa-convert');//koa 旧风格中间件转换
     $F.co=require('co');
-    $F.low=require('lowdb');//缓存
     $F.moment = require('moment');//时间格式化
     $F.moment.locale($C.defaultLang); //默认中文时间
     $F.sizeOf = require('image-size');//返回图片规格
