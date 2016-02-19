@@ -22,19 +22,19 @@ module.exports=function(root){
             ,host:'localhost'
             ,port:5432
         },
-        memcached:{
-             host:'x'
-            ,port:'11211'
-            ,username:'x'
-            ,password:'x'
-        },
-        redis:{
-            host:'127.0.0.1',
-            port:6379,
-            socket:'',
-            db:'',
-            pass:'e6c925a8eeb04856:ADmegic2015'
-        },
+        //memcached:{
+        //     host:'x'
+        //    ,port:'11211'
+        //    ,username:'x'
+        //    ,password:'x'
+        //},
+        //redis:{
+        //    host:'127.0.0.1',
+        //    port:6379,
+        //    socket:'',
+        //    db:'',
+        //    pass:'e6c925a8eeb04856:ADmegic2015'
+        //},
         //系统目录
         fileType:['gif','jpg','png'],//允许上传文件的类型
         maxFieldsSize:1*1024*1024,//最大上传文件

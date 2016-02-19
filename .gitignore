@@ -28,3 +28,4 @@ Application/ucenter
 Application/setting
 static/css
 static/lib
+cache/low

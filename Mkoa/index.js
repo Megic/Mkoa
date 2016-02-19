@@ -218,7 +218,7 @@ module.exports = function (root, mpath) {
             _404 = true;
         }
         //404页面处理
-        if (_404 && fs.existsSync($this.ROOT + '/' + $this.TPL + '.html')) {//存在html
+        if (_404 && fs.existsSync($C.ROOT + '/' + $this.TPL + '.html')) {//存在html
             yield this.display();
         }
         else if (_404) {
