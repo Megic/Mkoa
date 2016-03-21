@@ -146,7 +146,7 @@ module.exports = function (root, mpath) {
                             name: val.name,
                             type: type,
                             path: newFile.replace($C.staticpath, ''),
-                            size: $F.sizeOf(val.path),
+                            //size: $F.sizeOf(val.path),
                             oldPath: val.path
                         };
                     }

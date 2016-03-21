@@ -6,7 +6,7 @@ module.exports = function(app){
     app.use($F.convert(koaBody({
         multipart: true,
         formLimit: $C.formLimit,
-        formidable: {keepExtensions: false, maxFieldsSize: parseInt($C.maxFieldsSize), multiples: false}
+        formidable: {uploadDir:$C.uploadDir,keepExtensions: false, maxFieldsSize: parseInt($C.maxFieldsSize), multiples: false}
     })));//body中间件
 
     if ($C.csrf) {//开启csrf

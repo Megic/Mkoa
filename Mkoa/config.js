@@ -23,6 +23,7 @@ module.exports = function (root) {
         iscache:false,//缓存全局设置
         cahceTime:1000*60*60*24,//全局缓存时间-天
         upload: root + '/static/upload',//上传文件夹
+        uploadDir:root + '/cache/tmp/',//上传文件临时文件夹
         maxFieldsSize: 200*1024,//最大上传文件
         formLimit: 300,//post最大长度
         fileType: ['jpg', 'png', 'gif'],//上传文件类型
