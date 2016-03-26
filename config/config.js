@@ -13,7 +13,7 @@ module.exports=function(root){
         //    ,host:'localhost'
         //},
         sqlType:2,//ORM框架数据库 1 mysql  2 pgsql
-        sessionType:1,//1pgsql  2memcached 3 mysql 4 redis
+        sessionType:2,//1 mysql 2pgsql  3 memcached  4 redis
         pgsql:{
              username:'postgres'
             ,password:'root'

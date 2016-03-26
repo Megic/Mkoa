@@ -12,12 +12,7 @@ module.exports = function(app){
             maxage: $C.maxAge
         }
     };
-    if ($C.sessionType == 1) {//使用PostgreSQL存储session
-        var PgStore = require('koa-pg-session');
-        sessionOptions['store']=new PgStore("postgres://" + $C.pgsql['username'] + ":" + $C.pgsql['password'] + "@" + $C.pgsql['host'] + ":" + $C.pgsql.port + "/" + $C.pgsql['dbName']);
-        $SYS.pgSession=sessionOptions['store'];//pgSession 标记
-    }
-    if ($C.sessionType == 3) {
+    if ($C.sessionType == 1) {
         var MysqlStore = require('koa-mysql-session');// mysql存储session
         sessionOptions['store']=new MysqlStore({
             user: $C.mysql.username,
@@ -26,7 +21,12 @@ module.exports = function(app){
             host: $C.mysql.host
         });
     }
-    if ($C.sessionType == 2) {
+    if ($C.sessionType == 2) {//使用PostgreSQL存储session
+        var PgStore = require('koa-pg-session');
+        sessionOptions['store']=new PgStore("postgres://" + $C.pgsql['username'] + ":" + $C.pgsql['password'] + "@" + $C.pgsql['host'] + ":" + $C.pgsql.port + "/" + $C.pgsql['dbName']);
+        $SYS.pgSession=sessionOptions['store'];//pgSession 标记
+    }
+    if ($C.sessionType == 3) {
         var MemStore = require('koa-memcached');// memcached存储session
         sessionOptions['store']=new MemStore($C.memcached);
     }

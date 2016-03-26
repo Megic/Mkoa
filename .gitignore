@@ -29,3 +29,5 @@ Application/setting
 static/css
 static/lib
 cache/low
+Application/upload
+Application/install

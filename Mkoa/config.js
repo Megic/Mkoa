@@ -2,6 +2,7 @@ module.exports = function (root) {
     return {
         //系统目录
         sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
+        sessionType:1,//1 mysql 2pgsql  3 memcached  4 redis
         mysql:{
             user:''
             ,password:''
@@ -32,7 +33,6 @@ module.exports = function (root) {
         csrf: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
         secret: '*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
-        sessionType: 1,//1 pgsql 2 memcached
         //端口设置
         port: 3000,
         logger: true,
