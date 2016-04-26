@@ -1,5 +1,6 @@
 module.exports = function(app){
     var fs = require('fs');
+    var path=require('path');
     //缓存
     $SYS.lowdb=require('lowdb');
     var storage = require('lowdb/file-sync');

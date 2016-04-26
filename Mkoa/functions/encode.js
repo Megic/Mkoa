@@ -19,8 +19,8 @@ module.exports = {
     d: function (crypted) {
 
         var decipher = crypto.createDecipher('aes-256-cbc', C.secret);
-        var dec = decipher.update(crypted, 'hex', 'utf8')
-        dec += decipher.final('utf8')
+        var dec = decipher.update(crypted, 'hex', 'utf8');
+        dec += decipher.final('utf8');
         return dec;
 
 

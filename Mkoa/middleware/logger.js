@@ -13,8 +13,9 @@ module.exports = function(app){
 
 //===================系统错误处理===================
     function errHandler(e,$this) {
-        console.log('错误'+e);
-        return $this.body = {error: 500, data: e.message || e.name || e};//输出错误
+        var msg='systemError';
+        if($C.loggerType==1){msg= e.message || e.name || e; console.log('错误'+e);}
+        return $this.body = {error: 500, data:msg};//输出错误
     }
     app.use($F.convert(function*(next) {
         try {

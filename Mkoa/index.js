@@ -167,16 +167,26 @@ module.exports = function (root, mpath) {
         this.error = function (msg,data) {//返回错误结构
             this.body = {error: msg,data: data};
         };
-        this.display = function *(tpl, data) {//渲染模板
+        this.display = function *(tpl, data,option) {//渲染模板
             var sys = {
+                $U:function(mdPath){
+                    var _mdArr = mdPath.split(':');
+                    if (_mdArr.length > 1){
+                        //非当前模块模型
+                        mdPath = $C.ROOT + '/' + $C.application + '/' + _mdArr[0] + '/' + $C. views + '/' + _mdArr[1];
+                    }
+                    return mdPath;
+                },
                 $HOST: $this.HOSTURL,
                 $V: $C.v,
                 $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$F._.isString(tpl)) {//判断有没填模板参数
+                option=data;
                 data = tpl;
                 tpl = '';
             }
+            option=option?option:{};
             data = $F._.extend(sys, data);
             if (!tpl) {
                 tpl = $this.TPL;
@@ -189,7 +199,7 @@ module.exports = function (root, mpath) {
                 }
                 tpl = $C.application + '/' + _moudleName + '/' + $C.views + '/' + tpl;
             }
-            yield this.render(tpl, data);//渲染模板
+            yield this.render(tpl, data,option);//渲染模板
         };
         var _404 = false;
         if (fs.existsSync($this.actionUrl)) { //判定controller是否存在

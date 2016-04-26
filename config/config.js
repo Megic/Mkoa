@@ -46,7 +46,7 @@ module.exports=function(root){
         openRewrite:true,
         port:80,    //端口设置
         logger:true,   //输出调试内容
-        loggerType:2,//1：console 2file
+        loggerType:1,//1：console 2file
         //执行默认模块
         defaultPath:"index.html"//默认访问路径
     }

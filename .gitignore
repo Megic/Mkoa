@@ -8,9 +8,11 @@ lib-cov
 *.gz
 .idea
 pids
+/Application/classify
 logs
 results
 install.json
+/Application/test
 static/upload
 
 npm-debug.log
@@ -29,5 +31,5 @@ Application/setting
 static/css
 static/lib
 cache/low
-Application/upload
 Application/install
+Application/upload

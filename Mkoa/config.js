@@ -44,6 +44,7 @@ module.exports = function (root) {
         openRewrite:false,//是否开启rewrite
         cookie_locale: "mkoa_locale",//存放语言的 cookie 名称
         defaultLang: "zh-cn", //默认语言
+        defaultTPL: "ejs", //默认模板
         ROOT:root,//物理根目录
         //执行默认模块
         defaultPath:""//默认访问路径
