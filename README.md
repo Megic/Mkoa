@@ -24,7 +24,9 @@
 
 模块 | 描述 | 地址
 ----|------|----
+Mkoa-install| Mkoa简易模块安装/卸载管理 |https://github.com/Megic/mkoa-install
 Mkoa-builder | 代码生成器  | https://github.com/Megic/Mkoa-builder
+
 
 
 
