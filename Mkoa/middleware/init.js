@@ -34,9 +34,16 @@ module.exports = function(mpath,app){
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){
             var fpath=apppath + '/' + item+ '/' + $C.middleware;
-            if(fs.existsSync(fpath)) walk(fpath,function(filePath){
-                require(filePath)(app);//加载模块中间件
-            });
+            if(fs.existsSync(fpath)){
+                var isAdd=1;
+                if(fs.existsSync(apppath + '/' + item+'/package.json')){
+                    if(!fs.existsSync(apppath + '/' + item+'/node_modules/'))isAdd=0;//没有安装依赖
+                }
+                if(isAdd)walk(fpath,function(filePath){
+                    require(filePath)(app);//加载模块中间件
+                });
+            }
+
             var mdPath=apppath + '/' + item+ '/' + $C.models;//加载数据模型数据
             if(fs.existsSync(mdPath)) walk(mdPath,function(filePath,fileName){
                 var nameArr=fileName.split('.');
