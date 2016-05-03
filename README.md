@@ -20,12 +20,13 @@
 
 > node node.js   //node 4.0以下版本需要"--harmony"参数
 
-#Mkoa 模块
+#Mkoa 开发模块-协助进行项目开发
 
 模块 | 描述 | 地址
 ----|------|----
 Mkoa-install| Mkoa简易模块安装/卸载管理 |https://github.com/Megic/mkoa-install
-Mkoa-builder | 代码生成器  | https://github.com/Megic/Mkoa-builder
+Mkoa-webpack| Mkoa webpack前端代码打包模块 | https://github.com/Megic/Mkoa-webpack
+Mkoa-builder | 简易代码生成器  | https://github.com/Megic/Mkoa-builder
 
 
 

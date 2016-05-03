@@ -36,15 +36,17 @@ module.exports = function (root) {
         //端口设置
         port: 3000,
         logger: true,
-        loggerType:1,//1：default 2 config
+        loggerType:1,//1：default 2 lib
         logerConfig:{
            file: root + '/cache/log/file.log'
             //,size:''
         },
+        controllerCache:0,//是否清空controllerCache,开发环境开启修改conttoller文件后可以不用重启服务
         openRewrite:false,//是否开启rewrite
         cookie_locale: "mkoa_locale",//存放语言的 cookie 名称
         defaultLang: "zh-cn", //默认语言
         defaultTPL: "ejs", //默认模板
+        viewExt:'html',//模板后缀
         ROOT:root,//物理根目录
         //执行默认模块
         defaultPath:""//默认访问路径

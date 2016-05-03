@@ -1,3 +1,4 @@
+/Application/webpack
 lib-cov
 *.seed
 *.log
@@ -16,6 +17,7 @@ install.json
 static/upload
 
 npm-debug.log
+/static/1.0
 
 Application/builder/data
 

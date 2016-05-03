@@ -83,6 +83,7 @@ module.exports = function (root, mpath) {
                 mkoaRouter($this,'/'+obj.path);//路径处理
                 var _404 = false;
                 if (fs.existsSync(this.actionUrl)){ //判定controller是否存在
+                    if($C.controllerCache)delete require.cache[require.resolve(this.actionUrl)];//删除缓存
                     var SysFuc = require(this.actionUrl)(this); //加载controller
                     if (SysFuc && $F._.isFunction(SysFuc[this.actionName])) {
                         if(!SysFuc['_init'])SysFuc['_init']=function *(){};
@@ -178,7 +179,7 @@ module.exports = function (root, mpath) {
                     return mdPath;
                 },
                 $HOST: $this.HOSTURL,
-                $V: $C.v,
+                $V: $C.V,
                 $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$F._.isString(tpl)) {//判断有没填模板参数
@@ -189,7 +190,7 @@ module.exports = function (root, mpath) {
             option=option?option:{};
             data = $F._.extend(sys, data);
             if (!tpl) {
-                tpl = $this.TPL;
+                tpl = $this.TPL+ '.'+$C.viewExt;
             } else {//跨模块模板
                 var _tplArr = tpl.split(':');
                 var _moudleName = $this.moudle;
@@ -203,6 +204,7 @@ module.exports = function (root, mpath) {
         };
         var _404 = false;
         if (fs.existsSync($this.actionUrl)) { //判定controller是否存在
+            if($C.controllerCache)delete require.cache[require.resolve($this.actionUrl)];//删除缓存
             var SysFuc = require($this.actionUrl)(this); //加载controller
             if (SysFuc && $F._.isFunction(SysFuc[$this.actionName])) {
                 if(!SysFuc['_init'])SysFuc['_init']=function *(){};
@@ -228,7 +230,7 @@ module.exports = function (root, mpath) {
             _404 = true;
         }
         //404页面处理
-        if (_404 && fs.existsSync($C.ROOT + '/' + $this.TPL + '.html')) {//存在html
+        if (_404 && fs.existsSync($C.ROOT + '/' + $this.TPL + '.'+$C.viewExt)) {//存在html
             yield this.display();
         }
         else if (_404) {

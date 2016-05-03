@@ -19,6 +19,7 @@ module.exports = function(mpath,app){
 
     //***************************自动加载模块目录下中间件***********************
     var apppath=$C.ROOT+ '/' +$C.application;
+
     function walk(apppath,callback){
         var dirList = fs.readdirSync(apppath);
         dirList.forEach(function(item){
@@ -36,7 +37,7 @@ module.exports = function(mpath,app){
             var fpath=apppath + '/' + item+ '/' + $C.middleware;
             if(fs.existsSync(fpath)){
                 var isAdd=1;
-                if(fs.existsSync(apppath + '/' + item+'/package.json')){
+                if(fs.existsSync(apppath + '/' + item+'/config.json')){
                     if(!fs.existsSync(apppath + '/' + item+'/node_modules/'))isAdd=0;//没有安装依赖
                 }
                 if(isAdd)walk(fpath,function(filePath){

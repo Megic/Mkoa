@@ -1,7 +1,7 @@
 
 module.exports=function(root){
     return {
-        v:'1.0',//版本
+        V :'1.0',//版本
         //数据库连接
         //sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
         //sessionType:3,//1pgsql  2memcached 3 mysql 4 redis
@@ -47,6 +47,7 @@ module.exports=function(root){
         port:80,    //端口设置
         logger:true,   //输出调试内容
         loggerType:1,//1：console 2file
+        controllerCache:1,//是否关闭控制器缓存，方便开发,正式环境设为0
         //执行默认模块
         defaultPath:"index.html"//默认访问路径
     }
