@@ -180,6 +180,7 @@ module.exports = function (root, mpath) {
                 },
                 $HOST: $this.HOSTURL,
                 $V: $C.V,
+                $MOUDLE:$this.moudle,
                 $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$F._.isString(tpl)) {//判断有没填模板参数
