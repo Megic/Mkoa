@@ -1,6 +1,6 @@
 module.exports = function(app){
- var fs = require('fs');
-var commonLangs={},moduleLangs={};//缓存使用的语言
+    var fs = require('fs');
+    var commonLangs={},moduleLangs={};//缓存使用的语言
     app.use($F.convert(function*(next) {
         var lang=this.cookies.get($C.cookie_locale);//获取当前请求语言cookies
         if(!lang)lang=$C.defaultLang;
@@ -19,17 +19,17 @@ var commonLangs={},moduleLangs={};//缓存使用的语言
             }
         }
         //当前模块配置
-        if(!moduleLangs[lang]){
+        if(!moduleLangs[$this.moudle+lang]){
             var mdpath=$this.modulePath+$C.langs+'/'+lang;
             if (fs.existsSync(mdpath+'.js')){//存在公共语言文件
-                moduleLangs[lang]=require(mdpath);
+                moduleLangs[$this.moudle+lang]=require(mdpath);
             }else{
-                moduleLangs[lang]={};
+                moduleLangs[$this.moudle+lang]={};
             }
         }
         $this.langs={};
         $F._.extend($this.langs,commonLangs[lang]);
-        $F._.extend($this.langs,moduleLangs[lang]);
+        $F._.extend($this.langs,moduleLangs[$this.moudle+lang]);
     };
 
 };

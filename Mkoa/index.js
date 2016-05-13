@@ -46,10 +46,10 @@ module.exports = function (root, mpath) {
         //session处理
         $S.socket.use($F.co.wrap(function *(ctx, next) {
             if($S.socketUID[ctx.socket.id]){
-            ctx.session=yield $SYS.sessionStore.get('Mkoa:sess:'+$S.socketUID[ctx.socket.id]);
-            ctx.sessionSave=function *(){
-                yield $SYS.sessionStore.set('Mkoa:sess:'+$S.socketUID[ctx.socket.id],ctx.session);
-            };}else{
+                ctx.session=yield $SYS.sessionStore.get('Mkoa:sess:'+$S.socketUID[ctx.socket.id]);
+                ctx.sessionSave=function *(){
+                    yield $SYS.sessionStore.set('Mkoa:sess:'+$S.socketUID[ctx.socket.id],ctx.session);
+                };}else{
                 ctx.session={};
             }
             yield next();
@@ -135,7 +135,7 @@ module.exports = function (root, mpath) {
             for (key in this.request.body.files) {
                 var key = key;
                 var val = this.request.body.files[key];
-                var type = val.name.split('.')[1].toLowerCase();
+                var type = val.type.split('/')[1].toLowerCase();
                 if (type == 'jpeg')type = 'jpg';
                 var fileName = val.path.slice(-32);//获取文件名
                 this.FILES[key] = false;
@@ -180,8 +180,8 @@ module.exports = function (root, mpath) {
                 },
                 $HOST: $this.HOSTURL,
                 $V: $C.V,
-                $PATH:$this.request.path,
                 $MOUDLE:$this.moudle,
+                $PATH:$this.request.path,
                 $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$F._.isString(tpl)) {//判断有没填模板参数
