@@ -180,6 +180,7 @@ module.exports = function (root, mpath) {
                 },
                 $HOST: $this.HOSTURL,
                 $V: $C.V,
+                $SV:$C.SV?$C.SV:new Date().getTime(),
                 $MOUDLE:$this.moudle,
                 $PATH:$this.request.path,
                 $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
