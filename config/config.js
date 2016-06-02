@@ -37,12 +37,8 @@ module.exports=function(root){
         //},
         //系统目录
         fileType:['gif','jpg','png'],//允许上传文件的类型
-        maxFieldsSize:1*1024*1024,//最大上传文件
-        formLimit:'1mb',//post最大长度
-        host:'http://localhost/',//访问域名
-        csrf:false,//是否开启csrf验证
+        host:'http://localhost/',//访问域名，模板使用
         openSocket:true,//是否开启socket.io
-        socketConfig:root + '/config/socket',//socket配置文件
         openRewrite:true,
         port:80,    //端口设置
         logger:true,   //输出调试内容
