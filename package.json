@@ -1,13 +1,14 @@
 {
-  "name": "Mkoa2",
+  "name": "Mkoa",
   "version": "0.0.1",
   "description": "Koa2 web app framework",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Megic/Mkoa2.git"
+    "url": "https://github.com/Megic/Mkoa.git"
   },
   "readme": "ERROR: No README data found!",
   "dependencies": {
+    "Mkoa-pg-session": "^2.0.0",
     "co": "^4.6.0",
     "co-fs-plus": "^0.3.1",
     "co-request": "^1.0.0",
@@ -22,7 +23,6 @@
     "koa-log4js": "0.0.1",
     "koa-memcached": "^0.1.2",
     "koa-mysql-session": "0.0.2",
-    "koa-pg-session": "^2.0.0",
     "koa-redis": "^1.0.1",
     "koa-send": "^3.1.0",
     "koa-sequelize-transaction": "0.0.1",

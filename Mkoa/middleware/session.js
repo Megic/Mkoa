@@ -22,7 +22,7 @@ module.exports = function(app){
         });
     }
     if ($C.sessionType == 2) {//使用PostgreSQL存储session
-        var PgStore = require('koa-pg-session');
+        var PgStore = require('Mkoa-pg-session');
         sessionOptions['store']=new PgStore("postgres://" + $C.pgsql['username'] + ":" + $C.pgsql['password'] + "@" + $C.pgsql['host'] + ":" + $C.pgsql.port + "/" + $C.pgsql['dbName']);
         $SYS.pgSession=sessionOptions['store'];//pgSession 标记
     }
