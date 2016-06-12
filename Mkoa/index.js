@@ -221,7 +221,7 @@ module.exports = function (root, mpath) {
                                 yield SysFuc[$this.actionName].call(this, next);//执行请求函数
                                 if ($F._.isFunction(SysFuc['_after']))yield SysFuc['_after'].call(this, next);//执行after函数
                                 this.cacheOptions.type = $F.encode.isJSON(this.body) ? 'json' : 'html';
-                                if (!this.body)_404 = true;
+                                if (!this.body&&!this.response.header.location)_404 = true;
                             }
                         }
                     }//执行int函数

@@ -5,6 +5,7 @@ module.exports = function (root) {
         SV:0,//引用版本号，用于刷新ajax缓存，空或者0会生成当前时间戳
         sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
         sessionType:1,//1 mysql 2pgsql  3 memcached  4 redis
+        prefix:'mkoa_',//数据表前缀
         mysql:{
             user:''
             ,password:''
