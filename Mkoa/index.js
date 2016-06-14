@@ -36,6 +36,7 @@ module.exports = function (root, mpath) {
     var koa,app;
     koa = require('koa');
     app = new koa();
+    app.proxy=$C.proxy;
     if($C.openSocket){
         var IO = require('koa-socket');
         $S.socket = new IO();

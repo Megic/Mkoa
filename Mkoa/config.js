@@ -5,7 +5,6 @@ module.exports = function (root) {
         SV:0,//引用版本号，用于刷新ajax缓存，空或者0会生成当前时间戳
         sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
         sessionType:1,//1 mysql 2pgsql  3 memcached  4 redis
-        prefix:'mkoa_',//数据表前缀
         mysql:{
             user:''
             ,password:''
@@ -29,10 +28,11 @@ module.exports = function (root) {
         upload: root + '/static/upload',//上传文件夹
         uploadDir:root + '/cache/tmp/',//上传文件临时文件夹
         maxFieldsSize: 200*1024,//最大上传文件
-        formLimit: 300,//post最大长度
+        formLimit: 3000,//post最大长度
         fileType: ['jpg', 'png', 'gif'],//上传文件类型
         openSocket:false,//是否开启socket.io
         //cookie session
+        proxy:false,//如果用nginx代理，设置为true
         csrf: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
         secret: '*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
@@ -41,7 +41,7 @@ module.exports = function (root) {
         logger: true,
         loggerType:1,//1：default 2 lib
         logerConfig:{
-           file: root + '/cache/log/file.log'
+            file: root + '/cache/log/file.log'
             //,size:''
         },
         controllerCache:0,//是否清空controllerCache,开发环境开启修改conttoller文件后可以不用重启服务
