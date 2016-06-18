@@ -114,7 +114,8 @@ module.exports = function (root, mpath) {
     app.use($F.convert(function *(next) {
         this.GET = this.request.query;//get参数
         this.POST = this.request.body;//post参数
-        this.HOSTURL = $C.host ? $C.host : 'http://' + this.host + '/';//访问地址
+        $C.host=$C.host?$C.host:'http://' + this.host + '/';
+        this.HOSTURL = $C.host;//访问地址
         this.filePath=$C.upload + '/' + $F.moment().format('YYYY/MM/DD/');//当前文件保存地址
         var $this=this;
         //保存远程文件
