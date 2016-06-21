@@ -1,5 +1,15 @@
 module.exports = function(app){
     var SequelizeOBJ = require('sequelize');//ORM框架
+    ////////////数据库事务支持
+    var cls = require('continuation-local-storage');
+    var co = require('co');
+    var namespace;
+    if (SequelizeOBJ.cls) {
+        namespace = SequelizeOBJ.cls;
+    } else {
+        namespace = cls.createNamespace('koa-sequelize-transaction');
+        SequelizeOBJ.cls = namespace;
+    }
     /////////////////////////////////////////////////静态文件处理///////////////////////////
     //链接数据库
     var sequelize;
@@ -16,10 +26,7 @@ module.exports = function(app){
             dialect: "postgres",
             host: $C.pgsql.host,
             port: $C.pgsql.port,
-            logging: $C.logger ? console.log : false,
-            autocommit: false,
-            isolationLevel: 'REPEATABLE_READ',
-            deferrable: 'NOT DEFERRABLE' // implicit default of postgres
+            logging: $C.logger ? console.log : false
         });
     }
     $SYS.sequelize = sequelize;
@@ -27,18 +34,10 @@ module.exports = function(app){
         return sequelize.import($SYS.modelPath[model]);
     };//模型加载
 
-    ////////////数据库事务支持
-    var cls = require('continuation-local-storage');
-    var co = require('co');
-    var namespace;
-    if (SequelizeOBJ.cls) {
-        namespace = SequelizeOBJ.cls;
-    } else {
-        namespace = cls.createNamespace('koa-sequelize-transaction');
-        SequelizeOBJ.cls = namespace;
-    }
-    $F.transaction = function *(fn) {
-        yield $SYS.sequelize.transaction(function (t) {
+
+    $F.transaction = function *(fn,options) {
+        options=options?options:{};
+        yield $SYS.sequelize.transaction(options,function (t) {
             return co(function *() {
                 yield fn()
             });
