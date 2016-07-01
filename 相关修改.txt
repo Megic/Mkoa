@@ -1,3 +1,0 @@
-koa-csrf 行71 增加|| (body&&body.fields._csrf) 解决上传文件表单csrf失效问题
-sequelize.js data-type 加入tinyint
-修复 co-wechat.js

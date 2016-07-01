@@ -43,7 +43,7 @@ module.exports=function(root){
         openRewrite:true,
         csrf: false,
         //maxAge: 5 * 1000,//cookies时间
-       maxAge: 30 * 24 * 60 * 60 * 1000,//cookies时间
+        maxAge: 30 * 24 * 60 * 60 * 1000,//cookies时间
         port:80,    //端口设置
         logger:true,   //输出调试内容
         loggerType:1,//1：console 2file

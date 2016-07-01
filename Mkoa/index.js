@@ -6,7 +6,7 @@
  * @param root 根目录
  * @param mpath 库目录
  */
-module.exports = function (root, mpath) {
+module.exports = function (root, mpath,configstr) {
     var path = require('path')
         , fs = require('fs')
         , fscp = require('co-fs-plus');//文件夹等操作
@@ -18,7 +18,7 @@ module.exports = function (root, mpath) {
     $F._ = require('underscore');//辅助函数
 //===================获取配置内容===================
     var sConfig = require(mpath + '/config')(root);
-    var userConfig = require(root + '/config/config')(root);
+    var userConfig = require(root + '/config/config'+(configstr?'_'+configstr:''))(root);
     $F._.extend(sConfig, userConfig);
     $C = sConfig;
 
