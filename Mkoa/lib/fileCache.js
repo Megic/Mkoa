@@ -42,10 +42,10 @@ function Cache(options) {
         this.cacheInfo = fileInfo;
 
         //debug(fileInfo.name, " has expired: "+ fileInfo.expired);
-
         // If no cache exists or is expired (save)
         if (fileInfo.expired) {
             // Let downstream middleware do their stuff
+
             yield next;
 
             // Allow middleware to decide if we shouldn't cache
@@ -54,6 +54,7 @@ function Cache(options) {
                 //debug("Caching disabled for this request");
                 return;
             }
+
 
             yield saveCache(this, fileName);
 
@@ -68,70 +69,71 @@ function Cache(options) {
             // Let upstream middleware decide if we shouldn't read from cache
             if (this.caching === false) {
                 yield next;
-                return;
+                // return;
             }
+            if (this.caching ) {
+                // Get the header and file cache stats
+                this.vary('Accept-Encoding');
+                var encoding = this.acceptsEncodings(['gzip', 'identity']);
+                var lastModified = fileInfo.stats.mtime;
+                var ifModifiedSince = new Date(this.get('If-Modified-Since'));
+                var expires = new Date(lastModified.getTime() + options.cacheTime);
 
-            // Get the header and file cache stats
-            this.vary('Accept-Encoding');
-            var encoding = this.acceptsEncodings(['gzip', 'identity']);
-            var lastModified = fileInfo.stats.mtime;
-            var ifModifiedSince = new Date(this.get('If-Modified-Since'));
-            var expires = new Date(lastModified.getTime() + options.cacheTime);
+                // Drop the milliseconds because ifModifiedSince inherently does
+                lastModified.setMilliseconds(0);
 
-            // Drop the milliseconds because ifModifiedSince inherently does
-            lastModified.setMilliseconds(0);
+                // Check if we need to send the data (or if it's already cached client-side)
+                if (ifModifiedSince.getTime() >= lastModified.getTime()) {
+                    this.status = 304;
+                    this.set('Last-Modified', lastModified.toUTCString());
+                    this.set('Expires', expires.toUTCString());
+                    return;
+                }
 
-            // Check if we need to send the data (or if it's already cached client-side)
-            if (ifModifiedSince.getTime() >= lastModified.getTime()) {
-                this.status = 304;
-                this.set('Last-Modified', lastModified.toUTCString());
-                this.set('Expires', expires.toUTCString());
-                return;
-            }
+                // Force the cache to be loaded uncompressed
+                var force_parse_file = false;
+                // Force delegation to the other middleware
+                var force_delegation = false;
 
-            // Force the cache to be loaded uncompressed
-            var force_parse_file = false;
-            // Force delegation to the other middleware
-            var force_delegation = false;
+                // If we're not delegating we can stream directly to client
+                if (!options.delegate) {
+                    this.set('Last-Modified', lastModified.toUTCString());
+                    this.set('Expires', expires.toUTCString());
 
-            // If we're not delegating we can stream directly to client
-            if (!options.delegate) {
-                this.set('Last-Modified', lastModified.toUTCString());
-                this.set('Expires', expires.toUTCString());
+                    var cache = fs.createReadStream(fileInfo.name);
+                    if ((encoding === 'gzip') && fileInfo.gzipped) {
+                        this.set('Content-Encoding', encoding);
+                        this.body = cache;
 
-                var cache = fs.createReadStream(fileInfo.name);
-                if ((encoding === 'gzip') && fileInfo.gzipped) {
-                    this.set('Content-Encoding', encoding);
+                        // Prevent compression by other middleware
+                        this.compress = false;
+                    }
+                    else if ((encoding === 'identity') && fileInfo.gzipped) {
+                        force_parse_file = true;
+                    }
+                    else {
+                        this.body = cache;
+                    }
+
+                    // Set the type
+                    this.type = options.type;
+                }
+
+                // If we need to load the file into memory uncompressed
+                if (options.delegate || force_parse_file) {
+
+                    var cache = yield Cache.get(this);
+
+                    // Store the cache directly in the body
                     this.body = cache;
 
-                    // Prevent compression by other middleware
-                    this.compress = false;
-                }
-                else if ((encoding === 'identity') && fileInfo.gzipped) {
-                    force_parse_file = true;
-                }
-                else {
-                    this.body = cache;
+                    force_delegation = !cache; // if something went wrong
                 }
 
-                // Set the type
-                this.type = options.type;
-            }
-
-            // If we need to load the file into memory uncompressed
-            if (options.delegate || force_parse_file) {
-
-                var cache = yield Cache.get(this);
-
-                // Store the cache directly in the body
-                this.body = cache;
-
-                force_delegation = !cache; // if something went wrong
-            }
-
-            if (options.delegate || force_delegation) {
-                // Let middleware down the line see the cache
-                yield next;
+                if (options.delegate || force_delegation) {
+                    // Let middleware down the line see the cache
+                    yield next;
+                }
             }
         }
     };
@@ -148,6 +150,7 @@ Cache.get = function*(ctx) {
 
     var cache = yield readFile(fileInfo.name);
     cache = yield loadCacheUncompressed(options, cache, fileInfo.gzipped);
+    console.log(cache);
     return cache;
 };
 module.exports = Cache;
@@ -177,9 +180,9 @@ function saveCache(ctx, fileName) {
     var options = ctx.cacheOptions;
     return function(cb) {
         // Stringify any JSON
-        if (options.type === 'json') {
-            ctx.body = JSON.stringify(ctx.body, null, ctx.app.jsonSpaces);
-        }
+        // if (options.type === 'json') {
+        //     ctx.body = JSON.stringify(ctx.body, null, ctx.app.jsonSpaces);
+        // }
 
         // The write stream
         var out;
@@ -190,14 +193,14 @@ function saveCache(ctx, fileName) {
             var compression = zlib.createGzip();
             compression.pipe(out);
             compression.end(ctx.body);
-           // debug("Attempting to save "+fileName+'.gz');
+            // debug("Attempting to save "+fileName+'.gz');
         }
         // Or just save
         else {
-           // debug('gzip disabled or below threshold');
+            // debug('gzip disabled or below threshold');
             out = fs.createWriteStream(fileName);
             out.end(ctx.body);
-          //  debug("Attempting to save "+fileName);
+            //  debug("Attempting to save "+fileName);
         }
 
         out.on('error', cb);
