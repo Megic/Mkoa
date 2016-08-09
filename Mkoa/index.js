@@ -32,7 +32,6 @@ module.exports = function (root, mpath,configstr) {
     $F.request = require('co-request');
     $SYS.modelPath={};//数据模型路径
 
-
     var koa,app;
     koa = require('koa');
     app = new koa();
