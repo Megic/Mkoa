@@ -8,7 +8,6 @@ module.exports = function(){
         console.log('断开链接:'+ ctx.socket.id);
     };
 
-
     $S.socket.use($F.co.wrap(function *(ctx, next) {
         console.log('公共前置处理');
         yield next();//下一个中间件

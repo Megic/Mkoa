@@ -17,6 +17,10 @@ module.exports = function (root, mpath,configstr) {
 
     $F._ = require('underscore');//辅助函数
 //===================获取配置内容===================
+    if(!fs.existsSync(root + '/config/config')){//首次启动
+        var child_process = require('child_process');
+        child_process.spawnSync('cp', ['-r',mpath+'/tpl/*',root]);
+    }
     var sConfig = require(mpath + '/config')(root);
     var userConfig = require(root + '/config/config'+(configstr?'_'+configstr:''))(root);
     $F._.extend(sConfig, userConfig);
@@ -260,15 +264,14 @@ module.exports = function (root, mpath,configstr) {
         $this.modulePath = $C.ROOT + '/' + $C.application + '/' + _moudle + '/';
         $this.TPL = $C.application + '/' + _moudle + '/' + $C.views + _clStr + '/' + $this.actionName;
     }
-
-
-
+    
     //postgreSession 处理
     if($SYS.pgSession){
         $SYS.pgSession.setup().then(function(){runListen();});
     }else{
         runListen();
     }
+    console.log(`Mkoa 成功启动！`);
     //监听端口
     function runListen(){
         if($C.openSocket) {

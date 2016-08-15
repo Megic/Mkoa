@@ -1,40 +1,31 @@
 module.exports = function(app){
+    if($C.sessionStore.type) {
     var fs = require('fs')
         , session = require('koa-generic-session');
     /////////////////////////////////////////////////session///////////////////////////
     app.keys = [$C.secret];//session支持
     //session配置
-    var sessionOptions = {
-        key: 'Mkoa:sid',
-        prefix: 'Mkoa:sess:',
-        rolling: false,
-        cookie: {
-            maxage: $C.maxAge
+        var sessionOptions = $C.sessionConfig;
+        if ($C.sessionStore.type == 1) {
+            var MysqlStore = require('koa-mysql-session');// mysql存储session
+            sessionOptions['store'] = new MysqlStore($C.sessionStore.mysql);
         }
-    };
-    if ($C.sessionType == 1) {
-        var MysqlStore = require('koa-mysql-session');// mysql存储session
-        sessionOptions['store']=new MysqlStore({
-            user: $C.mysql.username,
-            password: $C.mysql.password,
-            database: $C.mysql.dbName,
-            host: $C.mysql.host
-        });
+        if ($C.sessionStore.type == 2) {//使用PostgreSQL存储session
+            var PgStore = require('Mkoa-pg-session');
+            sessionOptions['store'] = new PgStore("postgres://" + $C.sessionStore.pgsql['username'] + ":" + $C.sessionStore.pgsql['password'] + "@" + $C.sessionStore.pgsql['host'] + ":" + $C.sessionStore.pgsql['port'] + "/" + $C.sessionStore.pgsql['database']);
+            $SYS.pgSession = sessionOptions['store'];//pgSession 标记
+        }
+
+        if ($C.sessionStore.type == 3) {
+            var MemStore = require('koa-memcached');// memcached存储session
+            sessionOptions['store'] = new MemStore($C.sessionStore.memcached);
+        }
+        if ($C.sessionStore.type == 4) {
+            var redisStore = require('koa-redis');// redis存储session
+            sessionOptions['store'] = redisStore($C.sessionStore.redis);
+        }
+        $SYS.sessionStore = sessionOptions['store'];
+        app.use($F.convert(session(sessionOptions)));
     }
-    if ($C.sessionType == 2) {//使用PostgreSQL存储session
-        var PgStore = require('Mkoa-pg-session');
-        sessionOptions['store']=new PgStore("postgres://" + $C.pgsql['username'] + ":" + $C.pgsql['password'] + "@" + $C.pgsql['host'] + ":" + $C.pgsql.port + "/" + $C.pgsql['dbName']);
-        $SYS.pgSession=sessionOptions['store'];//pgSession 标记
-    }
-    if ($C.sessionType == 3) {
-        var MemStore = require('koa-memcached');// memcached存储session
-        sessionOptions['store']=new MemStore($C.memcached);
-    }
-    if ($C.sessionType == 4) {
-        var redisStore = require('koa-redis');// redis存储session
-        sessionOptions['store']=redisStore($C.redis);
-    }
-    $SYS.sessionStore=sessionOptions['store'];
-   app.use($F.convert(session(sessionOptions)));
 /////////////////////////////////////////////////session.end///////////////////////////
 };
