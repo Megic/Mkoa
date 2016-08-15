@@ -4,19 +4,15 @@
 
 #Mkoa安装
 
-> 运行 npm install
+> npm install Mkoa --save
 
-> 根据所用数据库安装对应依赖
+> 编写入口文件app.js,引用Mkoa即可
 
-> $ npm install --save pg pg-hstore //pgsql 依赖安装
+```
+require('Mkoa')(__dirname,'');
+```
 
-> $ npm install --save mysql //  mysql and mariadb 依赖安装
-
-> $ npm install --save sqlite3
-
-> $ npm install --save tedious // MSSQL 依赖安装
-
-> 运行app.js文件即可
+> 运行app.js
 
 > node node.js   //node 4.0以下版本需要"--harmony"参数
 

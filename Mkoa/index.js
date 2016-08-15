@@ -6,7 +6,8 @@
  * @param root 根目录
  * @param mpath 库目录
  */
-module.exports = function (root, mpath,configstr) {
+module.exports = function (root,configstr) {
+    var mpath=__dirname;
     var path = require('path')
         , fs = require('fs')
         , fscp = require('co-fs-plus');//文件夹等操作

@@ -1,7 +1,6 @@
 /Application/webpack
 lib-cov
 *.seed
-*.log
 *.csv
 *.dat
 *.out

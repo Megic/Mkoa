@@ -1,13 +1,17 @@
 {
   "name": "Mkoa",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Koa2 web app framework",
   "repository": {
     "type": "git",
     "url": "https://github.com/Megic/Mkoa.git"
   },
+  "author": {
+    "name": "Megic",
+    "email": "42063622@qq.com",
+    "url": "https://github.com/Megic/"
+  },
   "main": "./Mkoa/index.js",
-  "readme": "ERROR: No README data found!",
   "dependencies": {
     "Mkoa-pg-session": "^2.0.0",
     "co": "^4.6.0",
