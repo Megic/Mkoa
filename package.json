@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/Megic/Mkoa.git"
   },
+  "main": "./Mkoa/index.js",
   "readme": "ERROR: No README data found!",
   "dependencies": {
     "Mkoa-pg-session": "^2.0.0",
