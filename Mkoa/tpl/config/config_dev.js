@@ -34,7 +34,7 @@ module.exports=function(root){
         host:'',//访问域名，模板使用
         openSocket:false,//是否开启socket.io
         openRewrite:false,
-        port:80,    //端口设置
+        port:3000,    //端口设置
         logger:true,   //输出调试内容
         loggerType:1,//1：console 2file
         controllerCache:1,//是否关闭控制器缓存，方便开发,正式环境设为0

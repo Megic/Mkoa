@@ -1,6 +1,6 @@
 {
   "name": "Mkoa",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "description": "Koa2 web app framework",
   "repository": {
     "type": "git",

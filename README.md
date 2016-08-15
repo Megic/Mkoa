@@ -9,12 +9,14 @@
 > 编写入口文件app.js,引用Mkoa即可
 
 ```
-require('Mkoa')(__dirname,'');
+require('Mkoa')(__dirname,'dev');
 ```
 
 > 运行app.js
 
 > node node.js   //node 4.0以下版本需要"--harmony"参数
+
+> 浏览器访问http://localhost:3000/
 
 #Mkoa 开发模块-协助进行项目开发
 
@@ -40,8 +42,6 @@ Mkoa-builder | 简易代码生成器  | https://github.com/Megic/Mkoa-builder
 
 > pm2 start app.js --node-args="--harmony"
 
-> sequelize 模块的依赖需要进入 sequelize文件夹运行npm install 安装
-
-> npm使用阿里巴巴npm源
+> 国内npm安装可以使用阿里巴巴npm源加速
 
 > npm config set registry http://registry.npm.taobao.org/

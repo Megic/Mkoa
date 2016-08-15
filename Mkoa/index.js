@@ -272,7 +272,7 @@ module.exports = function (root,configstr) {
     }else{
         runListen();
     }
-    console.log(`Mkoa 成功启动！`);
+    console.log(`Mkoa 成功启动！监听端口：`+$C.port);
     //监听端口
     function runListen(){
         if($C.openSocket) {
