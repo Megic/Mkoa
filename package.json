@@ -1,6 +1,6 @@
 {
   "name": "Mkoa",
-  "version": "0.0.5",
+  "version": "1.0.5",
   "description": "Koa2 web app framework",
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
     "co-request": "^1.0.0",
     "continuation-local-storage": "^3.1.4",
     "ejs": "^2.4.1",
+    "fs-extra": "^0.30.0",
     "image-size": "^0.4.0",
     "koa": "^2.0.0-alpha.3",
     "koa-body": "^1.4.0",

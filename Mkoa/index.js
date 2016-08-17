@@ -6,7 +6,7 @@
  * @param root 根目录
  * @param mpath 库目录
  */
-module.exports = function (root,configstr) {
+module.exports = function (root,configTag) {
     var mpath=__dirname;
     var path = require('path')
         , fs = require('fs')
@@ -18,12 +18,26 @@ module.exports = function (root,configstr) {
 
     $F._ = require('underscore');//辅助函数
 //===================获取配置内容===================
-    if(!fs.existsSync(root + '/config/config')){//首次启动
-        var child_process = require('child_process');
-        child_process.spawnSync('cp', ['-r',mpath+'/tpl/*',root]);
+    if(!fs.existsSync(root + '/config')){//首次启动
+        var fse = require('fs-extra');
+        console.log('首次启动，正在初始化...');
+        fse.copySync(mpath+'/tpl/',root);
     }
     var sConfig = require(mpath + '/config')(root);
-    var userConfig = require(root + '/config/config'+(configstr?'_'+configstr:''))(root);
+    sConfig.configTag=configTag;
+    sConfig.U=function(urlStr){//获取配置文件地址，处理tag情况
+        var urlTag=configTag?configTag+'/':'';
+        var urlArr = urlStr.split(':');
+        var firestPath=root + '/config/';
+        if (urlArr.length > 1){
+            firestPath=root  + '/' + $C.application + '/' + urlArr[0]+'/config/';
+            urlStr=urlArr[1];
+        }
+        var resPath=firestPath+urlTag+urlStr;
+        return  (urlTag&&(fs.existsSync(resPath)||fs.existsSync(resPath+'.js')))?resPath:(firestPath+urlStr);
+
+    };
+    var userConfig = require(sConfig.U('config'))(root);
     $F._.extend(sConfig, userConfig);
     $C = sConfig;
 
@@ -265,7 +279,7 @@ module.exports = function (root,configstr) {
         $this.modulePath = $C.ROOT + '/' + $C.application + '/' + _moudle + '/';
         $this.TPL = $C.application + '/' + _moudle + '/' + $C.views + _clStr + '/' + $this.actionName;
     }
-    
+
     //postgreSession 处理
     if($SYS.pgSession){
         $SYS.pgSession.setup().then(function(){runListen();});

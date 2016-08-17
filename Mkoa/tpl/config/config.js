@@ -30,6 +30,14 @@ module.exports=function(root){
             //     ,port:5432
             // }
         },
+        // sessionConfig:{
+        //     key: 'Mkoa:sid',
+        //     prefix: 'Mkoa:sess:',
+        //     rolling: false,
+        //     cookie: {
+        //         maxage:30 * 24 * 60 * 60 * 1000
+        //     }
+        // },
         proxy:false,//如果用nginx代理，设置为true
         fileType:['gif','jpg','png'],//允许上传文件的类型
         host:'',//访问域名，模板使用
