@@ -4,6 +4,7 @@
 module.exports = function(mpath,app){
     var fs = require('fs');
     var path=mpath+'/middleware/';
+    require(path+'cors')(app);//cors请求部分,用
     require(path+'logger')(app);//logger与错误输出部分
     require(path+'rewrite')(app);//rewrite处理部分
     require(path+'static')(app);//静态文件处理部分

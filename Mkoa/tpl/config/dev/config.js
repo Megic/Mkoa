@@ -37,6 +37,14 @@ module.exports=function(root){
         //         maxage:30 * 24 * 60 * 60 * 1000
         //     }
         // },
+        // cors:{
+        //     origin:'',//允许发来请求的域名，对应响应的`Access-Control-Allow-Origin`，
+        //     allowMethods:'',//允许的方法，默认'GET,HEAD,PUT,POST,DELETE'，对应`Access-Control-Allow-Methods`，
+        //     exposeHeaders:'',//允许客户端从响应头里读取的字段，对应`Access-Control-Expose-Headers`，
+        //     allowHeaders:'',//这个字段只会在预请求的时候才会返回给客户端，标示了哪些请求头是可以带过来的，对应`Access-Control-Allow-Headers`，
+        //     maxAge:'',//也是在预请求的时候才会返回，标明了这个预请求的响应所返回信息的最长有效期，对应`Access-Control-Max-Age`
+        //     credentials:''//标示该响应是合法的，对应`Access-Control-Allow-Credentials`
+        // },
         proxy:false,//如果用nginx代理，设置为true
         fileType:['gif','jpg','png'],//允许上传文件的类型
         host:'',//访问域名，模板使用

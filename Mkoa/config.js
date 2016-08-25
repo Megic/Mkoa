@@ -59,6 +59,7 @@ module.exports = function (root) {
         },
         secret: '*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
         host:'',
+        cors:false,
         //端口设置
         port: 3000,
         logger: true,
