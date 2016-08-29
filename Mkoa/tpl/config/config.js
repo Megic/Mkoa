@@ -35,6 +35,7 @@ module.exports=function(root){
         //     prefix: 'Mkoa:sess:',
         //     rolling: false,
         //     cookie: {
+        //         domain:'',
         //         maxage:30 * 24 * 60 * 60 * 1000
         //     }
         // },
