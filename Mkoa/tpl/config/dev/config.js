@@ -48,6 +48,8 @@ module.exports=function(root){
         // },
         proxy:false,//如果用nginx代理，设置为true
         fileType:['gif','jpg','png'],//允许上传文件的类型
+        maxFieldsSize: 1000*1024,//允许最大上传文件大小
+        formLimit: 30*1024,//post最大长度
         host:'',//访问域名，模板使用
         openSocket:false,//是否开启socket.io
         openRewrite:false,
