@@ -50,9 +50,9 @@ module.exports = function(mpath,app){
             if(fs.existsSync(mdPath)) walk(mdPath,function(filePath,fileName){
                 var nameArr=fileName.split('.');
                 $SYS.modelPath[nameArr[0]]=filePath;//把模型文件地址放到变量
-                if ($C.syncModel)$SYS.sequelizes.import(filePath);//加载数据表
+                if ($C.syncModel)$SYS.sequelize.import(filePath);//加载数据表
             });
         }});
-    if ($C.syncModel)$SYS.sequelizes.sync({});//同步模型到数据表
+    if ($C.syncModel)$SYS.sequelize.sync({});//同步模型到数据表
 
 };
