@@ -155,7 +155,7 @@ module.exports = function (root,configTag) {
             for (key in this.request.body.files) {
                 var key = key;
                 var val = this.request.body.files[key];
-                var type=val.name.split('.')[1].toLowerCase();
+                var type=path.extname(val.name).replace('.','').toLowerCase();
                 type = type?type:val.type.split('/')[1].toLowerCase();
                 if (type == 'jpeg')type = 'jpg';
                 var fileName = val.path.slice(-32);//获取文件名
