@@ -27,11 +27,11 @@ module.exports = function(app){
         };
         $SYS.sequelize = $SYS.getSequelize('default');//默认链接
 
-        global.$D = function (model, key) {
+        global.$D = function (model,key,sync) {
             if (!key)key = 'default';
             if (!$SYS.sequelizes[key])$SYS.sequelizes[key] = buildSequelize(key);
             var LoadModel = $SYS.sequelizes[key].import($SYS.modelPath[model]);
-            if ($C.syncModel)LoadModel.sync();//同步数据表
+            if ($C.syncModel&&!sync)LoadModel.sync();//同步数据表
             return LoadModel;
         };//模型加载
         $F.transaction = function *(fn, options) {//自动事务
