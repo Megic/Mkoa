@@ -1,7 +1,7 @@
 /**
  * Created by Megic
  */
-var crypto = require('crypto');
+ let crypto = require('crypto');
 module.exports = {
     md5: function (text,encoding) {
         return crypto.createHash('md5').update(this.bufferStr(text), 'utf8').digest(encoding || 'hex');

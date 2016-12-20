@@ -7,9 +7,5 @@ module.exports = {
     middleware:'middleware',//中间件文件夹名称
     application:'application',//模块文件夹
     controller:'controller'//控制器文件夹名
-    ,runtime:'middleware'//中间件文件夹名称
     ,delcontrollerCache:0 //是否清空控制器requireh缓存,开发环境开启修改conttoller文件后可以不用重启服务
-    ,defaultLang: "zh-cn" //默认语言
-    ,proxy:false//如果用nginx代理，设置为true
-    ,keys:['*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#','sdf454547#123sdf(8&^123369']//cookieskey
 };

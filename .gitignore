@@ -34,3 +34,10 @@ static/lib
 cache/low
 Application/install
 Application/upload
+/package-back.json
+/Mkoa/index-bak.js
+/app.js
+/config/
+!/Mkoa/index-bak.js
+!/config/
+!/app.js
