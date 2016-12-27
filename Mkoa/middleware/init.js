@@ -2,27 +2,25 @@
  * Created by Megic on 14-11-30.
  */
 module.exports = function(mpath,app){
-    var fs = require('fs');
-    var path=mpath+'/middleware/';
-    require(path+'cors')(app);//cors请求部分,用
-    require(path+'logger')(app);//logger与错误输出部分
-    require(path+'rewrite')(app);//rewrite处理部分
-    require(path+'static')(app);//静态文件处理部分
-    require(path+'session')(app);//session处理部分
-    require(path+'db')(app);//数据库orm处理部分
-    require(path+'safe')(app);//安全及输入部分
-    require(path+'cache')(app);//缓存处理部分
-    require(path+'tpl')(app);//输出处理部分
-    require(path+'lang')(app);//语言处理部分
-    require(path+'low')(app);//low文件内存数据库
-    require($C['U']('middleware'))(app);//用户自定义中间件
-
+    let fs = require('fs');
+    let path=mpath+'/middleware/';
+    if($C.cors_open)require(path+'cors')(app);//cors请求部分,用
+    if($C.logger_open)require(path+'logger')(app);//logger
+    require(path+'error')(app);//错误处理
+    if($C.rewrite_open)require(path+'rewrite')(app);//rewrite处理部分
+    if($C.static_open)require(path+'static')(app);//静态文件处理部分
+    require(path+'db')(app);//数据源处理
+    if($C.lang_open)require(path+'lang')(app);//语言处理部分
+    if($C.session_open)require(path+'session')(app);//session处理部分
+    require(path+'body')(app);//安全及输入部分
+    if($C.cache_open)require(path+'cache')(app);//缓存处理部分
+    if($C.view_open)require(path+'tpl')(app);//输出处理部分
 
     //***************************自动加载模块目录下中间件***********************
-    var apppath=$C.ROOT+ '/' +$C.application;
+    let apppath=$C.ROOT+ '/' +$C.application;
 
     function walk(apppath,callback){
-        var dirList = fs.readdirSync(apppath);
+        let dirList = fs.readdirSync(apppath);
         dirList.forEach(function(item){
             if(fs.statSync(apppath + '/' + item).isDirectory()){
                 walk(apppath + '/' + item);
@@ -32,27 +30,43 @@ module.exports = function(mpath,app){
     }
 
     //加载模块目录中间件
-    var moudelList = fs.readdirSync($C.application);
+    let moudelList = fs.readdirSync(apppath);
+    let dataSources=$C['U']('datasources');
+
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){
-            var fpath=apppath + '/' + item+ '/' + $C.middleware;
+            let fpath=apppath + '/' + item+ '/' + $C.middleware;
             if(fs.existsSync(fpath)){
-                var isAdd=1;
+                let isAdd=1;
                 if(fs.existsSync(apppath + '/' + item+'/package.json')){
                     if(!fs.existsSync(apppath + '/' + item+'/node_modules/'))isAdd=0;//没有安装依赖
                 }
-                if(isAdd)walk(fpath,function(filePath){
+                if(isAdd)walk(fpath,function(filePath){//依赖安装后加载中间件
                     require(filePath)(app);//加载模块中间件
                 });
             }
-
-            var mdPath=apppath + '/' + item+ '/' + $C.models;//加载数据模型数据
+            //加载各模块模型文件
+            let mdPath=apppath + '/' + item+ '/' + $C.models;//加载数据模型数据
             if(fs.existsSync(mdPath)) walk(mdPath,function(filePath,fileName){
-                var nameArr=fileName.split('.');
-                $SYS.modelPath[nameArr[0]]=filePath;//把模型文件地址放到变量
-                if ($C.syncModel)$SYS.sequelize.import(filePath);//加载数据表
+                let nameArr=fileName.split('.');//拆分文件名
+                getModelByPath(filePath,nameArr[0]);//加载模型文件
             });
+
         }});
-    if ($C.syncModel)$SYS.sequelize.sync({});//同步模型到数据表
+
+    function getModelByPath(filePath,name){
+        let model=require(filePath);//加载模型文件
+        model.datasources=model.datasources?model.datasources:'default';//默认数据源
+        model.name=model.name?model.name:name;//模型名称默认使用模型文件名
+        model.prefix=dataSources[model.datasources].prefix?dataSources[model.datasources].prefix:'';//表前缀
+       if(dataSources[model.datasources].type=='sequelize'){//数据模型源类型
+           model.extend.tableName=model.extend.tableName?model.prefix+model.extend.tableName:model.prefix+model.name;//数据表名
+           $SYS.model[model.datasources][model.name]=$DB[model.datasources].define(model.name,model.model,model.extend);//缓存定义模型数据
+       }
+    }
+    $F._.each(dataSources,function(el, key){
+        if(el.type=='sequelize'&&el.sync)$DB[key].sync({});//同步数据表
+    });
+
 
 };
