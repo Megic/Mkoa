@@ -40,8 +40,7 @@ module.exports = function($this){
       //   await $this.display();
     };
     action['upload']=async function (){
-        await $ST['default'].upload($this,'user');//接收上传文件
-        console.log($this.POST)
+        let data=await $ST['default'].upload($this,'user');//接收上传文件
         $this.body=$this.POST;
     };
     return action;

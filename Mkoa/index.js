@@ -12,12 +12,7 @@ module.exports = function (options) {
     let path = require('path')
         , fs = require('fs-extra');//扩展文件夹等操作
 //=================================全局对象====================================================//
-    global.$M={};global.$S={};global.$F={};global.$C={};global.$SYS={};global.$DB={};global.$ST={};//定义全局变量
-    //首次启动创建默认文件夹
-    // if(!fs.existsSync(root + '/config')){//首次启动
-    //     console.log('首次启动，正在初始化...');
-    //     fs.copySync(mpath+'/tpl/',root);
-    // }
+    global.$M={};global.$S={};global.$F={};global.$C={};global.$API={};global.$SYS={};global.$DB={};global.$ST={};//定义全局变量
     $F._ = require('underscore');//辅助函数
     $F.fs=fs;//扩展后的fs
     //配置信息获取
@@ -59,6 +54,46 @@ module.exports = function (options) {
     app.proxy=$C.proxy;
     app.keys = $C.keys;
 
+    //******************$API方法*******************//
+    let request = require('request');//request
+    function getAPIUrl(url){
+        if((url.indexOf("http://")==-1)&&(url.indexOf("https://")==-1)){
+            let urlArr = url.split(':');
+            let APIPrefix=$C.host;
+            if(urlArr.length>1){
+                if($C.APIPrefix[urlArr[0]])APIPrefix=$C.APIPrefix[urlArr[0]];
+                url=url.replace(urlArr[0]+':',APIPrefix)
+            }else{
+                url=APIPrefix+url;
+            }
+        }
+        return url;
+    }
+    $API.GET=function(url,data){
+        url=getAPIUrl(url);
+        return new Promise(function(resolve,reject) {
+            request({
+                method: 'GET',
+                uri:url,
+                qs:data
+            },function(error, response, body){
+                resolve(JSON.parse(body));
+            });
+        });
+    };
+    $API.POST=function(url,data){
+        url=getAPIUrl(url);
+        return new Promise(function(resolve,reject) {
+            request({
+                method: 'POST',
+                uri:url,
+                form:data
+            },function(error, response, body){
+                resolve(JSON.parse(body));
+            });
+        });
+    };
+    //*******************************//
     //执行控制器方法
     async function callAction(action,$this){
         let  args= Array.prototype.slice.call(arguments);args.shift();//传递参数
@@ -154,7 +189,7 @@ module.exports = function (options) {
         let $this=ctx;//引用
         $this.GET = $this.request.query;//get参数
         $this.POST = $this.request.body;//post参数
-        $C.host=$C.host?$C.host:'http://' + this.host + '/';
+        $C.host=$C.host?$C.host:'http://' + $this.host + '/';
         $this.HOSTURL = $C.host;//访问地址
         mkoaRouter($this,$this.request.path);//路径处理
         $SYS.getLangs($this,$this.lang);//获取语言

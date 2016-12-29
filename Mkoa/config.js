@@ -18,6 +18,7 @@ module.exports=function(root){
         // ,maxFieldsSize: 200*1024//最大上传文件
         ,host:''//访问域名一般不需要配置
         ,defaultPath:""//默认访问路径
+        ,APIPrefix:{} //API调用配置{servicName:prefix}
         ,port: 3000 //监听端口
         ,body_config:{formLimit:'1mb',jsonLimit:'1mb'}
         ,body_strict:true
@@ -50,6 +51,11 @@ module.exports=function(root){
         //     file: root + '/cache/log/file.log'
         //     //,size:''
         // }
+        ,jwt_open:false
+        ,jwt_key:'shhhmkoa'//加密
+        ,jwt_pem:'shhhmkoa'//解密
+        ,jwt_sign_options:{}
+        ,jwt_verify_options:{}
         ,rewrite_open:false
         ,cache_open:true
         ,cache_store:'cache'

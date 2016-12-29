@@ -7,6 +7,7 @@ module.exports = function(mpath,app){
     if($C.cors_open)require(path+'cors')(app);//cors请求部分,用
     if($C.logger_open)require(path+'logger')(app);//logger
     require(path+'error')(app);//错误处理
+    if($C.jwt_open)require(path+'jwt')(app);//权限处理部分
     if($C.rewrite_open)require(path+'rewrite')(app);//rewrite处理部分
     if($C.static_open)require(path+'static')(app);//静态文件处理部分
     require(path+'db')(app);//数据源处理
@@ -16,7 +17,7 @@ module.exports = function(mpath,app){
     if($C.cache_open)require(path+'cache')(app);//缓存处理部分
     if($C.view_open)require(path+'tpl')(app);//输出处理部分
 
-    //***************************自动加载模块目录下中间件***********************
+    //***************************自动加载模块目录下中间件***********************//
     let apppath=$C.ROOT+ '/' +$C.application;
 
     function walk(apppath,callback){

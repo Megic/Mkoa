@@ -3,16 +3,14 @@ let localStorage = require('../lib/storage-filesystem');
 
 module.exports = function(app){
     app.use(requestbody($C.body_config));//body中间件
-    // app.use((ctx, next) => {
-    //    let bodyPromise=formy(ctx, {uploadDir:'./'});
-    //     return bodyPromise.then(function(body) {
-    //         ctx.request.body = body;
-    //         return next();
-    //     });
-    // });
+    //存储服务编写
     let storages = $C['U']('storages');
     $F._.each(storages,function(el, key){
-        if(el.type=='filesystem')$ST[key]=localStorage(el.options); //创建本地存储服务
+        if(el.type=='filesystem'){//创建本地存储服务
+            $ST[key]=localStorage(el.options);
+        }else{
+            $ST[key]=require(el.type)(el.options);//其他的加载服务
+        }
     });
 };
 

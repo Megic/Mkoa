@@ -19,19 +19,22 @@ module.exports=function(root){
                 maxage:30 * 24 * 60 * 60 * 1000
             }
         }
-        ,logger_open:true
+        ,jwt_open:false
+        ,jwt_key:'shhhmkoa'//加密
+        ,jwt_pem:'shhhmkoa'//解密
+        ,logger_open:false
         ,loger_config:false
-        ,logic_open:true //自动校验数据
+        ,logic_open:false //自动校验数据
         // ,loger_config:{
         //     file: root + '/cache/log/file.log'
         //     //,size:''
         // }
         ,rewrite_open:false
-        ,static_open:true
-        ,lang_open:true
+        ,static_open:false
+        ,lang_open:false
         ,lang_default:'zh-cn'
         ,lang_cookie: "mkoa_locale"//存放语言的 cookie 名称
-        ,view_open:true
+        ,view_open:false
         ,view_engine:'ejs'//视图解析
         ,view_ext:'html'//视图文件后缀
     }

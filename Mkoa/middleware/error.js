@@ -14,6 +14,7 @@ module.exports = function(app){
         if(!$C.loger_config){msg= e.message || e.name || e; console.log(e);}
         let code=500;
         if(e.message==404){code=$this.status;}
+        if(e.name='TokenExpiredError'){code=403;}
         await displayError($this,code,msg);
     }
     app.use(async (ctx, next) => {
