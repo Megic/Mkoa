@@ -8,6 +8,7 @@ module.exports = function(mpath,app){
     if($C.logger_open)require(path+'logger')(app);//logger
     require(path+'error')(app);//错误处理
     if($C.jwt_open)require(path+'jwt')(app);//权限处理部分
+    if($C.apiProxy_open)require(path+'proxy')(app);//权限处理部分
     if($C.rewrite_open)require(path+'rewrite')(app);//rewrite处理部分
     if($C.static_open)require(path+'static')(app);//静态文件处理部分
     require(path+'db')(app);//数据源处理

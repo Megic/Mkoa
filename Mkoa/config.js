@@ -18,7 +18,12 @@ module.exports=function(root){
         // ,maxFieldsSize: 200*1024//最大上传文件
         ,host:''//访问域名一般不需要配置
         ,defaultPath:""//默认访问路径
-        ,APIPrefix:{} //API调用配置{servicName:prefix}
+        ,apiProxy_open:false
+        ,apiProxy_prefix:{} //API调用配置{servicName:prefix}
+        ,apiProxy_proxy:{
+            timeout: 15000// 超时配置
+        }//proxy 补充配置项
+        ,apiProxy_request:{}//request配置项
         ,port: 3000 //监听端口
         ,body_config:{formLimit:'1mb',jsonLimit:'1mb'}
         ,body_strict:true

@@ -30,7 +30,7 @@ module.exports=function(root){
         //     //,size:''
         // }
         ,rewrite_open:false
-        ,static_open:false
+        ,static_open:true
         ,lang_open:false
         ,lang_default:'zh-cn'
         ,lang_cookie: "mkoa_locale"//存放语言的 cookie 名称
