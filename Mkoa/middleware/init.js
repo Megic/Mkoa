@@ -30,7 +30,8 @@ module.exports = function(mpath,app){
                 callback(apppath + '/' + item,item);
             }});
     }
-
+//
+    let installArr=[];//需要安装的模块
     //加载模块目录中间件
     let moudelList = fs.readdirSync(apppath);
     let dataSources=$C['U']('datasources');
@@ -48,6 +49,13 @@ module.exports = function(mpath,app){
                     require(filePath)(app);//加载模块中间件
                 });
             }
+            if($C.install_check){
+                let installPath=apppath + '/' + item+ '/install/';
+                if(fs.existsSync(installPath)&&!fs.existsSync(installPath+'lock')){
+                    modelsAfter.push(installPath);
+                }
+            }
+
             if($C.db_open) {
                 //加载各模块模型文件
                 let mdPath = apppath + '/' + item + '/' + $C.models;//加载数据模型数据
@@ -88,6 +96,16 @@ module.exports = function(mpath,app){
         $F._.each(dataSources, function (el, key) {
             if (el.type == 'sequelize' && el.sync) $DB[key].sync({});//同步数据表
         });
+        //执行安装
+        if($C.install_check){
+            $F._.each(installArr, function (el, key) {
+                require(el+'index')();//安装
+                //生成lock文件，避免重复安装
+                fs.writeFile(el+'lock','',(err) => {
+                    if (err) throw err;
+                });
+            });
+        }
     }
 
 };

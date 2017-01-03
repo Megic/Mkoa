@@ -27,6 +27,7 @@ module.exports=function(root){
         ,apiProxy_request:{}//request配置项
         ,body_config:{formLimit:'1mb',jsonLimit:'1mb'}
         ,body_strict:true
+        ,install_check:false
         ,db_open:false
         ,session_open:false
         ,session_store:'default'//session数据源 datasources.js文件定义数据源
