@@ -49,10 +49,10 @@ module.exports = function(mpath,app){
                     require(filePath)(app);//加载模块中间件
                 });
             }
-            if($C.install_check){
+            if($C.install_check){//是否存在需要安装的模块
                 let installPath=apppath + '/' + item+ '/install/';
                 if(fs.existsSync(installPath)&&!fs.existsSync(installPath+'lock')){
-                    modelsAfter.push(installPath);
+                    installArr.push(installPath);
                 }
             }
 
