@@ -16,6 +16,7 @@ module.exports=function(root){
         , keys: ['*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#', 'sdf454547#123sdf(8&^123369']//cookieskey
         // ,uploadDir:root + '/cache/tmp/'//上传文件临时文件夹
         // ,maxFieldsSize: 200*1024//最大上传文件
+        ,port: 3000 //监听端口
         ,host:''//访问域名一般不需要配置
         ,defaultPath:""//默认访问路径
         ,apiProxy_open:false
@@ -24,14 +25,15 @@ module.exports=function(root){
             timeout: 15000// 超时配置
         }//proxy 补充配置项
         ,apiProxy_request:{}//request配置项
-        ,port: 3000 //监听端口
         ,body_config:{formLimit:'1mb',jsonLimit:'1mb'}
         ,body_strict:true
+        ,db_open:false
         ,session_open:false
         ,session_store:'default'//session数据源 datasources.js文件定义数据源
         ,session_store_config:{//session 模型额外配置
             tableName:'Sessions',
-            modelName:'Session'
+            modelName:'Session',
+            browserSessionLifetime:60 * 60 * 24 * 14// 2星期
         }//配置模型koa-generic-session-sequelize
         ,session_config:{
             key: 'Mkoa:sid',
@@ -53,7 +55,7 @@ module.exports=function(root){
         ,logger_open:true
         ,loger_config:false
         // ,loger_config:{
-        //     file: root + '/cache/log/file.log'
+        //     file: root + '/file.log'
         //     //,size:''
         // }
         ,jwt_open:false
@@ -62,7 +64,7 @@ module.exports=function(root){
         ,jwt_sign_options:{}
         ,jwt_verify_options:{}
         ,rewrite_open:false
-        ,cache_open:true
+        ,cache_open:false
         ,cache_store:'cache'
         ,logic_open:false //自动校验数据
         ,static_open:true

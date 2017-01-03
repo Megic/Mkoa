@@ -177,7 +177,7 @@ module.exports = function (options) {
                 $SV:$C.SV?$C.SV:new Date().getTime(),
                 $MOUDLE:$this.moudle,
                 $PATH:$this.request.path,
-                $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.staticName + '/'//当前模块静态文件夹地址
+                $STATIC: $this.HOSTURL + $this.moudle + '/' + $C.static_pathName + '/'//当前模块静态文件夹地址
             };
             if (tpl && !$F._.isString(tpl)) {//判断有没填模板参数
                 option=data;

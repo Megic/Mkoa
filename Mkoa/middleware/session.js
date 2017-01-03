@@ -12,7 +12,15 @@ module.exports = function(app){
             const SequelizeStore = require('koa-generic-session-sequelize');
             sessionOptions['store'] = new SequelizeStore(store,$C.session_store_config);
         }
-
+        if (datasources[$C.session_store].type=='mongoose') {//mongoose存储
+            const MongooseStore = require('koa-session-mongoose');
+            sessionOptions['store'] = new MongooseStore({
+                collection: $C.session_store_config.tableName,
+                connection: store,
+                expires: $C.session_store_config.browserSessionLifetime, // 2 weeks is the default
+                model: $C.session_store_config.modelName
+            });
+        }
         // if ($C.sessionStore.type == 2) {//使用PostgreSQL存储session
         //     let PgStore = require('Mkoa-pg-session');
         //     sessionOptions['store'] = new PgStore("postgres://" + $C.sessionStore.pgsql['username'] + ":" + $C.sessionStore.pgsql['password'] + "@" + $C.sessionStore.pgsql['host'] + ":" + $C.sessionStore.pgsql['port'] + "/" + $C.sessionStore.pgsql['database']);

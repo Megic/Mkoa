@@ -11,9 +11,9 @@ module.exports = function(mpath,app){
     if($C.apiProxy_open)require(path+'proxy')(app);//权限处理部分
     if($C.rewrite_open)require(path+'rewrite')(app);//rewrite处理部分
     if($C.static_open)require(path+'static')(app);//静态文件处理部分
-    require(path+'db')(app);//数据源处理
+    if($C.db_open)require(path+'db')(app);//数据源处理
     if($C.lang_open)require(path+'lang')(app);//语言处理部分
-    if($C.session_open)require(path+'session')(app);//session处理部分
+    if($C.db_open&&$C.session_open)require(path+'session')(app);//session处理部分
     require(path+'body')(app);//安全及输入部分
     if($C.cache_open)require(path+'cache')(app);//缓存处理部分
     if($C.view_open)require(path+'tpl')(app);//输出处理部分
@@ -34,7 +34,8 @@ module.exports = function(mpath,app){
     //加载模块目录中间件
     let moudelList = fs.readdirSync(apppath);
     let dataSources=$C['U']('datasources');
-
+    let modelsAfter=[];//模型初始化后执行
+    let mongoose,Schema;
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){
             let fpath=apppath + '/' + item+ '/' + $C.middleware;
@@ -47,28 +48,46 @@ module.exports = function(mpath,app){
                     require(filePath)(app);//加载模块中间件
                 });
             }
-            //加载各模块模型文件
-            let mdPath=apppath + '/' + item+ '/' + $C.models;//加载数据模型数据
-            if(fs.existsSync(mdPath)) walk(mdPath,function(filePath,fileName){
-                let nameArr=fileName.split('.');//拆分文件名
-                getModelByPath(filePath,nameArr[0]);//加载模型文件
-            });
-
+            if($C.db_open) {
+                //加载各模块模型文件
+                let mdPath = apppath + '/' + item + '/' + $C.models;//加载数据模型数据
+                if (fs.existsSync(mdPath)) walk(mdPath, function (filePath, fileName) {
+                    let nameArr = fileName.split('.');//拆分文件名
+                    getModelByPath(filePath, nameArr[0]);//加载模型文件
+                });
+            }
         }});
 
     function getModelByPath(filePath,name){
         let model=require(filePath);//加载模型文件
         model.datasources=model.datasources?model.datasources:'default';//默认数据源
         model.name=model.name?model.name:name;//模型名称默认使用模型文件名
+        model.extend=model.extend?model.extend:{};//扩展
         model.prefix=dataSources[model.datasources].prefix?dataSources[model.datasources].prefix:'';//表前缀
        if(dataSources[model.datasources].type=='sequelize'){//数据模型源类型
            model.extend.tableName=model.extend.tableName?model.prefix+model.extend.tableName:model.prefix+model.name;//数据表名
            $SYS.model[model.datasources][model.name]=$DB[model.datasources].define(model.name,model.model,model.extend);//缓存定义模型数据
        }
+        if(dataSources[model.datasources].type=='mongoose'){//数据模型源类型
+            if(!mongoose){mongoose = require('mongoose');Schema = mongoose.Schema;}
+            let curSchema=new Schema(model.model,model.extend);
+            if(model.schema)$F._.extend(curSchema,model.schema);//合并方法
+            $SYS.model[model.datasources][model.name]=$DB[model.datasources].model(model.name,curSchema);//缓存定义模型数据
+       }
+        if(model['_after']){//存在模型处理
+            modelsAfter.push({
+                datasources:model.datasources,
+                '_after':model['_after']
+            });
+        }
     }
-    $F._.each(dataSources,function(el, key){
-        if(el.type=='sequelize'&&el.sync)$DB[key].sync({});//同步数据表
-    });
-
+    if($C.db_open) {
+        $F._.each(modelsAfter, function (el, key) {
+            el['_after']($SYS.model[el.datasources]);
+        });
+        $F._.each(dataSources, function (el, key) {
+            if (el.type == 'sequelize' && el.sync) $DB[key].sync({});//同步数据表
+        });
+    }
 
 };

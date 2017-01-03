@@ -19,6 +19,11 @@ module.exports = function(app){
         $F._.each(datasources,function(el, key){
             $SYS.model[key]={};//模型缓存地址
             if(el.type=='sequelize')$DB[key]=buildSequelize(el.options); //创建sequelize数据源
+            if(el.type=='mongoose'){
+                let mongoose = require('mongoose');
+                mongoose.Promise = global.Promise;
+                $DB[key]=mongoose.connect(el.connect);
+            } //创建mogodb数据源
             if(el.type=='memory'){//创建内存存储模型
                 let options={store: 'memory', max:el.options.max, ttl:el.options.ttl};
                 if(el.gzip)options.compress={
@@ -46,9 +51,19 @@ module.exports = function(app){
             });
         };
        }
-    global.$D = function (modelName,key,sync){
-        if (!key)key = 'default';
-        return $SYS.model[key][modelName];
+    global.$D = function (modelName,data){
+        let key='default';
+        let modelArr=modelName.split(':');
+        if(modelArr.length>1){ //存在指定数据源
+            key=modelArr[0];modelName=modelArr[1];
+        }
+        let model=$SYS.model[key][modelName];
+        if(data){//新建模型
+            if(datasources[key].type=='sequelize') return model.build(data);
+            if(datasources[key].type=='mongoose') return new model(data);
+        }else{
+            return model;
+        }
     };//模型加载
 
 
