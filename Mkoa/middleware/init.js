@@ -37,6 +37,9 @@ module.exports = function(mpath,app){
     let dataSources=$C['U']('datasources');
     let modelsAfter=[];//模型初始化后执行
     let mongoose,Schema;
+    let sequelizeModelNum=0;//模型计数，用于判断生成数据表
+
+
     moudelList.forEach(function(item){
         if(fs.statSync(apppath + '/' + item).isDirectory()){
             let fpath=apppath + '/' + item+ '/' + $C.middleware;
@@ -72,16 +75,17 @@ module.exports = function(mpath,app){
         model.name=model.name?model.name:name;//模型名称默认使用模型文件名
         model.extend=model.extend?model.extend:{};//扩展
         model.prefix=dataSources[model.datasources].prefix?dataSources[model.datasources].prefix:'';//表前缀
-       if(dataSources[model.datasources].type=='sequelize'){//数据模型源类型
-           model.extend.tableName=model.extend.tableName?model.prefix+model.extend.tableName:model.prefix+model.name;//数据表名
-           $SYS.model[model.datasources][model.name]=$DB[model.datasources].define(model.name,model.model,model.extend);//缓存定义模型数据
-       }
+        if(dataSources[model.datasources].type=='sequelize'){//数据模型源类型
+            sequelizeModelNum++;
+            model.extend.tableName=model.extend.tableName?model.prefix+model.extend.tableName:model.prefix+model.name;//数据表名
+            $SYS.model[model.datasources][model.name]=$DB[model.datasources].define(model.name,model.model,model.extend);//缓存定义模型数据
+        }
         if(dataSources[model.datasources].type=='mongoose'){//数据模型源类型
             if(!mongoose){mongoose = require('mongoose');Schema = mongoose.Schema;}
             let curSchema=new Schema(model.model,model.extend);
             if(model.schema)$F._.extend(curSchema,model.schema);//合并方法
             $SYS.model[model.datasources][model.name]=$DB[model.datasources].model(model.name,curSchema);//缓存定义模型数据
-       }
+        }
         if(model['_after']){//存在模型处理
             modelsAfter.push({
                 datasources:model.datasources,
@@ -90,15 +94,28 @@ module.exports = function(mpath,app){
         }
     }
     if($C.db_open) {
+
         $F._.each(modelsAfter, function (el, key) {
             el['_after']($SYS.model[el.datasources]);
         });
-        $F._.each(dataSources, function (el, key) {
-            if (el.type == 'sequelize' && el.sync) $DB[key].sync({});//同步数据表
+
+        let sYncmodel=0;
+        $F._.each(dataSources, async function (el, key) {
+            if (el.type == 'sequelize' && el.sync){
+                if($C.install_check){ $DB[key].addHook('afterSync', function () {
+                    sYncmodel++;
+                    callInstall();
+                });}
+                $DB[key].sync({});
+            }
+            //同步数据表
         });
+
         //执行安装
-        if($C.install_check){
-            $F._.each(installArr, function (el, key) {
+        if($C.install_check){callInstall();}
+
+        function callInstall() {//执行安装文件
+            if(sYncmodel==sequelizeModelNum)$F._.each(installArr, function (el, key) {
                 require(el+'index')();//安装
                 //生成lock文件，避免重复安装
                 fs.writeFile(el+'lock','',(err) => {
