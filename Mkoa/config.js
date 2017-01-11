@@ -32,8 +32,9 @@ module.exports=function(root){
         ,session_open:false
         ,session_store:'default'//session数据源 datasources.js文件定义数据源
         ,session_store_config:{//session 模型额外配置
-            tableName:'Sessions',
+            tableName:'mkoa_Sessions',
             modelName:'Session',
+            sync:false,
             browserSessionLifetime:60 * 60 * 24 * 14// 2星期
         }//配置模型koa-generic-session-sequelize
         ,session_config:{
