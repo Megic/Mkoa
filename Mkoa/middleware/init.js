@@ -115,8 +115,8 @@ module.exports = function(mpath,app){
         if($C.install_check){callInstall();}
 
         function callInstall() {//执行安装文件
-            if(sYncmodel==sequelizeModelNum)$F._.each(installArr, function (el, key) {
-                require(el+'index')();//安装
+            if(sYncmodel==sequelizeModelNum)$F._.each(installArr, async function (el, key) {
+                await require(el+'index')();//安装
                 //生成lock文件，避免重复安装
                 fs.writeFile(el+'lock','',(err) => {
                     if (err) throw err;
