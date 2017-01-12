@@ -9,6 +9,7 @@ module.exports=function(root){
         middleware: 'middleware',//中间件文件夹名称
         application: 'application',//模块文件夹
         controller: 'controller'//控制器文件夹名
+        ,getLoginInfoByToken:false  //获取用户授权信息
         , logic: 'logic'//logic校验文件夹名
         , delcontrollerCache: 0 //是否清空控制器requireh缓存,开发环境开启修改conttoller文件后可以不用重启服务
         , defaultLang: "zh-cn" //默认语言
