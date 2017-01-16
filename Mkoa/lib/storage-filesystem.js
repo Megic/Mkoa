@@ -8,8 +8,8 @@ let crypto = require("crypto");
 module.exports = function(options){
     let fileRoot=options.root;
     fs.mkdirsSync(fileRoot);//创建文件夹
-     let storage={};
-     //创建容器
+    let storage={};
+    //创建容器
     storage.createContainer=function(options){
         fs.mkdirsSync(path.join(fileRoot,options.name));//创建文件夹
     };
@@ -75,37 +75,41 @@ module.exports = function(options){
                     size:POST.size
                 });//文件唯一识别码
                 let curFileName,curPath;
-            if(!POST['chunks']||parseInt(POST['chunks'])<=1){//非分片，一次性上传
-                if(opts.filename){//自定义文件名
-                    curFileName=path.join(options.uploadDir,opts.filename);
-                    curPath=path.dirname(curFileName);
-                }else{//默认按日期分类
-                    curPath=path.join(options.uploadDir,moment().format('YYYY/MM/DD/'));
-                    curFileName=path.join(curPath,path.basename(POST['file'].path))
+                if(!POST['chunks']||parseInt(POST['chunks'])<=1){//非分片，一次性上传
+                    if(opts.filename){//自定义文件名
+                        curFileName=path.join(options.uploadDir,opts.filename);
+                        curPath=path.dirname(curFileName);
+                    }else{//默认按日期分类
+                        curPath=path.join(options.uploadDir,moment().format('YYYY/MM/DD/'));
+                        curFileName=path.join(curPath,path.basename(POST['file'].path))
+                    }
+                    fs.mkdirsSync(curPath);//创建文件夹
+                }else{//分片
+                    let cachePath=path.join(options.uploadDir,POST['file'].key);
+                    if(!fs.existsSync(cachePath))fs.mkdirsSync(cachePath);//创建文件夹
+                    curFileName=path.join(cachePath,'/',POST.chunk);
+                    fs.renameSync(POST['file'].path,curFileName);
+                    POST['file'].path=curFileName;//重新命名
+                    POST['file'].shortPath=curFileName.replace(fileRoot,'');//相对路径
                 }
-                fs.mkdirsSync(curPath);//创建文件夹
-            }else{//分片
-                let cachePath=path.join(options.uploadDir,POST['file'].key);
-                if(!fs.existsSync(cachePath))fs.mkdirsSync(cachePath);//创建文件夹
-                curFileName=path.join(cachePath,'/',POST.chunk);
-                fs.renameSync(POST['file'].path,curFileName);
-                POST['file'].path=curFileName;//重新命名
-                POST['file'].shortPath=curFileName.replace(fileRoot,'');//相对路径
-            }
-            return POST;
+                return POST;
             }
 
             let bodyPromise = formy(ctx,fileRoot,options);
             return bodyPromise.then(function (body) {
-                body=changePath(body);//分片上传后处理
-                ctx.POST = body;
-                return body;
+                if(body['file']){
+                    body=changePath(body);//分片上传后处理
+                    ctx.POST = body;
+                    return body;
+                }else{
+                    return false;
+                }
             });
         }
     };
     //分片检查
     storage.chunkCheck=function(containerName,opts){
-       return fs.existsSync(path.join(fileRoot,containerName,opts.key,opts.chunkIndex));
+        return fs.existsSync(path.join(fileRoot,containerName,opts.key,opts.chunkIndex));
     };
     //分片合并
     storage.chunksMerge=function(containerName,opts){
@@ -120,23 +124,28 @@ module.exports = function(options){
         fs.mkdirsSync(curPath);//创建文件夹
         let targetStream = fs.createWriteStream(curFileName);
         targetStream.on('finish', function() {
-         fs.remove(cahcePath);//删除文件夹
+            fs.remove(cahcePath);//删除文件夹
         });
         let cahcePath=path.join(fileRoot,containerName,opts.key);
         function toWrite(i,resolve, reject){//读取文件编写
-            let readstream=fs.createReadStream(cahcePath+'/'+i);//读取分片
-            readstream.pipe(targetStream); i++;
-            if(i<opts.chunks){
-                toWrite(i,resolve,reject);
-            }else{
-                readstream.on('end', function() {//最后一个结束
-                    targetStream.end();
-                    resolve({
-                        key:opts.key,
-                        path:curFileName,
-                        shortPath:curFileName.replace(fileRoot,'')//相对路径
+            if(fs.existsSync(cahcePath+'/'+i)) {
+                let readstream = fs.createReadStream(cahcePath + '/' + i);//读取分片
+                readstream.pipe(targetStream);
+                i++;
+                if (i < opts.chunks) {
+                    toWrite(i, resolve, reject);
+                } else {
+                    readstream.on('end', function () {//最后一个结束
+                        targetStream.end();
+                        resolve({
+                            key: opts.key,
+                            path: curFileName,
+                            shortPath: curFileName.replace(fileRoot, '')//相对路径
+                        });
                     });
-                });
+                }
+            }else{
+                resolve(false);
             }
         }
         return new Promise(function(resolve, reject) {
@@ -172,7 +181,7 @@ function formy(ctx,fileRoot,opts) {
                 fields[field] = value;
             }
         }).on('file', function (field, file) {
-           file={//重新整理对象
+            file={//重新整理对象
                 size: file.size,
                 path: file.path,
                 name:file.name,
