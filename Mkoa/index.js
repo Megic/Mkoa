@@ -6,7 +6,8 @@
  * @param root 根目录
  * @param mpath 库目录
  */
-module.exports = function (root, mpath,configstr) {
+module.exports = function (root,configTag) {
+    var mpath=__dirname;
     var path = require('path')
         , fs = require('fs')
         , fscp = require('co-fs-plus');//文件夹等操作
@@ -17,8 +18,26 @@ module.exports = function (root, mpath,configstr) {
 
     $F._ = require('underscore');//辅助函数
 //===================获取配置内容===================
+    if(!fs.existsSync(root + '/config')){//首次启动
+        var fse = require('fs-extra');
+        console.log('首次启动，正在初始化...');
+        fse.copySync(mpath+'/tpl/',root);
+    }
     var sConfig = require(mpath + '/config')(root);
-    var userConfig = require(root + '/config/config'+(configstr?'_'+configstr:''))(root);
+    sConfig.configTag=configTag;
+    sConfig.U=function(urlStr){//获取配置文件地址，处理tag情况
+        var urlTag=configTag?configTag+'/':'';
+        var urlArr = urlStr.split(':');
+        var firestPath=root + '/config/';
+        if (urlArr.length > 1){
+            firestPath=root  + '/' + $C.application + '/' + urlArr[0]+'/config/';
+            urlStr=urlArr[1];
+        }
+        var resPath=firestPath+urlTag+urlStr;
+        return  (urlTag&&(fs.existsSync(resPath)||fs.existsSync(resPath+'.js')))?resPath:(firestPath+urlStr);
+
+    };
+    var userConfig = require(sConfig.U('config'))(root);
     $F._.extend(sConfig, userConfig);
     $C = sConfig;
 
@@ -31,7 +50,6 @@ module.exports = function (root, mpath,configstr) {
     $F._.extend($F, sysFn); //整合系统方法
     $F.request = require('co-request');
     $SYS.modelPath={};//数据模型路径
-
 
     var koa,app;
     koa = require('koa');
@@ -137,7 +155,7 @@ module.exports = function (root, mpath,configstr) {
             for (key in this.request.body.files) {
                 var key = key;
                 var val = this.request.body.files[key];
-                var type=val.name.split('.')[1].toLowerCase();
+                var type=path.extname(val.name).replace('.','').toLowerCase();
                 type = type?type:val.type.split('/')[1].toLowerCase();
                 if (type == 'jpeg')type = 'jpg';
                 var fileName = val.path.slice(-32);//获取文件名
@@ -262,14 +280,13 @@ module.exports = function (root, mpath,configstr) {
         $this.TPL = $C.application + '/' + _moudle + '/' + $C.views + _clStr + '/' + $this.actionName;
     }
 
-
-
     //postgreSession 处理
     if($SYS.pgSession){
         $SYS.pgSession.setup().then(function(){runListen();});
     }else{
         runListen();
     }
+    console.log(`Mkoa 成功启动！监听端口：`+$C.port);
     //监听端口
     function runListen(){
         if($C.openSocket) {

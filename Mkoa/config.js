@@ -3,15 +3,6 @@ module.exports = function (root) {
         //系统目录
         V :'1.0',//版本
         SV:0,//引用版本号，用于刷新ajax缓存，空或者0会生成当前时间戳
-        sqlType:1,//ORM框架数据库 1 mysql  2 pgsql
-        sessionType:1,//1 mysql 2pgsql  3 memcached  4 redis
-        mysql:{
-            user:''
-            ,password:''
-            ,dbName:''
-            ,prefix:''
-            ,host:'localhost'
-        },
         models:'models',//模型文件夹名
         views: 'views',//模板文件夹名
         langs:'langs',//语言文件夹名称
@@ -31,11 +22,44 @@ module.exports = function (root) {
         formLimit: 3000,//post最大长度
         fileType: ['jpg', 'png', 'gif'],//上传文件类型
         openSocket:false,//是否开启socket.io
-        //cookie session
         proxy:false,//如果用nginx代理，设置为true
-        csrf: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        csrf: false,
+        syncModel:false,//是否同步模型到数据库,开发时可以开启，开启后，如果数据表不存在，返回错误并自动建表
+        //数据库ORM链接配置 default为$D函数默认链接数据
+        ormStore:{
+            // 'default':{//默认
+            //      username:''
+            //     ,password:''
+            //     ,database:''
+            //     ,option:{
+            //          dialect:'postgres' //'mysql'|'mariadb'|'sqlite'|'postgres'|'mssql'
+            //         ,host:'localhost'
+            //         ,port:5432
+            //     }
+            // }
+        },
+        //cookie session
+        sessionStore:{
+            // type:1 //1 mysql 2pgsql  3 memcached  4 redis
+            // ,mysql:{
+            //     // user:'',
+            //     // password: '',
+            //     // database:'',
+            //     // host:3306
+            // }
+            // ,pgsql{},memcached:{},redis:{}
+        },
+        sessionConfig:{
+            key: 'Mkoa:sid',
+            prefix: 'Mkoa:sess:',
+            rolling: false,
+            cookie: {
+                maxage:30 * 24 * 60 * 60 * 1000
+            }
+        },
         secret: '*&$^*&(*&$%@#@#$@!#$@%((()*()^#$%$#%@#$%@#$%$#',//session Key
+        host:'',
+        cors:false,
         //端口设置
         port: 3000,
         logger: true,

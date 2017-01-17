@@ -2,7 +2,7 @@ module.exports = function(app){
 
     if($C.openRewrite){
 
-        var rewriteData = require($C.ROOT + '/config/rewrite');
+        var rewriteData = require($C['U']('rewrite'));
         var toRegexp = require('path-to-regexp');
         var querystring = require('querystring');
         //url重写
