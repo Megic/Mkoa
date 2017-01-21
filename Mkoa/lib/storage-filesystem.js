@@ -7,6 +7,7 @@ let crypto = require("crypto");
 
 module.exports = function(options){
     let fileRoot=options.root;
+    options.prefix=options.prefix||'';
     fs.mkdirsSync(fileRoot);//创建文件夹
     let storage={};
     //创建容器
@@ -43,10 +44,10 @@ module.exports = function(options){
                     curPath=path.dirname(curFileName);
                 }else{//默认按日期分类
                     curPath=path.join(options.uploadDir,moment().format('YYYY/MM/DD/'));
-                    curFileName=path.join(curPath,path.basename(file.path))
+                    curFileName=path.join(curPath,path.basename(file.absPath))
                 }
                 fs.mkdirsSync(curPath);//创建文件夹
-                file.path=curFileName;//重新命名
+                file.path=path.normalize(curFileName.replace(fileRoot,options.prefix));//重新命名
             };
 
             let bodyPromise = formy(ctx,fileRoot,options);
@@ -81,17 +82,17 @@ module.exports = function(options){
                         curPath=path.dirname(curFileName);
                     }else{//默认按日期分类
                         curPath=path.join(options.uploadDir,moment().format('YYYY/MM/DD/'));
-                        curFileName=path.join(curPath,path.basename(POST['file'].path))
+                        curFileName=path.join(curPath,path.basename(POST['file'].absPath))
                     }
                     fs.mkdirsSync(curPath);//创建文件夹
                 }else{//分片
                     let cachePath=path.join(options.uploadDir,POST['file'].key);
                     if(!fs.existsSync(cachePath))fs.mkdirsSync(cachePath);//创建文件夹
                     curFileName=path.join(cachePath,'/',POST.chunk);
-                    fs.renameSync(POST['file'].path,curFileName);
-                    POST['file'].path=curFileName;//重新命名
-                    POST['file'].shortPath=curFileName.replace(fileRoot,'');//相对路径
                 }
+                fs.renameSync(POST['file'].absPath,curFileName);
+                POST['file'].path=path.normalize(curFileName.replace(fileRoot,options.prefix));//重新命名
+                POST['file'].absPath=curFileName;//相对路径
                 return POST;
             }
 
@@ -139,8 +140,8 @@ module.exports = function(options){
                         targetStream.end();
                         resolve({
                             key: opts.key,
-                            path: curFileName,
-                            shortPath: curFileName.replace(fileRoot, '')//相对路径
+                            path: path.normalize(curFileName.replace(fileRoot, options.prefix)),
+                            absPath:curFileName //相对路径
                         });
                     });
                 }
@@ -183,12 +184,12 @@ function formy(ctx,fileRoot,opts) {
         }).on('file', function (field, file) {
             file={//重新整理对象
                 size: file.size,
-                path: file.path,
+                path: file.path.replace(fileRoot,''),//相对路径,
                 name:file.name,
                 type: file.type,
                 ext:path.extname(file.name),
                 lastModifiedDate:file.lastModifiedDate,
-                shortPath:file.path.replace(fileRoot,'')//相对路径
+                absPath:file.path
             };
             if (files[field]) {
                 if (Array.isArray(files[field])) {
