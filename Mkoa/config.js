@@ -70,13 +70,13 @@ module.exports=function(root){
         ,cache_open:false
         ,cache_store:'cache'
         ,logic_open:false //自动校验数据
-        ,static_open:true
+        ,static_open:false
         ,static_pathName:'static'
         ,static_config:{maxAge: 365 * 24 * 60 * 60, buffer: true}
-        ,lang_open:true
+        ,lang_open:false
         ,lang_default:'zh-cn'
         ,lang_cookie: "mkoa_locale"//存放语言的 cookie 名称
-        ,view_open:true
+        ,view_open:false
         ,view_engine:'ejs'//视图解析
         ,view_ext:'html'//视图文件后缀
         ,socket_open:false

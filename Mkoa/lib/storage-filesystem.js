@@ -47,7 +47,7 @@ module.exports = function(options){
                     curFileName=path.join(curPath,path.basename(file.absPath))
                 }
                 fs.mkdirsSync(curPath);//创建文件夹
-                file.path=path.normalize(curFileName.replace(fileRoot,options.prefix));//重新命名
+                file.path=path.normalize(curFileName.replace(fileRoot,options.prefix).replace('upload_',''));//重新命名
             };
 
             let bodyPromise = formy(ctx,fileRoot,options);
@@ -85,11 +85,13 @@ module.exports = function(options){
                         curFileName=path.join(curPath,path.basename(POST['file'].absPath))
                     }
                     fs.mkdirsSync(curPath);//创建文件夹
+                    curFileName=curFileName.replace('upload_','');
                 }else{//分片
                     let cachePath=path.join(options.uploadDir,POST['file'].key);
                     if(!fs.existsSync(cachePath))fs.mkdirsSync(cachePath);//创建文件夹
                     curFileName=path.join(cachePath,'/',POST.chunk);
                 }
+
                 fs.renameSync(POST['file'].absPath,curFileName);
                 POST['file'].path=path.normalize(curFileName.replace(fileRoot,options.prefix));//重新命名
                 POST['file'].absPath=curFileName;//相对路径
