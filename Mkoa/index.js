@@ -33,7 +33,7 @@ module.exports = function (options) {
         let resPath=firestPath+urlTag+urlStr;
         let curPath=(urlTag&&(fs.existsSync(resPath)||fs.existsSync(resPath+'.js')))?resPath:(firestPath+urlStr);
         if($C.delcontrollerCache)delete require.cache[require.resolve(curPath)];//删除缓存
-        let redata=require(curPath);
+        let redata=fs.existsSync(curPath+'.js')?require(curPath):{};
         configCache[urlStr]=(typeof redata =='function')?redata(root):redata;//获取配置信息
         return configCache[urlStr];
     };
@@ -161,7 +161,6 @@ module.exports = function (options) {
         $this.error = function (code,data) {//返回错误结构
             $this.body = {error: code,data: data};
         };
-
         $this.display = function (tpl, data,option) {//渲染模板
             let sys = {
                 $U:function(mdPath){
@@ -203,7 +202,8 @@ module.exports = function (options) {
         let _404 = false;
         if (fs.existsSync($this.actionUrl)) { //判定controller是否存在
             if($C.delcontrollerCache)delete require.cache[require.resolve($this.actionUrl)];//删除缓存
-            let SysFuc = require($this.actionUrl)($this); //加载controller
+            let actionFile=require($this.actionUrl);
+            let SysFuc = $F._.isFunction(actionFile)?actionFile($this):actionFile; //加载controller
             if (SysFuc && $F._.isFunction(SysFuc[$this.actionName])){//存在控制器
                 if(!SysFuc['_before'])SysFuc['_before']=function (){};
                 if(!SysFuc['_after'])SysFuc['_after']=function (){};

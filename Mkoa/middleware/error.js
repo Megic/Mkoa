@@ -13,8 +13,8 @@ module.exports = function(app){
         let msg='systemError';
         if(!$C.loger_config){msg= e.message || e.name || e; console.log(e);}
         let code=500;
-        if(e.name='TokenExpiredError'){code=403;}
         if(e.message==404){code=$this.status;}
+        if(e.name=='TokenExpiredError'){code=403;}
         await displayError($this,code,msg);
     }
     app.use(async (ctx, next) => {
@@ -24,5 +24,17 @@ module.exports = function(app){
             return errHandler(err,ctx);
         }
     });
-
+    //捕获异步异常,等待所有连接结束后终止程序
+    process.on('uncaughtException', function (err) {
+        console.log(err);
+        try {
+            let killTimer = setTimeout(function () {
+                process.exit(1);
+            }, 30000);
+            killTimer.unref();
+            server.close();
+        } catch (e) {
+            console.log('error when exit', e.stack);
+        }
+    })
 };
