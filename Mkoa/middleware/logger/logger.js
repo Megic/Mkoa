@@ -75,9 +75,7 @@ function getKoaLogger (logger4js, options) {
                     level = levels.toLevel(options.level, levels.INFO)
                 }
             }
-            console.log('xxx')
             await next()
-            console.log('xxx2')
             // hook on end request to emit the log entry of the HTTP request.
             ctx.response.responseTime = new Date() - start
             // status code response level handling

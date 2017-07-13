@@ -24,15 +24,20 @@ module.exports = function(app){
             return errHandler(err,ctx);
         }
     });
+    let timmer=0;
     //捕获异步异常,等待所有连接结束后终止程序
     process.on('uncaughtException', function (err) {
-        console.log(err);
+        timmer++;
         try {
-            let killTimer = setTimeout(function () {
-                process.exit(1);
-            }, 30000);
-            killTimer.unref();
-            server.close();
+            console.log(`捕获到第${timmer}次uncaughtException异常 `,err);
+            if(timmer>$C.error_uncaught){
+                console.log(`uncaughtException异常到达限制次数,30秒后终止进程...`);
+                let killTimer = setTimeout(function () {
+                    process.exit(1);
+                }, 30000);
+                killTimer.unref();
+                $app.close();
+            }
         } catch (e) {
             console.log('error when exit', e.stack);
         }

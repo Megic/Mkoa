@@ -61,6 +61,7 @@ module.exports=function(root){
         //     file: root + '/file.log'
         //     //,size:''
         // }
+        ,error_uncaught:50//出现未知异常退出进程次数
         ,jwt_open:false
         ,jwt_key:'shhhmkoa'//加密
         ,jwt_pem:'shhhmkoa'//解密

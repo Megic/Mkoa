@@ -5,6 +5,7 @@
  *
  * @param options
  */
+
 module.exports = function (options) {
     console.log('正在启动MKOA项目...');
     let root=options.root;//项目根目录
@@ -12,7 +13,7 @@ module.exports = function (options) {
     let path = require('path')
         , fs = require('fs-extra');//扩展文件夹等操作
 //=================================全局对象====================================================//
-    global.$M={};global.$S={};global.$F={};global.$C={};global.$SYS={};global.$DB={};global.$ST={};//定义全局变量
+    global.$app='';global.$M={};global.$S={};global.$F={};global.$C={};global.$SYS={};global.$DB={};global.$ST={};//定义全局变量
     $F._ = require('underscore');//辅助函数
     $F.fs=fs;//扩展后的fs
     //配置信息获取
@@ -32,8 +33,11 @@ module.exports = function (options) {
         }
         let resPath=firestPath+urlTag+urlStr;
         let curPath=(urlTag&&(fs.existsSync(resPath)||fs.existsSync(resPath+'.js')))?resPath:(firestPath+urlStr);
-        if($C.delcontrollerCache)delete require.cache[require.resolve(curPath)];//删除缓存
-        let redata=fs.existsSync(curPath+'.js')?require(curPath):{};
+        let redata={};
+        if(fs.existsSync(curPath+'.js')){
+            if($C.delcontrollerCache)delete require.cache[require.resolve(curPath)];//删除缓存
+            redata=require(curPath);
+        }
         configCache[urlStr]=(typeof redata =='function')?redata(root):redata;//获取配置信息
         return configCache[urlStr];
     };
@@ -119,7 +123,7 @@ module.exports = function (options) {
                 mkoaRouter($this,'/'+obj.path);//路径处理
                 let _404 = false;
                 if (fs.existsSync(this.actionUrl)){ //判定controller是否存在
-                    if($C.controllerCache)delete require.cache[require.resolve(this.actionUrl)];//删除缓存
+                    if($C.delcontrollerCache)delete require.cache[require.resolve(this.actionUrl)];//删除缓存
                     let SysFuc = require(this.actionUrl)(this); //加载controller
                     if (SysFuc && $F._.isFunction(SysFuc[this.actionName])) {
                         if(!SysFuc['_before'])SysFuc['_before']=function *(){};
@@ -150,6 +154,8 @@ module.exports = function (options) {
         let $this=ctx;//引用
         $this.GET = $this.request.query;//get参数
         $this.POST = $this.request.body;//post参数
+        $this.params=$this.request.body;//post参数
+
         $C.host=$C.host?$C.host:'http://' + $this.host + '/';
         $this.HOSTURL = $C.host;//访问地址
         mkoaRouter($this,$this.request.path);//路径处理
@@ -219,16 +225,23 @@ module.exports = function (options) {
                             let logicData=logicFn[$this.actionName];
                             if(logicData){//存在校验规则
                                 if ($F._.isFunction(logicFn['_before']))await callAction(logicFn['_before'],$this);//存在前置函数
-                                let data=$this[logicData.method=='GET'?'GET':'POST'];//检验数据
+                                logicData.method=logicData.method?logicData.method:'POST';//默认方法
+                                let data=logicData.method=='GET'?$this.request.query:$this.request.body;//检验数据
+                                if(logicData.method==$this.method){
                                 logicData.rules=logicData.rules||{};
                                 logicData.messages=logicData.messages||{};
                                 logicData.sanitizeFirst=logicData.sanitizeFirst||false;
                                 if(logicData.sanitizeFirst&&logicData.sanitization)data=$F.indicative.sanitize(data,logicData.sanitization);//转换
                                 await $F.indicative.validate(data,logicData.rules,logicData.messages).catch(function (errors) {errorsmsg=errors;});
                                 if(!logicData.sanitizeFirst&&logicData.sanitization)data=$F.indicative.sanitize(data,logicData.sanitization);//后转换
-                                $this[logicData.method=='GET'?'GET':'POST']=data;//重新赋予转换后的数据
+
+                               // $this[logicData.method=='GET'?'GET':'POST']=data;//重新赋予转换后的数据
+
                                 if ($F._.isFunction(logicFn['_after']))await callAction(logicFn['_after'],$this,errorsmsg);//执行after函数
                                 if (!$this.body&&errorsmsg)$this.error(400,errorsmsg);//返回错误信息
+                                }else{
+                                    throw new Error(500,'method error');
+                                }
                             }
                         }
                         ///************************自动校验.end*************************/
@@ -281,9 +294,9 @@ module.exports = function (options) {
     console.log(`启动成功!监听端口:`+port);
     //监听端口
         if($C.socket_open) {
-            app.server.listen(port);//监听端口
+            $app=app.server.listen(port);//监听端口
         }else{
-            app.listen(port);//监听端口
+            $app=app.listen(port);//监听端口
         }
 
 };
